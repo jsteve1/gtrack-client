@@ -24,14 +24,11 @@ export default function TopnavButtons() {
                 font-size: 16pt;
             } 
             .nav-button-spacing {
-                margin-left: 45px;
-                margin-right: 45px;
+                align-self: center;
             }
             .signup-button {
                 color: #34dcbe;
                 font-weight: 500;
-                margin-left: auto;
-                margin-right: auto;
                 background-color: transparent;
                 outline: #34dcbe solid 2px;
                 border: none;
@@ -39,6 +36,13 @@ export default function TopnavButtons() {
                 padding-left: 20px;
                 padding-right: 20px;
                 box-shadow: none;
+                align-self: center;
+                margin-right: 25px;
+            }
+            @media only screen and (max-width: 550px) {
+                .signup-button {
+                    margin-right: 0px;
+                }
             }
             .signup-button:hover, 
             .signup-button:active, 
@@ -71,15 +75,15 @@ export default function TopnavButtons() {
         </style>
         <Container className="topnavbuttonscont" fluid>
             <Navbar.Brand className="topnavbuttonsbrand" href="#">Goals App</Navbar.Brand>
+            <Nav.Link className="link-color link-font-size nav-button-spacing" href="#action1">About</Nav.Link>
             <Navbar.Toggle aria-controls="navbarScroll" />
             <Navbar.Collapse id="navbarScroll" className="justify-content-end">
                 <Nav
-                    className="me-auto my-2 my-lg-0 nav-content"
+                    className="my-2 my-lg-0 nav-content"
                     style={{ maxHeight: '150px' }}
                     navbarScroll
                 >
-                    <Button className="signup-button nav-button-spacing">Sign Up</Button>
-                    <Nav.Link className="link-color link-font-size nav-button-spacing" href="#action1">About</Nav.Link>
+                    <Button className="signup-button">Sign Up</Button>
                     <Nav.Link className="link-color link-font-size nav-button-spacing"  href="#action2">Login</Nav.Link>         
                 </Nav>
                 </Navbar.Collapse>

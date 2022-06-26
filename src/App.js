@@ -4,13 +4,16 @@ import AppNav from './containers/ui/navbar';
 import { store } from './app/store';
 import { Provider } from 'react-redux';
 import Router from './router/router'; 
-import { Container } from 'react-bootstrap';
+import { BrowserRouter } from 'react-router-dom';
+import BottomNav from './containers/ui/bottomnav';
 function App() {
   return (
     <>
       <AppNav />
       <Provider store={store}>
-        <Router />
+        <BrowserRouter>
+          <Router />
+        </BrowserRouter>
       </Provider>
     </>
   );
