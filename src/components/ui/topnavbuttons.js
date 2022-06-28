@@ -73,9 +73,9 @@ export default function TopnavButtons() {
             `
         }
         </style>
-        <Container className="topnavbuttonscont" fluid>
+        <Container className="topnavbuttonscont border-bottom border-dark pb-3" fluid>
             <Navbar.Brand className="topnavbuttonsbrand" href="#">Goals App</Navbar.Brand>
-            <Nav.Link className="link-color link-font-size nav-button-spacing" href="#action1">About</Nav.Link>
+            <Nav.Link className="link-color link-font-size nav-button-spacing" href="/about">About</Nav.Link>
             <Navbar.Toggle aria-controls="navbarScroll" />
             <Navbar.Collapse id="navbarScroll" className="justify-content-end">
                 <Nav

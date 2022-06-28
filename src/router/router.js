@@ -4,6 +4,7 @@ import {
     useLocation
   } from "react-router-dom";
 import Home from '../containers/views/home';
+import AboutView from '../containers/views/about';
 import { useState, useEffect } from "react";
 
 export default function Router() {
@@ -61,7 +62,7 @@ export default function Router() {
                 }}
             >
                 <Routes location={displayLocation}>
-                    <Route path="/about" />
+                    <Route path="/about" element={ <AboutView /> }/>
                     <Route path="/home" element={ <Home /> } />
                     <Route path="/app">
                         <Route path="signin">
