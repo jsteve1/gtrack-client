@@ -6,7 +6,6 @@ import {
     Button
 } from 'react-bootstrap';
 export default function TopnavButtons() {
-
     return (
         <>
         <style type="text/css">
@@ -70,11 +69,14 @@ export default function TopnavButtons() {
                 transform: scale(1.05); 
                 filter: brightness(150%);
             }
+            .hidden-link {
+                display: none;
+            }
             `
         }
         </style>
         <Container className="topnavbuttonscont border-bottom border-dark pb-3" fluid>
-            <Navbar.Brand className="topnavbuttonsbrand" href="#">Goals App</Navbar.Brand>
+            <Navbar.Brand className="topnavbuttonsbrand" href="/home">Goals App</Navbar.Brand>
             <Nav.Link className="link-color link-font-size nav-button-spacing" href="/about">About</Nav.Link>
             <Navbar.Toggle aria-controls="navbarScroll" />
             <Navbar.Collapse id="navbarScroll" className="justify-content-end">
@@ -83,8 +85,9 @@ export default function TopnavButtons() {
                     style={{ maxHeight: '150px' }}
                     navbarScroll
                 >
-                    <Button className="signup-button">Sign Up</Button>
-                    <Nav.Link className="link-color link-font-size nav-button-spacing"  href="#action2">Login</Nav.Link>         
+                    <Button className="signup-button" onClick={ () => document.getElementById("hidden-sign-up-link").click() }>Sign Up</Button>
+                    <Nav.Link className="link-color link-font-size nav-button-spacing"  href="/app/signin">Login</Nav.Link>
+                    <Nav.Link className="hidden-link" id="hidden-sign-up-link" href="/app/signup" />         
                 </Nav>
                 </Navbar.Collapse>
         </Container>

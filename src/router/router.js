@@ -5,7 +5,10 @@ import {
   } from "react-router-dom";
 import Home from '../containers/views/home';
 import AboutView from '../containers/views/about';
-import { useState, useEffect } from "react";
+import Signin from '../containers/views/signin';
+import Signup from '../containers/views/signup';
+import React, { useState, useEffect } from "react";
+import mtn from '../static/images/mtn.jpg';
 
 export default function Router() {
     const location = useLocation();
@@ -61,25 +64,23 @@ export default function Router() {
                     }
                 }}
             >
-                <Routes location={displayLocation}>
-                    <Route path="/about" element={ <AboutView /> }/>
-                    <Route path="/home" element={ <Home /> } />
-                    <Route path="/app">
-                        <Route path="signin">
+                <React.Fragment>
+                    <Routes location={displayLocation}>    
+                        <Route path="/about" element={ <AboutView /> }/>
+                        <Route path="/home" element={ <Home /> } />
+                        <Route path="/app">
+                            <Route path="signin" element={ <Signin /> } />
+                            <Route path="signup" element={ <Signup /> } />
+                            <Route path="account">
 
+                            </Route>
                         </Route>
-                        <Route path="signup">
-
-                        </Route>
-                        <Route path="account">
-
-                        </Route>
-                    </Route>
-                    <Route path="/app/goal/:id" />
-                    <Route path="/app/goals" />
-                    <Route path="/app/profile" />
-                    <Route path="/" element={<Home />} />
-                </Routes>
+                        <Route path="/app/goal/:id" />
+                        <Route path="/app/goals" />
+                        <Route path="/app/profile" />
+                        <Route path="/" element={<Home />} />
+                    </Routes>
+                </React.Fragment>
             </div>
         </>
         )
