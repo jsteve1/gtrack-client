@@ -1,8 +1,19 @@
-import { Container, Row, Col, Form, Button, FloatingLabel, Navbar } from 'react-bootstrap';
+import { Container, Row, Col, Form, Button, FloatingLabel, Tooltip, OverlayTrigger, Modal, CloseButton, Navbar } from 'react-bootstrap';
 import * as Icon from 'react-bootstrap-icons';
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import mtn from '../../static/images/mtn.jpg';
+import { FileUploader } from "react-drag-drop-files";
+
+const renderPrivateProfileTooltip = (props) => (
+    <Tooltip id="button-tooltip" {...props}>
+      If selected, this profile, its data, and its goals won't be seen by other app users 
+    </Tooltip>
+  );
+
 export default function Signup() {
+    const [uploadModalShow, setModalShow] = useState(false);
+    // const handleClose = () => setModalShow(false);
+    // const handleShow = () => setModalShow(true);
     const [fNameValid, setfNameValid] = useState(true); 
     const [lNameValid, setlNameValid] = useState(true); 
     const [emailValid, setEmailValid] = useState(true); 
@@ -15,6 +26,14 @@ export default function Signup() {
     const pwRef = useRef(null);
     const pw2Ref = useRef(null);
     const bioRef = useRef(null);
+    const fileTypes = ["JPEG", "PNG", "GIF"];
+    const [profilePic, setProfilePic] = useState(null);
+    const [profilePicPreview, setProfilePicPreview] = useState(null);
+    const handleChange = (file) => {
+        console.log(file);
+        setProfilePic(file);
+        setModalShow(false);
+    };
     const evalPw = (str) => {
         if(str.length === 0) return true;
         return /((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%.,]).{8,100})/.test(str);
@@ -32,12 +51,35 @@ export default function Signup() {
         if(str.length === 0) return true;
         return /(.+)@(.+){2,}\.(.+){2,}/.test(str);
     }
+
+    useEffect(() => {
+        if(!profilePic) {
+            setProfilePicPreview(null); 
+            return;
+        }
+        const objectUrl = URL.createObjectURL(profilePic);
+        setProfilePicPreview(objectUrl); 
+
+        return () => URL.revokeObjectURL(objectUrl); 
+    }, [profilePic] )
+
     return (
             <>
                 <style type="text/css">
                 {
                     `
-                        .signup-cont {
+                    .profile-preview {
+                        max-height: 120px;
+                        border-radius: 20px;
+                    }
+                    .profile-preview:hover {
+                        filter: brightness(0.7);
+                        cursor: pointer;
+                    }
+                    .file-select {
+                        color: #aaaaaa;
+                    }    
+                    .signup-cont {
                             padding-top: 100px;
                             color: #191919;
                             background-image: url(${mtn});
@@ -114,17 +156,33 @@ export default function Signup() {
                             font-size: 16pt;
                             border-radius: 15px;
                             font-weight: 400;
+                            max-height: 100px;
                         }
                         .signup-button-ctm {
                             font-size: 25pt;
+                            font-weight: 700;
                         }
                         .total-height {
-                            height: max(100vh, 1200px);
+                            height: max(100vh, 1000px);
+                        }
+                        .private-profile-info {
+                            color: #404040;
+                            cursor: pointer;
+                        }
+                        .drop-area {
+                            background-color: #191919;
+                            height: 300px;
+                            width: 100%;
+                            color: #aaaaaa;
+                            border: dashed 1px #aaaaaa;
+                        }
+                        .navbar-signup-bottom {
+                            background-color: rgba(19,19,19,0.5);
                         }
                     `
                 }
                 </style>
-                <div className="total-height">
+                <div className="total-height">      
                 <Container className="signup-cont" fluid>
                     <Row>
                         <Col xs="1" />
@@ -205,13 +263,13 @@ export default function Signup() {
                                 <Col>
                                     <FloatingLabel className="floating-label-color" controlId="floatingTextarea" label="Biography (Optional)">
                                         <Form.Control
-                                        ref={bioRef}
-                                        as="textarea"
-                                        placeholder="Tell us about yourself"
-                                        style={{ height: '75px' }}
-                                        className="signup-input signup-input-bio"
-                                        isInvalid={!bioValid} 
-                                        onChange={(e) => { if(!evalBio(e.target.value)) setBioValid(false); else{ if(bioValid) return; else setBioValid(true); }  }}
+                                            ref={bioRef}
+                                            as="textarea"
+                                            placeholder="Tell us about yourself"
+                                            style={{ height: '75px' }}
+                                            className="signup-input signup-input-bio"
+                                            isInvalid={!bioValid} 
+                                            onChange={(e) => { if(!evalBio(e.target.value)) setBioValid(false); else{ if(bioValid) return; else setBioValid(true); }  }}
                                         />
                                         <Form.Control.Feedback type="invalid">
                                             Biography cannot be more than 255 characters.
@@ -220,7 +278,7 @@ export default function Signup() {
                                 </Col>
                             </Row>
                             <Row className="mt-2">
-                                <Col xs="12" sm="6" className="mt-2 d-flex justify-content-center">
+                                <Col xs="12" sm="4" className="mt-2 d-flex justify-content-center">
                                     <span className="d-flex justify-content-between">
                                         <span className="private-profile-text">Private Profile</span> <Form.Check 
                                             type="switch"
@@ -228,26 +286,54 @@ export default function Signup() {
                                             className="private-switch"
                                             variant="dark"
                                         />
-                                    </span>
+                                    </span>&nbsp;&nbsp;
+                                    <OverlayTrigger
+                                        placement="right"
+                                        delay={{ show: 0, hide: 400 }}
+                                        overlay={renderPrivateProfileTooltip}
+                                    >
+                                        <Icon.InfoCircle className="private-profile-info" />
+                                    </OverlayTrigger>
                                 </Col>
-                                <Col xs="12" sm="6" className="mt-2 d-flex justify-content-center">
-                                    <Button variant="dark" className="addprofilepic-button">
-                                    Add Profile Pic <Icon.Upload />
-                                </Button>
-                                </Col>
-                            </Row>
-                            <Row className="mt-5">
-                                <Col className="d-flex justify-content-center">
-                                    <Button variant="dark" className="signup-button signup-button-ctm">
-                                        Complete Signup
-                                    </Button>
-                                </Col>
+                                {
+                                    (profilePic === null) ? ( 
+                                        <Col xs="12" sm="4" className="mt-2 d-flex justify-content-center">
+                                            <Button variant="dark" className="addprofilepic-button" onClick={() => setModalShow(true)}>
+                                                Add Profile Pic <Icon.Upload />
+                                            </Button>
+                                        </Col>) : (
+                                            <Col xs="12" sm="4" className="mt-3 d-flex justify-content-center">
+                                                <img onClick={() => setModalShow(true)} className="profile-preview" src={profilePicPreview} />
+                                                <CloseButton variant="white" onClick={() => {setProfilePic(null)}}/>
+                                             </Col>   
+                                        )
+                                }
                             </Row>
                         </Col>
                         <Col xs="1" />
                     </Row>
                 </Container>    
                 </div>
+                <Modal 
+                    show={uploadModalShow} 
+                    onHide={() => setModalShow(false)}
+                    centered
+                    >
+                    <FileUploader
+                        multiple={false}
+                        handleChange={handleChange}
+                        name="file"
+                        types={fileTypes}
+                        maxSize="8"
+                        minSize="0"
+                        classes="drop-area"
+                    />
+                </Modal>
+                <Navbar className="d-flex justify-content-center navbar-signup-bottom" fixed="bottom">
+                    <Button variant="dark" className="signup-button signup-button-ctm">
+                        Complete Signup <Icon.Check />
+                    </Button>
+                </Navbar>
             </>
         )
 }

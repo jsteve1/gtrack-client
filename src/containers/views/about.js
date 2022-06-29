@@ -16,7 +16,7 @@ export default function AboutView() {
                         }
                         .title-about {
                             font-weight: 500; 
-                            font-size: 7vh; 
+                            font-size: 4vh; 
                             color: #AAAAAA;
                             margin-top: 20px;
                             margin-bottom: 20px;
@@ -133,13 +133,14 @@ export default function AboutView() {
                         <Col xs='12' className="title-about">Slacker tested. Slacker approved.</Col>                         
                     </Row>
                     <Row className="row-about-2 pb-5 border-dark border-bottom">
-                        <Col xs='12' className="title-about-2">After achieving <span className="zero-text">ZERO</span> of my self-determined goals in June 2022, I created this app to help me stay on track and on schedule for fitness goals.</Col> 
+                        <Col xs="2"/>
+                        <Col xs='6' className="title-about-2">After achieving <span className="zero-text">ZERO</span> of my self-determined goals in June 2022, I created this app to help me stay on track and on schedule for fitness goals.</Col> 
+                        <Col xs="3"/>
                     </Row>
                     <Row className="row-about-3 pb-5 border-dark border-bottom">
-                        <Col xs='12' className="title-about-3">Utilizing reminders, timelines, and user-friendly design, Goals App's aim is to aid in countless achievements and develop its users to their potential.</Col> 
-                    </Row>
-                    <Row className="row-about-4 pb-5">
-                        <Col xs='12' className="title-about">Questions? Concerns?<br></br><Button variant="dark" className="contact-button">Contact Me</Button></Col> 
+                        <Col xs="3"/>
+                        <Col xs='6' className="title-about-3">Utilizing reminders, timelines, and user-friendly design, Goals App's aim is to aid in countless achievements and develop its users to their potential.</Col> 
+                        <Col xs="2"/>
                     </Row>
                     </Container>
             </>
