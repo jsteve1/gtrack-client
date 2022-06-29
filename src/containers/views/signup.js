@@ -3,6 +3,7 @@ import * as Icon from 'react-bootstrap-icons';
 import { useRef, useState, useEffect } from 'react';
 import mtn from '../../static/images/mtn.jpg';
 import { FileUploader } from "react-drag-drop-files";
+import { evalPw, evalName, evalBio, evalEmail } from '../../app/utils';
 
 const renderPrivateProfileTooltip = (props) => (
     <Tooltip id="button-tooltip" {...props}>
@@ -34,24 +35,6 @@ export default function Signup() {
         setProfilePic(file);
         setModalShow(false);
     };
-    const evalPw = (str) => {
-        if(str.length === 0) return true;
-        return /((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%.,]).{8,100})/.test(str);
-    }
-    const evalName = (str) => {
-        if(str.length === 0) return true;
-        return /^(?=.{1,50}$)[a-z]+(?:['_.\s][a-z]+)*$/i.test(str); 
-    }
-    const evalBio = (str) => {
-        if(str.length === 0) return true;
-        if(str.length > 255) return false;
-        return true;
-    }
-    const evalEmail = (str) => {
-        if(str.length === 0) return true;
-        return /(.+)@(.+){2,}\.(.+){2,}/.test(str);
-    }
-
     useEffect(() => {
         if(!profilePic) {
             setProfilePicPreview(null); 
@@ -88,10 +71,11 @@ export default function Signup() {
                             height: 100% !important;
                         }
                         .signup-col {
-                            background-color: rgba(19, 19, 19, 0.3);
+                            background-color: rgba(3, 3, 3, 0.9);
                             padding: 35px;
                             border-radius: 10px;
                             max-height: 100%;
+                            max-width: 750px;
                         }   
                         .signup-button {
 
@@ -140,7 +124,7 @@ export default function Signup() {
                         }
                         .signup-title-row {
                             color: #aaaaaa;
-                            font-size: 5vh;
+                            font-size: 4vh;
                             font-weight: 500;
                         }
                         .floating-label-color  {
@@ -161,6 +145,8 @@ export default function Signup() {
                         .signup-button-ctm {
                             font-size: 25pt;
                             font-weight: 700;
+                            background-color: #191919;
+                            border-radius: 15px;
                         }
                         .total-height {
                             height: max(100vh, 1000px);
@@ -177,14 +163,15 @@ export default function Signup() {
                             border: dashed 1px #aaaaaa;
                         }
                         .navbar-signup-bottom {
-                            background-color: rgba(19,19,19,0.5);
+                            background-color: transparent;
+                            padding-bottom: 50px;
                         }
                     `
                 }
                 </style>
                 <div className="total-height">      
                 <Container className="signup-cont" fluid>
-                    <Row>
+                    <Row className="d-flex justify-content-center">
                         <Col xs="1" />
                         <Col className="signup-col">
                             <Row className="signup-title-row d-flex justify-content-center mb-5">
