@@ -37,7 +37,7 @@ export default function Signin() {
         return;
        }
        try {
-        const res = await fetch(`http://localhost:3000/api/signon/login`, {
+        const res = await fetch(`${process.env.APP_DOMAIN}/api/signon/login`, {
             method: "POST",
             headers: {
                 "content-type": "application/json"

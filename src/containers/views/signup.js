@@ -62,7 +62,7 @@ export default function Signup() {
             console.error("Error while checking sign up fields.");
             return;
         }
-        const res = await fetch(`http://localhost:3000/api/user/create`, {
+        const res = await fetch(`${process.env.APP_DOMAIN}/api/user/create`, {
             method: "POST",
             body: JSON.stringify({
                 "fname": `${fnameRef.current.value}`,
