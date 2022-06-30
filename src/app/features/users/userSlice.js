@@ -49,6 +49,9 @@ export const userSlice = createSlice({
   }
 })
 
+export const profile = (state) => state.users.myProfile; 
+export const loggedIn = (state) => state.users.myProfile.id !== "";
+
 export const { login, logout, searchOtherUsers, addUpload, rmUpload, editProfile } = userSlice.actions
 
 export default userSlice.reducer

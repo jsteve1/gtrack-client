@@ -4,15 +4,16 @@ import { store } from './app/store';
 import { Provider } from 'react-redux';
 import Router from './router/router'; 
 import { BrowserRouter } from 'react-router-dom';
-import BottomNav from './containers/ui/bottomnav';
-import AppNav from './containers/ui/navbar';
-import { Container } from 'react-bootstrap';
+import { CookiesProvider } from 'react-cookie';
+
 function App() {
   return (
       <Provider store={store}>
-        <BrowserRouter>
-          <Router />
-        </BrowserRouter>
+        <CookiesProvider>
+          <BrowserRouter>
+            <Router />
+          </BrowserRouter>
+        </CookiesProvider>
       </Provider>
   );
 }

@@ -76,12 +76,16 @@ export default function TopnavButtons() {
             .link-no-underline {
                 text-decoration: none;
             }
+            .about-link {
+                margin-top: 10px;
+                margin-right: 10px;
+            }
             `
         }
         </style>
-        <Container className="topnavbuttonscont border-bottom border-dark pb-3" fluid>
+        <Container className="topnavbuttonscont border-bottom border-dark pb-3 d-flex align-items-baseline" fluid>
             <Link className="topnavbuttonsbrand link-no-underline " to="/home">Goals App</Link>
-            <Link className="link-color link-font-size nav-button-spacing link-no-underline " to="/about">About</Link>
+            <Link className="link-color link-font-size nav-button-spacing link-no-underline about-link" to="/about">About</Link>
             <Navbar.Toggle aria-controls="navbarScroll" />
             <Navbar.Collapse id="navbarScroll" className="justify-content-end">
                 <Nav

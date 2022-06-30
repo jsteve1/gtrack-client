@@ -1,4 +1,4 @@
-import { Container, Button, Navbar } from 'react-bootstrap';
+import { Container, Button, Navbar, Modal, Row, Col } from 'react-bootstrap';
 import arnold from '../../static/images/arnold.jpg';
 import arnoldback from '../../static/images/arnoldback.jpg';
 import lesbrown from '../../static/images/lesbrown.png';
@@ -9,12 +9,20 @@ import * as Icon from 'react-bootstrap-icons';
 import { useEffect, useRef, useState } from 'react'; 
 import { useSpring, animated as a } from 'react-spring'
 import AppNav from '../ui/navbar';
-
+import PrivacyModal from '../ui/privacymodal';
+import CookieModal from '../ui/cookiemodal';
+import { useCookies } from 'react-cookie';
+import { useNavigate } from 'react-router-dom';
 export default function Home() {
     const [quoteMoving, setQuoteMoving] = useState(false);
     const [quoteIndex, setQuoteIndex] = useState(0);
     const [quotePicIndex, setQuotePicIndex] = useState(0);
     const [isDisabled, setDisabled] = useState(false); 
+    const [showPrivacyModal, setShowPrivacyModal] = useState(false);
+    const [showContactModal, setShowContactModal] = useState(false);
+    const [showCookiesModal, setShowCookiesModal] = useState(false);
+    const [cookies, setCookie] = useCookies(['ackCookie']);
+    const navigate = useNavigate();
     const springprops = useSpring({ 
         marginTop: quoteMoving ? "150vh" : "5vh",
         onStart: () => { 
@@ -54,7 +62,6 @@ export default function Home() {
             }
         ]
     })
-
     useEffect(() => {
         if(isDisabled) {
             setTimeout(() => {
@@ -62,6 +69,13 @@ export default function Home() {
             }, 1000);
         }
     }, [isDisabled]);
+    const getStarted = () => {
+        if(cookies.ackCookie !== 'acknowledged')
+            setShowCookiesModal(true); 
+        else {
+            navigate('/app/signin');
+        }
+    }
     return (
             <>
                 <style type="text/css">
@@ -151,9 +165,9 @@ export default function Home() {
                         }
                         .home-footer {
                             color: #999999;
-                            font-size: 8pt;
+                            font-size: 16pt;
                             font-weight: 100;
-
+                            padding-bottom: 25px;
                         }
                         .privacy-btn {
                             cursor: pointer; 
@@ -162,6 +176,11 @@ export default function Home() {
                         }
                         .contact-btn {
                             cursor: pointer; 
+                            margin-right: 10px;
+                        }
+                        .cookies-btn {
+                            cursor: pointer; 
+
                         }
                         .privacy-btn:hover,
                         .contact-btn:hover{
@@ -171,6 +190,21 @@ export default function Home() {
                             height: 0px;
                             background-color: transparent;
                         }
+                        .contact-modal {
+                            font-size: 25pt; 
+                            font-weight: 500;
+                            color: #aaaaaa;
+                            background-color: #191919;
+                            padding: 50px;
+                        }    
+                        .contact-title {
+                            font-size: 20pt;
+                            color: #999999;
+                        }         
+                        .cookie-modal-background {
+                            background-color: transparent !important;
+
+                        }
                 `
                 }
                 </style>
@@ -179,7 +213,7 @@ export default function Home() {
                         <div className="title"><span><Icon.ListCheck color='#34dcbe'/> Track, </span></div>
                         <div className="title title2"><span><Icon.HourglassSplit color='#34dcbe' /> Pursue,</span></div>
                         <div className="title title3"><span><Icon.AwardFill color='#34dcbe'/> & Achieve your Goals. </span></div>
-                        <div className="getstarted"><span><Button variant="dark" className="getstartedbtn">Get Started </Button></span></div>
+                        <div className="getstarted"><span><Button variant="dark" className="getstartedbtn" onClick={() => getStarted()}>Get Started </Button></span></div>
                         <a.div className="goals-quotes" style={springprops}>
                             <span className="goals-quote">"{`${mappedQuotes.current.quotes[quoteIndex].quote}`}"</span>                   
                         </a.div>
@@ -188,8 +222,44 @@ export default function Home() {
                         </div>
                 </Container>
                 <Navbar className="home-footer-nav" fixed="bottom">
-                    <div className="home-footer"><span className="privacy-btn">Privacy</span> <span className="contact-btn">Contact</span></div>
+                    <div className="home-footer">
+                        <span className="privacy-btn" onClick={() => setShowPrivacyModal(true)}>Privacy</span> 
+                        <span className="contact-btn" onClick={() => setShowContactModal(true)}>Contact</span>
+                        <span className="cookies-btn" onClick={() => setShowCookiesModal(true)}>Cookies Policy</span>
+                    </div>
                 </Navbar>
+                <Modal
+                    show={showPrivacyModal} 
+                    onHide={() => setShowPrivacyModal(false)}
+                    centered
+                    size="lg"
+                    className="privacy-modal-background"
+                >
+                   <PrivacyModal />
+                </Modal>
+                <Modal
+                    show={showContactModal} 
+                    onHide={() => setShowContactModal(false)}
+                    centered
+                    className="privacy-modal-background"
+                >
+                    <Container className="contact-modal" fluid>
+                        <Row>
+                            <Col className="contact-text">
+                                <p className="contact-title">Questions, concerns, or suggestions? Send me an email:</p>
+                                <p>goaltrackeradm@gmail.com</p>
+                            </Col>
+                        </Row> 
+                    </Container>
+                </Modal>
+                <Modal
+                    show={showCookiesModal} 
+                    centered
+                    className="cookie-modal-background"
+                    onHide={() => setShowCookiesModal(false)}
+                >
+                    <CookieModal />
+                </Modal>
             </>
         )
 }

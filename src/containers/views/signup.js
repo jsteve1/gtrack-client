@@ -33,6 +33,8 @@ export default function Signup() {
     const fileTypes = ["JPEG", "PNG", "GIF", "WEBM", "WEBP", "JPG", "BMP"];
     const [profilePic, setProfilePic] = useState(null);
     const [profilePicPreview, setProfilePicPreview] = useState(null);
+    const [showSignupError, setShowSignupError] = useState(false);
+    const [signupError, setSignupError] = useState("");
     const checkProfileFields = () => {
         if(!evalName(fnameRef.current.value)) {
             console.error("First name is not valid. Cannot sign up");
@@ -57,32 +59,47 @@ export default function Signup() {
         return true;
     }
     const submitSignup = async () => {
+        setShowSignupError(false);
         setShowSignupSpinner(true);
         if(!checkProfileFields()) {
             console.error("Error while checking sign up fields.");
+            setShowSignupError(true);
             return;
         }
-        const res = await fetch(`${process.env.APP_DOMAIN}/api/user/create`, {
-            method: "POST",
-            body: JSON.stringify({
-                "fname": `${fnameRef.current.value}`,
-                "lname": `${lnameRef.current.value}`,
-                "email": `${emailRef.current.value}`,
-                "pw": `${pwRef.current.value}`,
-                "private": privateBoolRef.current.checked, 
-                "media": [],
-                "bio":  `${bioRef.current.value}`
-            }),
-            headers: {
-                "content-type": "application/json"
+        try {
+            const res = await fetch(`${process.env.APP_DOMAIN}/api/user/create`, {
+                method: "POST",
+                body: JSON.stringify({
+                    "fname": `${fnameRef.current.value}`,
+                    "lname": `${lnameRef.current.value}`,
+                    "email": `${emailRef.current.value}`,
+                    "pw": `${pwRef.current.value}`,
+                    "private": privateBoolRef.current.checked, 
+                    "media": [],
+                    "bio":  `${bioRef.current.value}`
+                }),
+                headers: {
+                    "content-type": "application/json"
+                }
+            })
+            const body = await res.json();
+            console.log(body);
+            if(body.id && body.email === emailRef.current.value) {
+                setSuccessModalShow(true);
+            } else {
+                if(body.statusCode === 400) {
+                    setSignupError("authorization error with the server");
+                }
+                if(body.statusCode === 500) {
+                    setSignupError("internal server error");
+                }
             }
-        })
-        const body = await res.json();
-        console.log(body);
-        if(body.id && body.email === emailRef.current.value) {
-            setSuccessModalShow(true);
-        }
-        setShowSignupSpinner(false);
+            setShowSignupSpinner(false);
+        } catch(err) {
+            console.error("Error while attempting to signup. Please try again or contact the page administrator.");
+            setShowSignupSpinner(false);
+            setShowSignupError(true);
+        }     
     }
     const handleChange = (file) => {
         console.log(file);
@@ -253,6 +270,12 @@ export default function Signup() {
                             color: #34dcbe; 
                             font-weight: 700;
                         }
+                        .signup-error {
+                            color: darkred; 
+                            font-weight: 100; 
+                            font-size: 16pt;
+                            margin-top: 25px;
+                        }
                     `
                 }
                 </style>
@@ -379,12 +402,17 @@ export default function Signup() {
                                             </Button>
                                         </Col>) : (
                                             <Col xs="12" sm="4" className="mt-3 d-flex justify-content-center">
-                                                <img onClick={() => setModalShow(true)} className="profile-preview" src={profilePicPreview} />
+                                                <img alt="Profile Pic Preview" onClick={() => setModalShow(true)} className="profile-preview" src={profilePicPreview} />
                                                 <CloseButton variant="white" onClick={() => {setProfilePic(null)}}/>
                                              </Col>   
                                         )
                                 }
                             </Row>
+                            {(showSignupError) ? (<Row>
+                                <Col className="d-flex justify-content-center">
+                                    <span className="signup-error">An error occured while attempting to create a new account. {`${signupError}`}</span>
+                                </Col>
+                                </Row>): ""}
                         </Col>
                         <Col xs="1" />
                     </Row>
