@@ -22,37 +22,37 @@ export default function Router() {
             <>
             <style type="text/css">
             {
-                // `
-                // .fadeIn {
-                //     animation: 0.5s fadeIn forwards;
-                //   }
+                `
+                .fadeIn {
+                    animation: 0.3s fadeIn forwards;
+                  }
                   
-                //   .fadeOut {
-                //     animation: 0.5s fadeOut forwards;
-                //   }
+                  .fadeOut {
+                    animation: 0.3s fadeOut forwards;
+                  }
                   
-                //   @keyframes fadeIn {
-                //     from {
-                //       opacity: 0;
-                //       transform: translate(-20px, 0);
-                //     }
-                //     to {
-                //       opacity: 1;
-                //       transform: translate(0px, 0px);
-                //     }
-                //   }
+                  @keyframes fadeIn {
+                    from {
+                      opacity: .1;
+                      transform: translate(-20px, 0px);
+                    }
+                    to {
+                      opacity: 1;
+                      transform: translate(0px, 0px);
+                    }
+                  }
                   
-                //   @keyframes fadeOut {
-                //     from {
-                //       opacity: 1;
-                //       transform: translate(0px, 0px);
-                //     }
-                //     to {
-                //       transform: translate(-20px, 0);
-                //       opacity: 0;
-                //     }
-                //   }
-                // `
+                  @keyframes fadeOut {
+                    from {
+                      opacity: 1;
+                      transform: translate(0px, 0px);
+                    }
+                    to {
+                      transform: translate(20px, 0px);
+                      opacity: .1;
+                    }
+                  }
+                `
             }
             </style>
             <div 
@@ -64,7 +64,6 @@ export default function Router() {
                     }
                 }}
             >
-                <React.Fragment>
                     <Routes location={displayLocation}>    
                         <Route path="/about" element={ <AboutView /> }/>
                         <Route path="/home" element={ <Home /> } />
@@ -80,7 +79,6 @@ export default function Router() {
                         <Route path="/app/profile" />
                         <Route path="/" element={<Home />} />
                     </Routes>
-                </React.Fragment>
             </div>
         </>
         )

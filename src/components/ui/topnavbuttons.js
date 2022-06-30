@@ -5,6 +5,7 @@ import {
     NavDropdown,
     Button
 } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 export default function TopnavButtons() {
     return (
         <>
@@ -72,12 +73,15 @@ export default function TopnavButtons() {
             .hidden-link {
                 display: none;
             }
+            .link-no-underline {
+                text-decoration: none;
+            }
             `
         }
         </style>
         <Container className="topnavbuttonscont border-bottom border-dark pb-3" fluid>
-            <Navbar.Brand className="topnavbuttonsbrand" href="/home">Goals App</Navbar.Brand>
-            <Nav.Link className="link-color link-font-size nav-button-spacing" href="/about">About</Nav.Link>
+            <Link className="topnavbuttonsbrand link-no-underline " to="/home">Goals App</Link>
+            <Link className="link-color link-font-size nav-button-spacing link-no-underline " to="/about">About</Link>
             <Navbar.Toggle aria-controls="navbarScroll" />
             <Navbar.Collapse id="navbarScroll" className="justify-content-end">
                 <Nav
@@ -86,8 +90,8 @@ export default function TopnavButtons() {
                     navbarScroll
                 >
                     <Button className="signup-button" onClick={ () => document.getElementById("hidden-sign-up-link").click() }>Sign Up</Button>
-                    <Nav.Link className="link-color link-font-size nav-button-spacing"  href="/app/signin">Login</Nav.Link>
-                    <Nav.Link className="hidden-link" id="hidden-sign-up-link" href="/app/signup" />         
+                    <Link className="link-color link-no-underline link-font-size nav-button-spacing"  to="/app/signin">Login</Link>
+                    <Link className="hidden-link " id="hidden-sign-up-link" to="/app/signup" />         
                 </Nav>
                 </Navbar.Collapse>
         </Container>

@@ -1,22 +1,69 @@
-import { Container, Row, Col, Form, FloatingLabel, Button } from 'react-bootstrap';
+import { Container, Row, Col, Form, FloatingLabel, Button, Spinner } from 'react-bootstrap';
 import { useState, useRef } from 'react';
 import { evalEmail, evalPw } from '../../app/utils';
 import mtn from '../../static/images/mtn.jpg';
+import { login } from '../../app/features/users/userSlice'; 
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import AppNav from '../ui/navbar';
 
 export default function Signin() {
     const [emailValid, setEmailValid] = useState(true); 
     const [pwValid, setPwValid] = useState(true);
+    const [loginLoading, setLoginLoading] = useState(false);
+    const [loginError, setShowLoginError] = useState(false);
     const emailRef = useRef(null);
     const pwRef = useRef(null);
-    const submitLogin = () => {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const checkLogin = () => {
         if(!evalEmail(emailRef.current.value)) {
             setEmailValid(false);
-            return;
+            console.error("Email is invalid, cannot login")
+            return false;
         } else setEmailValid(true); 
         if(!evalPw(pwRef.current.value)) {
             setPwValid(false);
-            return;
-        } else setPwValid(true); 
+            console.error("Password is invalid, cannot login")
+            return false;
+        } else setPwValid(true);
+        return true;
+    }
+    const submitLogin = async () => {
+       setLoginLoading(true);
+       setShowLoginError(false); 
+       if(!checkLogin()) {
+        console.error("Error while logging in, parameters are incorrectly formatted");
+        return;
+       }
+       try {
+        const res = await fetch(`http://localhost:3000/api/signon/login`, {
+            method: "POST",
+            headers: {
+                "content-type": "application/json"
+            },
+            body: JSON.stringify({
+                email: `${emailRef.current.value}`,
+                password: `${pwRef.current.value}`
+            })
+           });
+           const body = await res.json(); 
+           console.log(body);
+           if(body.user.id && body.user.email === emailRef.current.value) {
+            setLoginLoading(false);
+            dispatch(login(body.user));
+            navigate('/home', { replace: true });
+           } else {
+                setLoginLoading(false);
+                setShowLoginError(true);
+                return;
+           }
+       } catch(err) {
+        setLoginLoading(false);
+        setShowLoginError(true);
+        return;
+       }
+
     }
     return (
             <>
@@ -105,9 +152,14 @@ export default function Signin() {
                         .total-height {
                             height: max(100vh, 1000px);
                         }
+                        .col-error-logging-in {
+                            color: darkred; 
+                            font-weight: 100;
+                        }
                     `
                 }
                 </style>    
+                <AppNav />
                 <div className="total-height">
                     <Container fluid className="signin-cont">
                         <Row className="signin-row d-flex justify-content-center">
@@ -151,22 +203,19 @@ export default function Signin() {
                                 <Row>
                                     <Col xs="1" sm="3"/>
                                     <Col className="d-flex justify-content-center">
-                                        <Button variant="dark" className="login-button" onClick={() => submitLogin()}>Login</Button>
+                                        <Button variant="dark" className="login-button" onClick={() => submitLogin()}>
+                                         {(loginLoading) ? <Spinner animation="border" /> : "Login" }
+                                        </Button>
                                     </Col>
                                     <Col xs="1" sm="3"/>
                                 </Row>
-                                <Row>
-                                    <Col xs="1" sm="3"/>
-                                    <Col className="d-flex justify-content-center align-items-center mt-5 col-remember-me">
-                                        Remember me&nbsp;&nbsp;&nbsp;<Form.Check 
-                                            type="switch"
-                                            id="remember-me-custom-switch"
-                                            className="private-switch"
-                                            variant="dark"
-                                        />
-                                    </Col>
-                                    <Col xs="1" sm="3"/>
-                                </Row>
+                                {
+                                    (loginError) ? (<Row>
+                                        <Col className="d-flex justify-content-center align-items-center mt-5 col-remember-me col-error-logging-in">
+                                            Error while logging In. Please make sure your email and password are correct               
+                                        </Col> 
+                                        </Row>) : ""  
+                                }
                                 <Row>
                                 <Col xs="1" sm="3"/>
                                     <Col className="d-flex justify-content-center align-items-center mt-5 col-remember-me">

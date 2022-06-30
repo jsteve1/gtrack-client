@@ -2,6 +2,7 @@ import { Container, Row, Col,Button } from 'react-bootstrap';
 import * as Icon from 'react-bootstrap-icons';
 import clean from '../../static/images/clean.jpg';
 import messy from '../../static/images/messy.jpg';
+import AppNav from '../ui/navbar';
 export default function AboutView() {
     return (
             <>
@@ -9,7 +10,6 @@ export default function AboutView() {
                 {
                     `
                         .about-cont {
-                            margin-top: 80px; 
                             font-size: 50pt; 
                             color: #4dcbe3;
                             text-align: center;
@@ -120,6 +120,7 @@ export default function AboutView() {
                     `
                 }
                 </style>
+                <AppNav />
                 <Container className="about-cont" fluid>
                     <Row className="row-about-img">
                         <Col xs="6" className="messy-room">

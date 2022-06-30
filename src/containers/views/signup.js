@@ -1,9 +1,11 @@
-import { Container, Row, Col, Form, Button, FloatingLabel, Tooltip, OverlayTrigger, Modal, CloseButton, Navbar } from 'react-bootstrap';
+import { Container, Row, Col, Form, Button, FloatingLabel, Tooltip, OverlayTrigger, Modal, CloseButton, Navbar, Spinner } from 'react-bootstrap';
 import * as Icon from 'react-bootstrap-icons';
 import { useRef, useState, useEffect } from 'react';
 import mtn from '../../static/images/mtn.jpg';
 import { FileUploader } from "react-drag-drop-files";
 import { evalPw, evalName, evalBio, evalEmail } from '../../app/utils';
+import { Link } from 'react-router-dom';
+import AppNav from '../ui/navbar';
 
 const renderPrivateProfileTooltip = (props) => (
     <Tooltip id="button-tooltip" {...props}>
@@ -12,9 +14,9 @@ const renderPrivateProfileTooltip = (props) => (
   );
 
 export default function Signup() {
+    const [showSignupSpinner, setShowSignupSpinner] = useState(false);
     const [uploadModalShow, setModalShow] = useState(false);
-    // const handleClose = () => setModalShow(false);
-    // const handleShow = () => setModalShow(true);
+    const [successModalShow, setSuccessModalShow] = useState(false);
     const [fNameValid, setfNameValid] = useState(true); 
     const [lNameValid, setlNameValid] = useState(true); 
     const [emailValid, setEmailValid] = useState(true); 
@@ -27,9 +29,61 @@ export default function Signup() {
     const pwRef = useRef(null);
     const pw2Ref = useRef(null);
     const bioRef = useRef(null);
-    const fileTypes = ["JPEG", "PNG", "GIF"];
+    const privateBoolRef = useRef(null);
+    const fileTypes = ["JPEG", "PNG", "GIF", "WEBM", "WEBP", "JPG", "BMP"];
     const [profilePic, setProfilePic] = useState(null);
     const [profilePicPreview, setProfilePicPreview] = useState(null);
+    const checkProfileFields = () => {
+        if(!evalName(fnameRef.current.value)) {
+            console.error("First name is not valid. Cannot sign up");
+            return false;
+        }
+        if(!evalName(lnameRef.current.value)) {
+            console.error("Last name is not valid. Cannot sign up");
+            return false;
+        }
+        if(!evalEmail(emailRef.current.value)) {
+            console.error("Email is not valid. Cannot sign up");
+            return false;
+        }
+        if(!evalPw(pwRef.current.value) || pwRef.current.value !== pw2Ref.current.value) {
+            console.error("Password is not valid or does not match. Cannot sign up");
+            return false;
+        }
+        if(!evalBio(bioRef.current.value)) {
+            console.error("Biography is not valid. Cannot sign up");
+            return false;
+        }
+        return true;
+    }
+    const submitSignup = async () => {
+        setShowSignupSpinner(true);
+        if(!checkProfileFields()) {
+            console.error("Error while checking sign up fields.");
+            return;
+        }
+        const res = await fetch(`http://localhost:3000/api/user/create`, {
+            method: "POST",
+            body: JSON.stringify({
+                "fname": `${fnameRef.current.value}`,
+                "lname": `${lnameRef.current.value}`,
+                "email": `${emailRef.current.value}`,
+                "pw": `${pwRef.current.value}`,
+                "private": privateBoolRef.current.checked, 
+                "media": [],
+                "bio":  `${bioRef.current.value}`
+            }),
+            headers: {
+                "content-type": "application/json"
+            }
+        })
+        const body = await res.json();
+        console.log(body);
+        if(body.id && body.email === emailRef.current.value) {
+            setSuccessModalShow(true);
+        }
+        setShowSignupSpinner(false);
+    }
     const handleChange = (file) => {
         console.log(file);
         setProfilePic(file);
@@ -161,14 +215,48 @@ export default function Signup() {
                             width: 100%;
                             color: #aaaaaa;
                             border: dashed 1px #aaaaaa;
+                            font-size: 24pt;
                         }
                         .navbar-signup-bottom {
                             background-color: transparent;
                             padding-bottom: 50px;
                         }
+                        .user-created-modal-col {
+                            color: #aaaaaa;
+                            font-size: 20pt; 
+                            font-weight: 500;
+                        }
+                        .user-created-modal-note {
+                            color: #999999;
+                            font-style: italic;
+                            font-size: 10pt; 
+                            font-weight: 100;
+                        }
+                        .user-created-send-again {
+                            color: #888888;
+                            cursor: pointer; 
+                            font-size: 12pt; 
+                            font-weight: 100;
+                            margin-top: 40px;
+                        }
+                        .user-created-send-again:hover {
+                            color: #34dcbe;
+                        }
+                        .success-background {
+                            background-color: rgba(7,7,7,0.7);
+                        }
+                        .success-modal-cont {
+                            background-color: #151515;
+                            padding: 35px;
+                        }
+                        .login-success-link {
+                            color: #34dcbe; 
+                            font-weight: 700;
+                        }
                     `
                 }
                 </style>
+                <AppNav />
                 <div className="total-height">      
                 <Container className="signup-cont" fluid>
                     <Row className="d-flex justify-content-center">
@@ -272,6 +360,7 @@ export default function Signup() {
                                             id="custom-switch"
                                             className="private-switch"
                                             variant="dark"
+                                            ref={privateBoolRef}
                                         />
                                     </span>&nbsp;&nbsp;
                                     <OverlayTrigger
@@ -316,9 +405,39 @@ export default function Signup() {
                         classes="drop-area"
                     />
                 </Modal>
+                <Modal
+                    show={successModalShow} 
+                    onHide={() => setSuccessModalShow(false)}
+                    centered
+                    className="success-background"
+                    >
+                    <Container className="success-modal-cont" fluid>
+                        <Row>
+                            <Col />
+                            <Col xs="8" className="d-flex justify-content-center user-created-modal-col">
+                                <span>User successfully created. Check your inbox for a confirmation email and <Link to="/app/signin" className="login-success-link">login!</Link></span>
+                            </Col>
+                            <Col />
+                        </Row>
+                        <Row>
+                            <Col />
+                            <Col xs="8" className="d-flex justify-content-center user-created-modal-note">
+                                {`(Please note emails may take up to 15 minutes to receive)`}
+                            </Col>
+                            <Col />
+                        </Row>
+                        <Row>
+                            <Col />
+                            <Col xs="8" className="d-flex justify-content-center user-created-send-again">
+                                Didn't receive the email? Click here to try again
+                            </Col>
+                            <Col />
+                        </Row>
+                    </Container>
+                </Modal>
                 <Navbar className="d-flex justify-content-center navbar-signup-bottom" fixed="bottom">
-                    <Button variant="dark" className="signup-button signup-button-ctm">
-                        Complete Signup <Icon.Check />
+                    <Button variant="dark" className="signup-button signup-button-ctm" onClick={() => submitSignup()}>
+                        {(showSignupSpinner) ? <Spinner animation="border" /> : (<>{`Complete Signup`} <Icon.Check /></>)}
                     </Button>
                 </Navbar>
             </>

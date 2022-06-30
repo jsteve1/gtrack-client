@@ -8,6 +8,7 @@ import goggins from '../../static/images/goggins.jpg';
 import * as Icon from 'react-bootstrap-icons';
 import { useEffect, useRef, useState } from 'react'; 
 import { useSpring, animated as a } from 'react-spring'
+import AppNav from '../ui/navbar';
 
 export default function Home() {
     const [quoteMoving, setQuoteMoving] = useState(false);
@@ -67,12 +68,12 @@ export default function Home() {
                 {
                     `
                         .home-cont {
-                            margin-top: 80px !important;
+                            padding-top: 80px;
                             text-align: center;
                             background-image: url("${mappedQuotes.current.quotes[quotePicIndex].img}");
                             background-repeat: no-repeat;
                             height: 1080px;
-                            max-height: 90vh;
+                            max-height: 100vh;
                             ${(quotePicIndex > 3) ? "background-position: 70% 0%;" : " background-position: 50% 0%; " }
                             background-size: cover;
                             transition: background 1.0s ease;
@@ -173,6 +174,7 @@ export default function Home() {
                 `
                 }
                 </style>
+                <AppNav />
                 <Container fluid className="home-cont">
                         <div className="title"><span><Icon.ListCheck color='#34dcbe'/> Track, </span></div>
                         <div className="title title2"><span><Icon.HourglassSplit color='#34dcbe' /> Pursue,</span></div>
