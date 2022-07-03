@@ -1,6 +1,6 @@
-import { Container, Row, Col } from 'react-bootstrap';
+import { Container, Row, Col, CloseButton } from 'react-bootstrap';
 
-export default function PrivacyModal() {
+export default function PrivacyModal({ setShowPrivacyModal }) {
     return (
         <>
             <style type="text/css">
@@ -15,6 +15,9 @@ export default function PrivacyModal() {
                 }
             </style>
             <Container fluid className="privacy-cont">
+            <Row className="d-flex justify-content-end">
+                <CloseButton variant="white" onClick={() => setShowPrivacyModal(false) } />
+            </Row>
             <Row>
                 <Col className="">
                 <p>

@@ -1,8 +1,6 @@
-import { Container, Row, Col,Button } from 'react-bootstrap';
-import * as Icon from 'react-bootstrap-icons';
+import { Container, Row, Col } from 'react-bootstrap';
 import clean from '../../static/images/clean.jpg';
 import messy from '../../static/images/messy.jpg';
-import AppNav from '../ui/navbar';
 export default function AboutView() {
     return (
             <>
@@ -12,7 +10,9 @@ export default function AboutView() {
                         .about-cont {
                             font-size: 50pt; 
                             color: #4dcbe3;
-                            text-align: center;
+                            text-align: center; 
+                            height: 100vh;
+                            background-color: #171717;
                         }
                         .title-about {
                             font-weight: 500; 
@@ -38,10 +38,11 @@ export default function AboutView() {
                             margin-top: 75px;
                         }
                         .row-about-1 {
+                            padding-top: 150px;
                         }
                         .row-about-2,
                         .row-about-4  {
-                            background-color: #212121;
+                            background-color: #171717;
                         }
                         .row-about-3 {
                             background-color: #171717;
@@ -120,16 +121,17 @@ export default function AboutView() {
                     `
                 }
                 </style>
-                <AppNav />
                 <Container className="about-cont" fluid>
-                    <Row className="row-about-img">
-                        <Col xs="6" className="messy-room">
+                    {
+                        // <Row className="row-about-img">
+                        // <Col xs="6" className="messy-room">
 
-                        </Col>
-                        <Col xs="6" className="clean-room">
+                        // </Col>
+                        // <Col xs="6" className="clean-room">
 
-                        </Col>
-                    </Row>
+                        // </Col>
+                        // </Row>
+                    }
                     <Row className="row-about-1">
                         <Col xs='12' className="title-about">Slacker tested. Slacker approved.</Col>                         
                     </Row>
@@ -143,7 +145,7 @@ export default function AboutView() {
                         <Col xs='6' className="title-about-3">Utilizing reminders, timelines, and user-friendly design, Goals App's aim is to aid in countless achievements and develop its users to their potential.</Col> 
                         <Col xs="2"/>
                     </Row>
-                    </Container>
+                </Container>
             </>
         )
 }

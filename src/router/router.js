@@ -10,16 +10,13 @@ import Signup from '../containers/views/signup';
 import React, { useState, useEffect } from "react";
 import { useSelector } from 'react-redux';
 import { loggedIn } from "../app/features/users/userSlice";
-
 export default function Router() {
     const location = useLocation();
     const [displayLocation, setDisplayLocation] = useState(location);
     const [transitionStage, setTransistionStage] = useState("fadeIn");
-
     useEffect(() => {
-        if (location !== displayLocation) setTransistionStage("fadeOut");
+        if (location.pathname !== displayLocation.pathname) setTransistionStage("fadeOut");
       }, [location, displayLocation]);
-
     return ( 
             <>
             <style type="text/css">
@@ -65,7 +62,7 @@ export default function Router() {
                     setDisplayLocation(location);
                     }
                 }}
-            >
+            >                
                     <Routes location={displayLocation}>    
                         <Route path="/about" element={ <AboutView /> }/>
                         <Route path="/home" element={ <Home /> } />

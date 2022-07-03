@@ -1,21 +1,14 @@
-import { Container, Row, Col, Form, Button, FloatingLabel, Tooltip, OverlayTrigger, Modal, CloseButton, Navbar, Spinner } from 'react-bootstrap';
+import { Container, Row, Col, Form, Button, FloatingLabel, Tooltip, OverlayTrigger, CloseButton, Navbar, Spinner } from 'react-bootstrap';
 import * as Icon from 'react-bootstrap-icons';
 import { useRef, useState, useEffect } from 'react';
-import mtn from '../../static/images/mtn.jpg';
-import { FileUploader } from "react-drag-drop-files";
-import { evalPw, evalName, evalBio, evalEmail } from '../../app/utils';
-import { Link } from 'react-router-dom';
-import AppNav from '../ui/navbar';
-
-const renderPrivateProfileTooltip = (props) => (
-    <Tooltip id="button-tooltip" {...props}>
-      If selected, this profile, its data, and its goals won't be seen by other app users 
-    </Tooltip>
-  );
+import { evalPw, evalName, evalBio, evalEmail, checkProfileFields } from '../../app/utils';
+import UploadModal from '../ui/uploadmodal';
+import SignupSuccessModal from '../ui/successmodal';
+import SignupStyle from '../../styles/containers/views/SignupStyle';
 
 export default function Signup() {
     const [showSignupSpinner, setShowSignupSpinner] = useState(false);
-    const [uploadModalShow, setModalShow] = useState(false);
+    const [uploadModalShow, setUploadModalShow] = useState(false);
     const [successModalShow, setSuccessModalShow] = useState(false);
     const [fNameValid, setfNameValid] = useState(true); 
     const [lNameValid, setlNameValid] = useState(true); 
@@ -23,6 +16,11 @@ export default function Signup() {
     const [pwValid, setPwValid] = useState(true); 
     const [pw2Valid, setPw2Valid] = useState(true); 
     const [bioValid, setBioValid] = useState(true); 
+    const [profilePic, setProfilePic] = useState(null);
+    const [profilePicPreview, setProfilePicPreview] = useState(null);
+    const [showSignupError, setShowSignupError] = useState(false);
+    const [signupError, setSignupError] = useState("");
+
     const fnameRef = useRef(null);
     const lnameRef = useRef(null);
     const emailRef = useRef(null);
@@ -30,44 +28,37 @@ export default function Signup() {
     const pw2Ref = useRef(null);
     const bioRef = useRef(null);
     const privateBoolRef = useRef(null);
-    const fileTypes = ["JPEG", "PNG", "GIF", "WEBM", "WEBP", "JPG", "BMP"];
-    const [profilePic, setProfilePic] = useState(null);
-    const [profilePicPreview, setProfilePicPreview] = useState(null);
-    const [showSignupError, setShowSignupError] = useState(false);
-    const [signupError, setSignupError] = useState("");
-    const checkProfileFields = () => {
-        if(!evalName(fnameRef.current.value)) {
-            console.error("First name is not valid. Cannot sign up");
-            return false;
+
+    useEffect(() => {
+        if(!profilePic) {
+            setProfilePicPreview(null); 
+            return;
         }
-        if(!evalName(lnameRef.current.value)) {
-            console.error("Last name is not valid. Cannot sign up");
-            return false;
-        }
-        if(!evalEmail(emailRef.current.value)) {
-            console.error("Email is not valid. Cannot sign up");
-            return false;
-        }
-        if(!evalPw(pwRef.current.value) || pwRef.current.value !== pw2Ref.current.value) {
-            console.error("Password is not valid or does not match. Cannot sign up");
-            return false;
-        }
-        if(!evalBio(bioRef.current.value)) {
-            console.error("Biography is not valid. Cannot sign up");
-            return false;
-        }
-        return true;
-    }
+        const objectUrl = URL.createObjectURL(profilePic);
+        setProfilePicPreview(objectUrl); 
+
+        return () => URL.revokeObjectURL(objectUrl); 
+    }, [profilePic] );
+
     const submitSignup = async () => {
         setShowSignupError(false);
         setShowSignupSpinner(true);
-        if(!checkProfileFields()) {
+        if(!checkProfileFields(
+            {
+                fname: `${fnameRef.current.value}`,
+                lname: `${lnameRef.current.value}`,
+                email: `${emailRef.current.value}`,
+                pw: `${pwRef.current.value}`,
+                pw2: `${pw2Ref.current.value}`,
+                bio: `${bioRef.current.value}`
+            }
+        )) {
             console.error("Error while checking sign up fields.");
             setShowSignupError(true);
             return;
         }
         try {
-            const res = await fetch(`${process.env.APP_DOMAIN}/api/user/create`, {
+            const res = await fetch(`${process.env.REACT_APP_APP_DOMAIN}/api/user/create`, {
                 method: "POST",
                 body: JSON.stringify({
                     "fname": `${fnameRef.current.value}`,
@@ -101,185 +92,10 @@ export default function Signup() {
             setShowSignupError(true);
         }     
     }
-    const handleChange = (file) => {
-        console.log(file);
-        setProfilePic(file);
-        setModalShow(false);
-    };
-    useEffect(() => {
-        if(!profilePic) {
-            setProfilePicPreview(null); 
-            return;
-        }
-        const objectUrl = URL.createObjectURL(profilePic);
-        setProfilePicPreview(objectUrl); 
-
-        return () => URL.revokeObjectURL(objectUrl); 
-    }, [profilePic] )
 
     return (
             <>
-                <style type="text/css">
-                {
-                    `
-                    .profile-preview {
-                        max-height: 120px;
-                        border-radius: 20px;
-                    }
-                    .profile-preview:hover {
-                        filter: brightness(0.7);
-                        cursor: pointer;
-                    }
-                    .file-select {
-                        color: #aaaaaa;
-                    }    
-                    .signup-cont {
-                            padding-top: 100px;
-                            color: #191919;
-                            background-image: url(${mtn});
-                            background-size: cover;
-                            background-position: center top;
-                            height: 100% !important;
-                        }
-                        .signup-col {
-                            background-color: rgba(3, 3, 3, 0.9);
-                            padding: 35px;
-                            border-radius: 10px;
-                            max-height: 100%;
-                            max-width: 750px;
-                        }   
-                        .signup-button {
-
-                        }
-                        .private-switch {
-                            color: #aaaaaa;
-                            background-color: transparent;
-                            cursor: pointer;
-                        }
-                        .form-switch .form-check-input {
-                            height: 30px;
-                            width: 50px;
-                            background-color: #404040;
-                            cursor: pointer;
-
-                        }
-                        .form-switch .form-check-input:focus {
-                            border-color: rgba(0, 0, 0, 0.9);
-                            outline: 0;
-                            box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
-                            background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='rgba(0,0,0,0.25)'/></svg>");
-                        }
-                        .form-switch .form-check-input:checked {
-                            background-color: #404040;
-                            border-color: #30D158;
-                            border: none;
-                            background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='rgba(255,255,255,1.0)'/></svg>");
-                        }
-                        .signup-input {
-                            background-color: rgba(20, 20, 20, 0.7);
-                            color: #aaaaaa;
-                            border: none; 
-                            box-shadow: none; 
-                            outline: none;
-
-                        }
-                        .signup-input:hover,                                         
-                        .signup-input:focus, 
-                        .signup-input:active, 
-                        .signup-input:focus-visible {
-                            background-color: #202020;
-                            color: #aaaaaa;
-                            border: none; 
-                            box-shadow: none; 
-                            outline: none;
-                        }
-                        .signup-title-row {
-                            color: #aaaaaa;
-                            font-size: 4vh;
-                            font-weight: 500;
-                        }
-                        .floating-label-color  {
-                            color: #aaaaaa;
-                        }
-                        .private-profile-text {
-                            color: #aaaaaa;
-                            margin-right: 20px;
-                            margin-top: 5px;
-                        }
-                        .addprofilepic-button {
-                            padding: 15px; 
-                            font-size: 16pt;
-                            border-radius: 15px;
-                            font-weight: 400;
-                            max-height: 100px;
-                        }
-                        .signup-button-ctm {
-                            font-size: 25pt;
-                            font-weight: 700;
-                            background-color: #191919;
-                            border-radius: 15px;
-                        }
-                        .total-height {
-                            height: max(100vh, 1000px);
-                        }
-                        .private-profile-info {
-                            color: #404040;
-                            cursor: pointer;
-                        }
-                        .drop-area {
-                            background-color: #191919;
-                            height: 300px;
-                            width: 100%;
-                            color: #aaaaaa;
-                            border: dashed 1px #aaaaaa;
-                            font-size: 24pt;
-                        }
-                        .navbar-signup-bottom {
-                            background-color: transparent;
-                            padding-bottom: 50px;
-                        }
-                        .user-created-modal-col {
-                            color: #aaaaaa;
-                            font-size: 20pt; 
-                            font-weight: 500;
-                        }
-                        .user-created-modal-note {
-                            color: #999999;
-                            font-style: italic;
-                            font-size: 10pt; 
-                            font-weight: 100;
-                        }
-                        .user-created-send-again {
-                            color: #888888;
-                            cursor: pointer; 
-                            font-size: 12pt; 
-                            font-weight: 100;
-                            margin-top: 40px;
-                        }
-                        .user-created-send-again:hover {
-                            color: #34dcbe;
-                        }
-                        .success-background {
-                            background-color: rgba(7,7,7,0.7);
-                        }
-                        .success-modal-cont {
-                            background-color: #151515;
-                            padding: 35px;
-                        }
-                        .login-success-link {
-                            color: #34dcbe; 
-                            font-weight: 700;
-                        }
-                        .signup-error {
-                            color: darkred; 
-                            font-weight: 100; 
-                            font-size: 16pt;
-                            margin-top: 25px;
-                        }
-                    `
-                }
-                </style>
-                <AppNav />
+                <SignupStyle />
                 <div className="total-height">      
                 <Container className="signup-cont" fluid>
                     <Row className="d-flex justify-content-center">
@@ -389,7 +205,11 @@ export default function Signup() {
                                     <OverlayTrigger
                                         placement="right"
                                         delay={{ show: 0, hide: 400 }}
-                                        overlay={renderPrivateProfileTooltip}
+                                        overlay={
+                                            <Tooltip id="button-tooltip">
+                                                If selected, this profile, its data, and its goals won't be seen by other app users 
+                                            </Tooltip>
+                                        }
                                     >
                                         <Icon.InfoCircle className="private-profile-info" />
                                     </OverlayTrigger>
@@ -397,12 +217,12 @@ export default function Signup() {
                                 {
                                     (profilePic === null) ? ( 
                                         <Col xs="12" sm="4" className="mt-2 d-flex justify-content-center">
-                                            <Button variant="dark" className="addprofilepic-button" onClick={() => setModalShow(true)}>
+                                            <Button variant="dark" className="addprofilepic-button" onClick={() => setUploadModalShow(true)}>
                                                 Add Profile Pic <Icon.Upload />
                                             </Button>
                                         </Col>) : (
                                             <Col xs="12" sm="4" className="mt-3 d-flex justify-content-center">
-                                                <img alt="Profile Pic Preview" onClick={() => setModalShow(true)} className="profile-preview" src={profilePicPreview} />
+                                                <img alt="Profile Pic Preview" onClick={() => setUploadModalShow(true)} className="profile-preview" src={profilePicPreview} />
                                                 <CloseButton variant="white" onClick={() => {setProfilePic(null)}}/>
                                              </Col>   
                                         )
@@ -418,51 +238,8 @@ export default function Signup() {
                     </Row>
                 </Container>    
                 </div>
-                <Modal 
-                    show={uploadModalShow} 
-                    onHide={() => setModalShow(false)}
-                    centered
-                    >
-                    <FileUploader
-                        multiple={false}
-                        handleChange={handleChange}
-                        name="file"
-                        types={fileTypes}
-                        maxSize="8"
-                        minSize="0"
-                        classes="drop-area"
-                    />
-                </Modal>
-                <Modal
-                    show={successModalShow} 
-                    onHide={() => setSuccessModalShow(false)}
-                    centered
-                    className="success-background"
-                    >
-                    <Container className="success-modal-cont" fluid>
-                        <Row>
-                            <Col />
-                            <Col xs="8" className="d-flex justify-content-center user-created-modal-col">
-                                <span>User successfully created. Check your inbox for a confirmation email and <Link to="/app/signin" className="login-success-link">login!</Link></span>
-                            </Col>
-                            <Col />
-                        </Row>
-                        <Row>
-                            <Col />
-                            <Col xs="8" className="d-flex justify-content-center user-created-modal-note">
-                                {`(Please note emails may take up to 15 minutes to receive)`}
-                            </Col>
-                            <Col />
-                        </Row>
-                        <Row>
-                            <Col />
-                            <Col xs="8" className="d-flex justify-content-center user-created-send-again">
-                                Didn't receive the email? Click here to try again
-                            </Col>
-                            <Col />
-                        </Row>
-                    </Container>
-                </Modal>
+                <UploadModal uploadModalShow={uploadModalShow} setUploadModalShow={setUploadModalShow} setProfilePic={setProfilePic} />
+                <SignupSuccessModal successModalShow={successModalShow} setSuccessModalShow={setSuccessModalShow} />
                 <Navbar className="d-flex justify-content-center navbar-signup-bottom" fixed="bottom">
                     <Button variant="dark" className="signup-button signup-button-ctm" onClick={() => submitSignup()}>
                         {(showSignupSpinner) ? <Spinner animation="border" /> : (<>{`Complete Signup`} <Icon.Check /></>)}

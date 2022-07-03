@@ -15,3 +15,27 @@ export const evalEmail = (str) => {
     if(str.length === 0) return true;
     return /(.+)@(.+){2,}\.(.+){2,}/.test(str);
 }
+
+export const checkProfileFields = ({ fname, lname, email, pw, pw2, bio }) => {
+    if(!evalName(fname)) {
+        console.error("First name is not valid. Cannot sign up");
+        return false;
+    }
+    if(!evalName(lname)) {
+        console.error("Last name is not valid. Cannot sign up");
+        return false;
+    }
+    if(!evalEmail(email)) {
+        console.error("Email is not valid. Cannot sign up");
+        return false;
+    }
+    if(!evalPw(pw) || pw !== pw2) {
+        console.error("Password is not valid or does not match. Cannot sign up");
+        return false;
+    }
+    if(!evalBio(bio)) {
+        console.error("Biography is not valid. Cannot sign up");
+        return false;
+    }
+    return true;
+}

@@ -56,6 +56,9 @@ export const goalSlice = createSlice({
     }}
 })
 
+export const selectGoals = (state) => state.goals.goals; 
+export const selectProgressMarkers = (state) => state.goals.progressMarkers;
+
 export const { addGoal, removeGoal, editGoal, addProgressMarker, rmProgressMarker } = goalSlice.actions
 
 export default goalSlice.reducer

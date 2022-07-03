@@ -1,8 +1,8 @@
-import { Container, Row, Col, Button} from 'react-bootstrap';
+import { Container, Row, Col, Button, CloseButton } from 'react-bootstrap';
 import { useCookies } from 'react-cookie'
 import * as Icon from 'react-bootstrap-icons';
 import { useNavigate } from 'react-router-dom';
-export default function CookieModal(){
+export default function CookieModal({ setShowCookieModal }){
     const [cookies, setCookie] = useCookies(['ackCookie']);
     const navigate = useNavigate();
     const setAckCookie = () => {
@@ -39,6 +39,7 @@ export default function CookieModal(){
             }
             </style>
             <Container className="cookie-cont">
+                <Row className="d-flex justify-content-end"><CloseButton variant="white" onClick={() => setShowCookieModal(false) } /></Row>
                 <Row>
                     <Col>
                     {(cookies.ackCookie === 'acknowledged') ? "" : <Button variant="success" className="ack-cookie" onClick={() => setAckCookie()}>Acknowledge <Icon.Check /></Button>}

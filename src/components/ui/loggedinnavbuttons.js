@@ -1,11 +1,40 @@
 import {
     Container,
-    Navbar, 
-    Nav,
-    Button
+    Dropdown
 } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-export default function TopnavButtons() {
+import { forwardRef } from 'react';
+import * as Icon from 'react-bootstrap-icons';
+const CustomProfileDropdown = forwardRef(( { onClick }, ref) => (
+    <>
+    <style type="text/css">
+        {
+            `
+                .icon-person-top-nav {
+                    cursor: pointer;
+                    color: #34aaaa;
+                }
+                .icon-person-top-nav:hover {
+                    transform: scale(1.05); 
+                    color: #34dcbe;
+                }
+            `
+        }
+    </style>
+    <span
+    ref={ref}
+    onClick={(e) => {
+      e.preventDefault();
+      onClick(e);
+    }}
+    className="icon-person-top-nav"
+  >
+    <Icon.PersonCircle className="icon-person-top-nav" width={40} height={40} />
+  </span>
+  </>
+));
+
+export default function LoggedInNavButtons() {
     return (
         <>
         <style type="text/css">
@@ -77,26 +106,23 @@ export default function TopnavButtons() {
             }
             .about-link {
                 margin-top: 10px;
-                margin-right: 10px;
+                margin-right: auto;
             }
             `
         }
         </style>
         <Container className="topnavbuttonscont border-bottom border-dark pb-3 d-flex align-items-baseline" fluid>
-            <Link className="topnavbuttonsbrand link-no-underline " to="/home">Goals App</Link>
+            <Link className="topnavbuttonsbrand link-no-underline" to="/home">Goals App</Link>
             <Link className="link-color link-font-size nav-button-spacing link-no-underline about-link" to="/about">About</Link>
-            <Navbar.Toggle aria-controls="navbarScroll" />
-            <Navbar.Collapse id="navbarScroll" className="justify-content-end">
-                <Nav
-                    className="my-2 my-lg-0 nav-content"
-                    style={{ maxHeight: '150px' }}
-                    navbarScroll
-                >
-                    <Button className="signup-button" onClick={ () => document.getElementById("hidden-sign-up-link").click() }>Sign Up</Button>
-                    <Link className="link-color link-no-underline link-font-size nav-button-spacing"  to="/app/signin">Login</Link>
-                    <Link className="hidden-link " id="hidden-sign-up-link" to="/app/signup" />         
-                </Nav>
-                </Navbar.Collapse>
+            <Dropdown drop={'start'}>
+                <Dropdown.Toggle as={CustomProfileDropdown} id="dropdown-custom-components" />
+                <Dropdown.Menu variant="dark">
+                    <Dropdown.Item><Icon.Person color={"#34dcbe"} /> My Profile</Dropdown.Item>
+                    <Dropdown.Item><Icon.ListCheck color={"#34dcbe"}/> My Goals</Dropdown.Item>
+                    <Dropdown.Divider />
+                    <Dropdown.Item><Icon.Gear color={"#34dcbe"} /> Account Settings</Dropdown.Item>
+                </Dropdown.Menu>
+            </Dropdown>
         </Container>
       </>
     )

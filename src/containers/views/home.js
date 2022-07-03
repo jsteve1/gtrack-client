@@ -1,4 +1,4 @@
-import { Container, Button, Navbar, Modal, Row, Col } from 'react-bootstrap';
+import { Container, Button, Navbar, Modal, Row, Col, CloseButton } from 'react-bootstrap';
 import arnold from '../../static/images/arnold.jpg';
 import arnoldback from '../../static/images/arnoldback.jpg';
 import lesbrown from '../../static/images/lesbrown.png';
@@ -8,7 +8,6 @@ import goggins from '../../static/images/goggins.jpg';
 import * as Icon from 'react-bootstrap-icons';
 import { useEffect, useRef, useState } from 'react'; 
 import { useSpring, animated as a } from 'react-spring'
-import AppNav from '../ui/navbar';
 import PrivacyModal from '../ui/privacymodal';
 import CookieModal from '../ui/cookiemodal';
 import { useCookies } from 'react-cookie';
@@ -21,7 +20,7 @@ export default function Home() {
     const [showPrivacyModal, setShowPrivacyModal] = useState(false);
     const [showContactModal, setShowContactModal] = useState(false);
     const [showCookiesModal, setShowCookiesModal] = useState(false);
-    const [cookies, setCookie] = useCookies(['ackCookie']);
+    const [cookies] = useCookies(['ackCookie']);
     const navigate = useNavigate();
     const springprops = useSpring({ 
         marginTop: quoteMoving ? "150vh" : "5vh",
@@ -92,6 +91,7 @@ export default function Home() {
                             background-size: cover;
                             transition: background 1.0s ease;
                             overflow: hidden;
+                            
                         }
                         .test {
                             color: blue;
@@ -107,13 +107,13 @@ export default function Home() {
                         .goals-quotes-next {
                             color: #34dcbe;
                             font-weight: 300; 
-                            font-size: 3vh;
+                            font-size: 2vh;
                             text-shadow: 1px 1px 5px black;
                             font-style: italic;
                             cursor: pointer;
                             ${isDisabled ? "color: #555555; cursor: not-allowed;" : ""}
                             position: fixed;
-                            top: 75vh;
+                            top: 70%;
                             left: 75vw;
                             border-radius: 10px;
                             padding: 5px;
@@ -173,21 +173,26 @@ export default function Home() {
                             cursor: pointer; 
                             margin-right: 10px;
                             margin-left: 5px;
+                            display: inline-block;
                         }
                         .contact-btn {
                             cursor: pointer; 
                             margin-right: 10px;
+                            display: inline-block;
+
                         }
                         .cookies-btn {
                             cursor: pointer; 
+                            display: inline-block;
 
                         }
                         .privacy-btn:hover,
-                        .contact-btn:hover{
+                        .contact-btn:hover,
+                        .cookies-btn:hover {
                             color: #34dcbe; 
                         }
                         .home-footer-nav {
-                            height: 0px;
+                            margin-top: 15px;
                             background-color: transparent;
                         }
                         .contact-modal {
@@ -205,10 +210,12 @@ export default function Home() {
                             background-color: transparent !important;
 
                         }
+                        .contact-email {
+                            overflow-wrap: break-word;
+                        }
                 `
                 }
                 </style>
-                <AppNav />
                 <Container fluid className="home-cont">
                         <div className="title"><span><Icon.ListCheck color='#34dcbe'/> Track, </span></div>
                         <div className="title title2"><span><Icon.HourglassSplit color='#34dcbe' /> Pursue,</span></div>
@@ -221,8 +228,8 @@ export default function Home() {
                             <span className="goals-quoteright" onClick={() => { if(!isDisabled) { setQuoteMoving(true); setDisabled(true); } }}>Next Quote <Icon.ArrowCounterclockwise /></span>           
                         </div>
                 </Container>
-                <Navbar className="home-footer-nav" fixed="bottom">
-                    <div className="home-footer">
+                <Navbar className="home-footer-nav d-flex justify-content-center" fixed="bottom">
+                    <div className="home-footer d-flex justify-content-center">
                         <span className="privacy-btn" onClick={() => setShowPrivacyModal(true)}>Privacy</span> 
                         <span className="contact-btn" onClick={() => setShowContactModal(true)}>Contact</span>
                         <span className="cookies-btn" onClick={() => setShowCookiesModal(true)}>Cookies Policy</span>
@@ -235,7 +242,7 @@ export default function Home() {
                     size="lg"
                     className="privacy-modal-background"
                 >
-                   <PrivacyModal />
+                   <PrivacyModal setShowPrivacyModal={setShowPrivacyModal} />
                 </Modal>
                 <Modal
                     show={showContactModal} 
@@ -244,10 +251,13 @@ export default function Home() {
                     className="privacy-modal-background"
                 >
                     <Container className="contact-modal" fluid>
+                        <Row className="d-flex justify-content-end">
+                            <CloseButton variant="white" onClick={() => setShowContactModal(false) } />
+                        </Row>
                         <Row>
                             <Col className="contact-text">
                                 <p className="contact-title">Questions, concerns, or suggestions? Send me an email:</p>
-                                <p>goaltrackeradm@gmail.com</p>
+                                <span className="contact-email">goaltrackeradm@gmail.com</span>
                             </Col>
                         </Row> 
                     </Container>
@@ -258,7 +268,7 @@ export default function Home() {
                     className="cookie-modal-background"
                     onHide={() => setShowCookiesModal(false)}
                 >
-                    <CookieModal />
+                    <CookieModal setShowCookieModal={setShowCookiesModal} />
                 </Modal>
             </>
         )

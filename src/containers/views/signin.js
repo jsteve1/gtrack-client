@@ -5,13 +5,14 @@ import mtn from '../../static/images/mtn.jpg';
 import { login } from '../../app/features/users/userSlice'; 
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import AppNav from '../ui/navbar';
-
+import { addGoal, addProgressMarker } from '../../app/features/goals/goalSlice'; 
+import ForgotPwModal from '../ui/forgotpwmodal';
 export default function Signin() {
     const [emailValid, setEmailValid] = useState(true); 
     const [pwValid, setPwValid] = useState(true);
     const [loginLoading, setLoginLoading] = useState(false);
     const [loginError, setShowLoginError] = useState(false);
+    const [forgotPwModalShow, setForgotPwModalShow] = useState(false);
     const emailRef = useRef(null);
     const pwRef = useRef(null);
     const dispatch = useDispatch();
@@ -37,7 +38,7 @@ export default function Signin() {
         return;
        }
        try {
-        const res = await fetch(`${process.env.APP_DOMAIN}/api/signon/login`, {
+        const res = await fetch(`${process.env.REACT_APP_APP_DOMAIN}/api/signon/login`, {
             method: "POST",
             headers: {
                 "content-type": "application/json"
@@ -52,6 +53,15 @@ export default function Signin() {
            if(body.user.id && body.user.email === emailRef.current.value) {
             setLoginLoading(false);
             dispatch(login(body.user));
+            if(body.goals.length > 0) {
+                body.goals.forEach(goal => {
+                    dispatch(addGoal(goal)); 
+                })
+                if(body.progressMarkers.length > 0)
+                    body.progressMarkers.forEach(prgmrk => {
+                        dispatch(addProgressMarker(prgmrk));
+                    })
+            }
             navigate('/home', { replace: true });
            } else {
                 setLoginLoading(false);
@@ -87,7 +97,7 @@ export default function Signin() {
                             height: 100% !important;
                         }
                         .signup-input {
-                            background-color: rgba(20, 20, 20, 0.7);
+                            background-color: rgba(35, 35, 35, 0.7);
                             color: #aaaaaa;
                             border: none; 
                             box-shadow: none; 
@@ -156,10 +166,16 @@ export default function Signin() {
                             color: darkred; 
                             font-weight: 100;
                         }
+                        .forgot-pw {
+                            cursor: pointer;
+                        }
+                        .forgot-pw:hover {
+                            color: #34dcbe;
+                            font-weight: 500;
+                        }
                     `
                 }
                 </style>    
-                <AppNav />
                 <div className="total-height">
                     <Container fluid className="signin-cont">
                         <Row className="signin-row d-flex justify-content-center">
@@ -218,7 +234,7 @@ export default function Signin() {
                                 }
                                 <Row>
                                 <Col xs="1" sm="3"/>
-                                    <Col className="d-flex justify-content-center align-items-center mt-5 col-remember-me">
+                                    <Col className="d-flex justify-content-center align-items-center mt-5 col-remember-me forgot-pw" onClick={() => setForgotPwModalShow(true)}>
                                         Forgot Password                
                                     </Col>
                                     <Col xs="1" sm="3"/>
@@ -228,6 +244,7 @@ export default function Signin() {
                         </Row>
                     </Container>
                 </div>
+                <ForgotPwModal forgotPwModalShow={forgotPwModalShow} setForgotPwModalShow={setForgotPwModalShow} />
             </>
         )
 }
