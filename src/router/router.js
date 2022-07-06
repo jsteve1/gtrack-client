@@ -10,6 +10,7 @@ import Signup from '../containers/views/signup';
 import React, { useState, useEffect } from "react";
 import { useSelector } from 'react-redux';
 import { loggedIn } from "../app/features/users/userSlice";
+import AppHomeView from '../containers/views/apphome';
 export default function Router() {
     const location = useLocation();
     const [displayLocation, setDisplayLocation] = useState(location);
@@ -69,6 +70,11 @@ export default function Router() {
                         <Route path="/app">
                             <Route path="signin" element={ <Signin /> } />
                             <Route path="signup" element={ <Signup /> } />
+                            <Route path="home" element={
+                                // <RequireAuth>
+                                  <AppHomeView /> 
+                                //</RequireAuth>
+                              } />
                             <Route path="account" element={
                               <RequireAuth>
                               <div>

@@ -2,8 +2,10 @@ import { Navbar, Container, Row, Col, OverlayTrigger, Tooltip } from 'react-boot
 import * as Icon from 'react-bootstrap-icons';
 import { useSelector } from 'react-redux';
 import { loggedIn } from '../../app/features/users/userSlice';
+import { useNavigate } from 'react-router-dom';
 export default function BottomNav() {
     const _loggedIn = useSelector(loggedIn);
+    const navigate = useNavigate();
     return (
         (_loggedIn) ? (
             <>
@@ -11,7 +13,8 @@ export default function BottomNav() {
                 {
                     `
                         .nav-bottom-logged-in {
-
+                            margin-bottom: -10px;
+                            width: 105vw;
                         }
                         .nav-bottom-logged-in-cont {
 
@@ -21,6 +24,7 @@ export default function BottomNav() {
                             cursor: pointer;
                             transition: all ease 0.2s;
                             color: #34aaaa;
+                            background-color: rgba(19, 19, 19, 0.9);
                         }
                         .icon-select-bottom-nav:hover {
                             background-color: #252525;
@@ -36,7 +40,7 @@ export default function BottomNav() {
                 <Navbar fixed="bottom" className="nav-bottom-logged-in">
                     <Container fluid className="h-100 nav-bottom-logged-in-cont w-100">
                         <Row className="w-100 h-100">
-                            <Col xs="4" className="p-2 h-100 d-flex justify-content-center icon-select-bottom-nav">
+                            <Col xs="4" onClick={() => navigate('/app/home')} className="p-2 h-100 d-flex justify-content-center icon-select-bottom-nav">
                                 <OverlayTrigger
                                     placement="top"
                                     delay={{ show: 250, hide: 400 }}
@@ -49,7 +53,7 @@ export default function BottomNav() {
                                     <Icon.HouseDoorFill width={45} height={45} />
                                 </OverlayTrigger>
                             </Col>
-                            <Col xs="4" className="p-2 d-flex justify-content-center icon-select-bottom-nav">
+                            <Col xs="4"  onClick={() => navigate('/app/goals')} className="p-2 d-flex justify-content-center icon-select-bottom-nav">
                                 <OverlayTrigger
                                     placement="top"
                                     delay={{ show: 250, hide: 400 }}
@@ -62,7 +66,7 @@ export default function BottomNav() {
                                     <Icon.ListCheck width={45} height={45} />
                                 </OverlayTrigger>
                             </Col>
-                            <Col xs="4" className="p-2 d-flex justify-content-center icon-select-bottom-nav">
+                            <Col xs="4"  onClick={() => navigate('/app/goals')}  className="p-2 d-flex justify-content-center icon-select-bottom-nav">
                                 <OverlayTrigger
                                     placement="top"
                                     delay={{ show: 250, hide: 400 }}

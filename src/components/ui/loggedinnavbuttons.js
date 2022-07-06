@@ -51,9 +51,6 @@ export default function LoggedInNavButtons() {
             .link-font-size {
                 font-size: 16pt;
             } 
-            .nav-button-spacing {
-                align-self: center;
-            }
             .signup-button {
                 color: #34dcbe;
                 font-weight: 500;
@@ -92,7 +89,7 @@ export default function LoggedInNavButtons() {
                 color: #34dcbe !important; 
                 transition: ease all 0.5s;
                 font-size: 30pt;
-                margin-right: 70px;
+                margin-right: 30px;
             }
             .topnavbuttonsbrand:hover {
                 transform: scale(1.05); 

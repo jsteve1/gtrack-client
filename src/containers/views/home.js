@@ -12,6 +12,8 @@ import PrivacyModal from '../ui/privacymodal';
 import CookieModal from '../ui/cookiemodal';
 import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom';
+import mtn from '../../static/images/mtn.jpg';
+
 export default function Home() {
     const [quoteMoving, setQuoteMoving] = useState(false);
     const [quoteIndex, setQuoteIndex] = useState(0);
@@ -83,16 +85,15 @@ export default function Home() {
                         .home-cont {
                             padding-top: 80px;
                             text-align: center;
-                            background-image: url("${mappedQuotes.current.quotes[quotePicIndex].img}");
+                            background-image: url("${mtn}");
                             background-repeat: no-repeat;
                             height: 1080px;
                             max-height: 100vh;
-                            ${(quotePicIndex > 3) ? "background-position: 70% 0%;" : " background-position: 50% 0%; " }
                             background-size: cover;
                             transition: background 1.0s ease;
-                            overflow: hidden;
-                            
+                            overflow: hidden;                          
                         }
+              
                         .test {
                             color: blue;
                         }
@@ -163,6 +164,11 @@ export default function Home() {
                                 top: 90vh;
                             }
                         }
+                        @media only screen and (max-height: 800px) {
+                            .goals-quotes-next {
+                                top: 90vh;
+                            }
+                        }
                         .home-footer {
                             color: #999999;
                             font-size: 16pt;
@@ -222,11 +228,17 @@ export default function Home() {
                         <div className="title title3"><span><Icon.AwardFill color='#34dcbe'/> & Achieve your Goals. </span></div>
                         <div className="getstarted"><span><Button variant="dark" className="getstartedbtn" onClick={() => getStarted()}>Get Started </Button></span></div>
                         <a.div className="goals-quotes" style={springprops}>
-                            <span className="goals-quote">"{`${mappedQuotes.current.quotes[quoteIndex].quote}`}"</span>                   
+                        <span className="goals-quote">"{`${mappedQuotes.current.quotes[0].quote}`}"</span>                   
+                        {
+                           //<span className="goals-quote">"{`${mappedQuotes.current.quotes[quoteIndex].quote}`}"</span> 
+                        }                
                         </a.div>
-                        <div className="goals-quotes-next">
-                            <span className="goals-quoteright" onClick={() => { if(!isDisabled) { setQuoteMoving(true); setDisabled(true); } }}>Next Quote <Icon.ArrowCounterclockwise /></span>           
-                        </div>
+                        {
+                            // <div className="goals-quotes-next">
+                            //     <span className="goals-quoteright" onClick={() => { if(!isDisabled) { setQuoteMoving(true); setDisabled(true); } }}>Next Quote <Icon.ArrowCounterclockwise /></span>           
+                            // </div>
+                        }
+                  
                 </Container>
                 <Navbar className="home-footer-nav d-flex justify-content-center" fixed="bottom">
                     <div className="home-footer d-flex justify-content-center">
