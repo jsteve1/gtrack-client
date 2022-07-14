@@ -5,6 +5,7 @@ import {
 import { Link } from 'react-router-dom';
 import { forwardRef } from 'react';
 import * as Icon from 'react-bootstrap-icons';
+import { useNavigate } from 'react-router-dom';
 const CustomProfileDropdown = forwardRef(( { onClick }, ref) => (
     <>
     <style type="text/css">
@@ -35,6 +36,7 @@ const CustomProfileDropdown = forwardRef(( { onClick }, ref) => (
 ));
 
 export default function LoggedInNavButtons() {
+    const navigate = useNavigate();
     return (
         <>
         <style type="text/css">
@@ -114,10 +116,8 @@ export default function LoggedInNavButtons() {
             <Dropdown drop={'start'}>
                 <Dropdown.Toggle as={CustomProfileDropdown} id="dropdown-custom-components" />
                 <Dropdown.Menu variant="dark">
-                    <Dropdown.Item><Icon.Person color={"#34dcbe"} /> My Profile</Dropdown.Item>
-                    <Dropdown.Item><Icon.ListCheck color={"#34dcbe"}/> My Goals</Dropdown.Item>
-                    <Dropdown.Divider />
-                    <Dropdown.Item><Icon.Gear color={"#34dcbe"} /> Account Settings</Dropdown.Item>
+                    <Dropdown.Item onClick={(e) => { e.preventDefault(); navigate('/app/profile') } }><Icon.Person color={"#34dcbe"} /> My Profile</Dropdown.Item>
+                    <Dropdown.Item onClick={(e) => { e.preventDefault(); navigate('/app/goals') } }><Icon.ListCheck color={"#34dcbe"}/> My Goals</Dropdown.Item>
                 </Dropdown.Menu>
             </Dropdown>
         </Container>

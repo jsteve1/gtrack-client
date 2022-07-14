@@ -1,6 +1,4 @@
 import { Container, Row, Col } from 'react-bootstrap';
-import AppNav from '../ui/navbar';
-import blacksand from '../../static/images/blacksand.jpg';
 import QuickInfo from '../ui/quickinfo';
 import CurrentGoal from '../../components/goals/currentgoal';
 import OtherUserList from '../otheruser/otheruserlistview';

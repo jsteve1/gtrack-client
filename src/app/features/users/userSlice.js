@@ -52,7 +52,8 @@ const initialUser = {
   fname: "", 
   lname: "", 
   email: "", 
-  mainpic: "", 
+  mainpic: "",
+  media: [], 
   pics: "", 
   private: false, 
   bio: ""
@@ -84,7 +85,7 @@ export const userSlice = createSlice({
 
     },
     addUpload: (state, action) => {
-
+      state.myProfile.media.push(action.payload);
     },
     rmUpload: (state, action) => {
 

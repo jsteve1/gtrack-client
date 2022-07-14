@@ -1,5 +1,5 @@
 import { Button, Col } from 'react-bootstrap';
-
+import * as Icon from 'react-bootstrap-icons';
 export default function AppHomeActions(){
     return (
         <>
@@ -21,17 +21,17 @@ export default function AppHomeActions(){
            </style>
            <Col className="mt-1" xs="12" sm="4">
                 <Button variant="dark" className="getstartedbtn" onClick={() => {}}>
-                    New Goal
+                    <Icon.Plus width={40} height={40} color={"#34dcbe"} /> New Goal
                 </Button>
            </Col>
             <Col className="mt-1" xs="12" sm="4">
                 <Button variant="dark" className="getstartedbtn" onClick={() => {}}>
-                    Timeline
+                    <Icon.CalendarWeek width={40} height={40} color={"#34dcbe"} />  Timeline
                 </Button>
             </Col>
             <Col className="mt-1" xs="12" sm="4">
                 <Button variant="dark" className="getstartedbtn" onClick={() => {}}>
-                    My Profile
+                    <Icon.PersonBadgeFill width={40} height={40} color={"#34dcbe"} /> My Profile
                 </Button>
             </Col>
         </>

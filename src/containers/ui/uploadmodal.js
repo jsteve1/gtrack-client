@@ -1,12 +1,7 @@
 import { FileUploader } from "react-drag-drop-files";
 import { Modal } from 'react-bootstrap';
-export default function UploadModal({ uploadModalShow, setUploadModalShow, setProfilePic }) {
+export default function UploadModal({ uploadModalShow, setUploadModalShow, handleFileChange }) {
     const fileTypes = ["JPEG", "PNG", "GIF", "WEBM", "WEBP", "JPG", "BMP"];
-    const handleFileChange = (file) => {
-        console.log("File uploaded", file);
-        setProfilePic(file);
-        setUploadModalShow(false);
-    };
     return (
         <>
             <style type="text/css">
@@ -15,6 +10,7 @@ export default function UploadModal({ uploadModalShow, setUploadModalShow, setPr
                     background-color: #191919;
                     height: 300px;
                     width: 65vw;
+                    min-width: 100%;
                     color: #aaaaaa;
                     border: dashed 1px #aaaaaa;
                     font-size: 24pt;
@@ -38,6 +34,7 @@ export default function UploadModal({ uploadModalShow, setUploadModalShow, setPr
                 maxSize="8"
                 minSize="0"
                 classes="drop-area"
+                label="Upload an image"
             />
             </Modal>
         </>

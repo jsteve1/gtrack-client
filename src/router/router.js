@@ -11,6 +11,7 @@ import React, { useState, useEffect } from "react";
 import { useSelector } from 'react-redux';
 import { loggedIn } from "../app/features/users/userSlice";
 import AppHomeView from '../containers/views/apphome';
+import MyProfileView from "../containers/views/myprofile";
 export default function Router() {
     const location = useLocation();
     const [displayLocation, setDisplayLocation] = useState(location);
@@ -71,16 +72,14 @@ export default function Router() {
                             <Route path="signin" element={ <Signin /> } />
                             <Route path="signup" element={ <Signup /> } />
                             <Route path="home" element={
-                                // <RequireAuth>
+                                <RequireAuth>
                                   <AppHomeView /> 
-                                //</RequireAuth>
+                                </RequireAuth>
                               } />
-                            <Route path="account" element={
+                            <Route path="profile" element={
                               <RequireAuth>
-                              <div>
-                                account
-                              </div>
-                            </RequireAuth>                  
+                                <MyProfileView />   
+                              </RequireAuth>                  
                             }/>
                         </Route>
                         <Route path="/app/goal/:id" element={
@@ -97,13 +96,6 @@ export default function Router() {
                             </div>
                           </RequireAuth>
                         }/>
-                          <Route path="/app/profile" element={
-                            <RequireAuth>
-                            <div>
-                              profile
-                            </div>
-                            </RequireAuth> 
-                          }/>
                         <Route path="/" element={<Home />} />
                         <Route path="*" element={<Home />} />
                     </Routes>
