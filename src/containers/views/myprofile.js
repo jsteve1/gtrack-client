@@ -37,8 +37,6 @@ export default function MyProfileView() {
                         .profile-content {
                             margin-top: 90px;
                             margin-bottom: 0px;
-                            background-color: rgba(20, 20, 20, 0.5);
-                            min-height: 200px;
                             max-height: 50vh;
                             min-width: 100vw; 
                             max-width: 1000px; 

@@ -124,6 +124,11 @@ export const userSlice = createSlice({
           state.myProfile[key] = action.payload[key];
         } 
       }
+    },
+    removePicIndex: (state, action) => {
+      state.myProfile.media = produce(state.myProfile.media, draft => {
+        draft.splice(action.payload.index, 1);
+      })
     }
   }
 })
@@ -132,6 +137,6 @@ export const profile = (state) => state.users.myProfile;
 export const loggedIn = (state) => state.users.myProfile.id !== "";
 export const selectOtherUsers = (state) => state.users.otherUsers; 
 
-export const { login, logout, searchOtherUsers, addUpload, rmUpload, editProfile, addOtherUser, setMediaIndex, setMainPicIndex } = userSlice.actions
+export const { login, logout, searchOtherUsers, addUpload, rmUpload, editProfile, addOtherUser, setMediaIndex, setMainPicIndex, removePicIndex } = userSlice.actions
 
 export default userSlice.reducer

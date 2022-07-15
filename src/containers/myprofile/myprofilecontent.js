@@ -1,11 +1,11 @@
 import { Container, Row, Col, Button, Dropdown } from 'react-bootstrap';
 import * as Icon from 'react-bootstrap-icons';
-import { profile, addUpload, setMediaIndex, setMainPicIndex } from '../../app/features/users/userSlice';
+import { profile, addUpload, setMediaIndex, setMainPicIndex, removePicIndex } from '../../app/features/users/userSlice';
 import { useSelector, useDispatch } from 'react-redux';
 import React, { forwardRef, useEffect, useState } from 'react';
 import UploadModal from '../ui/uploadmodal';
 
-const ImageTile = ({ pic, index, setIndex, setMainPic }) => {
+const ImageTile = ({ pic, index, setIndex, setMainPic, removeImg }) => {
     const [show, setShow] = useState(false);
     if(pic !== "") {
         return (<>
@@ -27,6 +27,7 @@ const ImageTile = ({ pic, index, setIndex, setMainPic }) => {
                 <Dropdown.Item eventKey="1" onClick={() => setMainPic(index)} ><Icon.StarFill color={"#34dcbe"} className="icon-dropdown-img" />Make Main Pic</Dropdown.Item>
                 <Dropdown.Item eventKey="2" onClick={() => setIndex(index, index - 1)}><Icon.ArrowLeft color={"#34dcbe"} className="icon-dropdown-img" /> Move Left</Dropdown.Item>
                 <Dropdown.Item eventKey="3" onClick={() => setIndex(index, index + 1)}><Icon.ArrowRight color={"#34dcbe"} className="icon-dropdown-img" /> Move Right</Dropdown.Item>
+                <Dropdown.Item eventKey="4" onClick={() => removeImg(index)}><Icon.Trash2Fill  color={"#34dcbe"} className="icon-dropdown-img" />Delete Image</Dropdown.Item>
             </Dropdown.Menu>
         </Dropdown>
         </>)
@@ -52,6 +53,10 @@ export default function MyProfileContent({ uploadModalShow, setUploadModalShow }
         console.info("Image added to pic library on client"); 
         setMyPics( [ ...myPics, img ] );
         dispatch(addUpload(img));
+    }
+    const removeImg = (index) => {
+        dispatch(removePicIndex({ index: index })); 
+        updateState();
     }
     useEffect(() => {
         setMyPics([]);
@@ -138,13 +143,14 @@ export default function MyProfileContent({ uploadModalShow, setUploadModalShow }
                             border-radius: 10px;
                         }
                         .images-list {
+                            ${(myprofile.media.length === 0) ? "min-height: 0px !important; height: 0px !important;" : "" }
+                            ${(myprofile.media.length === 1) ? "justify-content: center;" : "justify-content: start;" }
                             width: 100vw;
                             min-height: 350px;
                             max-height: 350px;
                             overflow-x: auto;
                             overflow-y: hidden;
                             display: flex;
-                            justify-content: start;
                         }
                         .images-list::-webkit-scrollbar-track {
                             -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
@@ -199,7 +205,7 @@ export default function MyProfileContent({ uploadModalShow, setUploadModalShow }
                             <>
                                 {                       
                                     myprofile.media.map((pic, index) => {                      
-                                        return <ImageTile key={`${index}-img-key`} pic={pic} index={index} setIndex={setIndex} setMainPic={_setMainPicIndex} />
+                                        return <ImageTile removeImg={removeImg} key={`${index}-img-key`} pic={pic} index={index} setIndex={setIndex} setMainPic={_setMainPicIndex} />
                                     })
                                 }
                             </>
