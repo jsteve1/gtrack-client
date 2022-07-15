@@ -33,12 +33,11 @@ const ImageTile = ({ pic, index, setIndex, setMainPic }) => {
     } else return "";
 }
 
-export default function MyProfileContent({  }) {
+export default function MyProfileContent({ uploadModalShow, setUploadModalShow }) {
     const dispatch = useDispatch();
     const myprofile = useSelector(profile); 
     const [myPics, setMyPics] = useState([]);
     const [mainPic, setMainPic] = useState(null);
-    const [uploadModalShow, setUploadModalShow] = useState(false);
     const [, updateState] = useState();
     const setIndex = (index, newIndex) => {
         dispatch(setMediaIndex({ index: index, newIndex: newIndex }));
@@ -109,14 +108,6 @@ export default function MyProfileContent({  }) {
                         }
                         .col-content {
                             padding: 10px;
-                        }
-                        .profile-pic-add {
-                            color: #34a9be;
-                            position: absolute;
-                            left: 79%;
-                            top: 41vh;
-                            border-radius: 50px; 
-                            box-shadow: 1px 1px 2px 2px #222222;
                         }
                         .profile-pic-add:hover,
                         .profile-pic-add:active,
@@ -193,6 +184,11 @@ export default function MyProfileContent({  }) {
                             background-color: transparent;
                             margin-right: 5px;
                         }
+                        .upload-actions {
+                            margin-top: 10px; 
+                            margin-bottom: 10px;
+                            padding-right: 35px;
+                        }
                         `
                 }
                 </style>
@@ -210,7 +206,6 @@ export default function MyProfileContent({  }) {
                         )
                         :  ""
                     }
-                    <Icon.PlusCircleFill className="profile-pic-add" width={75} height={75} onClick={() => setUploadModalShow(true)} />
                 </div>
                 <UploadModal setUploadModalShow={setUploadModalShow} uploadModalShow={uploadModalShow} handleFileChange={(file) => processImgFile(file) }/>
             </>

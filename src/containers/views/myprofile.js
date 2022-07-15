@@ -11,6 +11,7 @@ import MyProfileContent from '../myprofile/myprofilecontent';
 export default function MyProfileView() {
     const _profile = useSelector(profile);
     const [showEdit, setShowEdit] = useState(false);
+    const [uploadModalShow, setUploadModalShow] = useState(false);
     return (
             <>
                 <style type="text/css">
@@ -48,13 +49,10 @@ export default function MyProfileView() {
                 </style>
                 <Container fluid className="myprofile-cont">
                     <Row className="profile-content">
-                        <MyProfileContent />
+                        <MyProfileContent uploadModalShow={uploadModalShow} setUploadModalShow={setUploadModalShow} />
                     </Row>
                     <Row className="profile-main-row">
-                        <MyProfileInfo fname={_profile.fname} lname={_profile.lname} email={_profile.email} bio={_profile.bio} />
-                    </Row>
-                    <Row className="profile-actions-row">
-                        <MyProfileActions setShowEdit={setShowEdit} />
+                        <MyProfileInfo setShowEdit={setShowEdit} uploadModalShow={uploadModalShow} setUploadModalShow={setUploadModalShow} fname={_profile.fname} lname={_profile.lname} email={_profile.email} bio={_profile.bio} />
                     </Row>
                     <Row className="profile-desc-row">
                         <MyProfileDesc />
