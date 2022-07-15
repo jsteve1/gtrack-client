@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-
+import produce from 'immer';
 export const mockUsersState = {
   myProfile: {
        id: "35942fde-d1a0-443e-aa0c-b383fe915bc5",
@@ -90,6 +90,34 @@ export const userSlice = createSlice({
     rmUpload: (state, action) => {
 
     },
+    setMainPicIndex: (state, action) => {
+      console.log("set main pic");
+      state.myProfile.media = produce(state.myProfile.media, draft => {
+        const temp = draft[action.payload.index]; 
+        draft.splice(action.payload.index, 1);
+        draft.unshift(temp);
+      })
+    },
+    setMediaIndex: (state, action) => {
+      console.log("set media index");
+      if(state.myProfile.media.length === 1) {
+        return;
+      }
+      if(action.payload.index === 0) {
+        if(action.payload.newIndex === -1) { 
+          return; 
+        }
+      }
+      if(action.payload.index === state.myProfile.media.length - 1) {
+        if(action.payload.newIndex === state.myProfile.media.length) {
+           return;
+        }
+      }
+      const temp = JSON.parse(JSON.stringify(state.myProfile.media[action.payload.index])); 
+      const swap = JSON.parse(JSON.stringify(state.myProfile.media[action.payload.newIndex])); 
+      state.myProfile.media[action.payload.newIndex] = temp; 
+      state.myProfile.media[action.payload.index] = swap; 
+    },
     editProfile: (state, action) => {
       for(let key in action.payload) {
         if(state.myProfile[key] !== undefined){
@@ -104,6 +132,6 @@ export const profile = (state) => state.users.myProfile;
 export const loggedIn = (state) => state.users.myProfile.id !== "";
 export const selectOtherUsers = (state) => state.users.otherUsers; 
 
-export const { login, logout, searchOtherUsers, addUpload, rmUpload, editProfile, addOtherUser } = userSlice.actions
+export const { login, logout, searchOtherUsers, addUpload, rmUpload, editProfile, addOtherUser, setMediaIndex, setMainPicIndex } = userSlice.actions
 
 export default userSlice.reducer

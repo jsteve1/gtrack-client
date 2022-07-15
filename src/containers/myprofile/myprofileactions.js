@@ -32,7 +32,7 @@ export default function MyProfileActions({ setShowEdit }) {
                 </Col>
                 <Col className="mt-4" xs="12" md="4">
                     <Button variant="dark" className="profileactionbutton" onClick={() => {}}>
-                        <Icon.GearFill width={40} height={40} color={"#34dcbe"} /> Account Settings
+                        <Icon.GearFill width={40} height={40} color={"#34dcbe"} /> Account
                     </Button>
                 </Col>
             </>

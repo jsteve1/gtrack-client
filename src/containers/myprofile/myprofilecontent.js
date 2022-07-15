@@ -1,9 +1,37 @@
-import { Container, Row, Col, Button } from 'react-bootstrap';
+import { Container, Row, Col, Button, Dropdown } from 'react-bootstrap';
 import * as Icon from 'react-bootstrap-icons';
-import { profile, addUpload } from '../../app/features/users/userSlice';
+import { profile, addUpload, setMediaIndex, setMainPicIndex } from '../../app/features/users/userSlice';
 import { useSelector, useDispatch } from 'react-redux';
-import { useEffect, useState } from 'react';
+import React, { forwardRef, useEffect, useState } from 'react';
 import UploadModal from '../ui/uploadmodal';
+
+const ImageTile = ({ pic, index, setIndex, setMainPic }) => {
+    const [show, setShow] = useState(false);
+    if(pic !== "") {
+        return (<>
+        <Dropdown align="end" drop="left" variant="dark" className="img-dropdown">
+            <Dropdown.Toggle className="img-dropdown" as={ forwardRef(({ children, onClick }, ref) => {
+                                        const [selected, setSelected] = useState(false);
+                                        const dispatch = useDispatch();
+                                        return (<img ref={ref} className={(selected) ? "main-img-profile selected-image" : "main-img-profile"} 
+                                                    src={`${pic}`} 
+                                                    alt="profile img"                                                  
+                                                    onClick={(e) => {
+                                                            e.preventDefault();
+                                                            setSelected(!selected);
+                                                            onClick(e);
+                                                        }} />)
+                                        })}>
+            </Dropdown.Toggle>
+            <Dropdown.Menu flip={false} className="menu-dropdown-img">
+                <Dropdown.Item eventKey="1" onClick={() => setMainPic(index)} ><Icon.StarFill color={"#34dcbe"} className="icon-dropdown-img" />Make Main Pic</Dropdown.Item>
+                <Dropdown.Item eventKey="2" onClick={() => setIndex(index, index - 1)}><Icon.ArrowLeft color={"#34dcbe"} className="icon-dropdown-img" /> Move Left</Dropdown.Item>
+                <Dropdown.Item eventKey="3" onClick={() => setIndex(index, index + 1)}><Icon.ArrowRight color={"#34dcbe"} className="icon-dropdown-img" /> Move Right</Dropdown.Item>
+            </Dropdown.Menu>
+        </Dropdown>
+        </>)
+    } else return "";
+}
 
 export default function MyProfileContent({  }) {
     const dispatch = useDispatch();
@@ -11,6 +39,15 @@ export default function MyProfileContent({  }) {
     const [myPics, setMyPics] = useState([]);
     const [mainPic, setMainPic] = useState(null);
     const [uploadModalShow, setUploadModalShow] = useState(false);
+    const [, updateState] = useState();
+    const setIndex = (index, newIndex) => {
+        dispatch(setMediaIndex({ index: index, newIndex: newIndex }));
+        updateState();
+    }
+    const _setMainPicIndex = (index) => {
+        dispatch(setMainPicIndex({ index: index }));
+        updateState();
+    }
     const processImgFile = (file) => {
         const img = URL.createObjectURL(file); 
         console.info("Image added to pic library on client"); 
@@ -44,6 +81,9 @@ export default function MyProfileContent({  }) {
         }
         fetchPics();
     }, [myprofile.mainpic]);
+    useEffect(() => {
+        setMyPics(myprofile.media); 
+    }, [myprofile.media])
     return (
             <>
                 <style type="text/css">
@@ -71,11 +111,12 @@ export default function MyProfileContent({  }) {
                             padding: 10px;
                         }
                         .profile-pic-add {
-                            color: #34dcbe;
+                            color: #34a9be;
                             position: absolute;
-                            left: 85%;
-                            top: 340px;
-                            text-shadow: 2px 2px #000000;
+                            left: 79%;
+                            top: 41vh;
+                            border-radius: 50px; 
+                            box-shadow: 1px 1px 2px 2px #222222;
                         }
                         .profile-pic-add:hover,
                         .profile-pic-add:active,
@@ -107,7 +148,7 @@ export default function MyProfileContent({  }) {
                         }
                         .images-list {
                             width: 100vw;
-                            min-height: 250px;
+                            min-height: 350px;
                             max-height: 350px;
                             overflow-x: auto;
                             overflow-y: hidden;
@@ -128,6 +169,30 @@ export default function MyProfileContent({  }) {
                             -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
                             background-color: #353535;
                         }
+                        .selected-image {
+                            border: 3px solid #34dcbe; 
+                            filter: brightness(1.05);
+                        }
+                        .main-image {
+                            border: 3px solid #34dcbe;
+                        }
+                        .img-dropdown {
+                            margin-top: 0px;
+                        }
+                        .menu-dropdown-img {
+                            margin-top: -70px;
+                            margin-left: 15px; 
+                            margin-right: 15px;
+                        }
+                        .menu-dropdown-img,
+                        .menu-dropdown-img * {
+                            background-color: #191919;
+                            color: #34dcbe;
+                        }
+                        .icon-dropdown-img {
+                            background-color: transparent;
+                            margin-right: 5px;
+                        }
                         `
                 }
                 </style>
@@ -137,12 +202,8 @@ export default function MyProfileContent({  }) {
                         (
                             <>
                                 {                       
-                                    myprofile.media.map((pic) => {
-                                        if(pic !== "") {
-                                            return (<>
-                                                <img className="main-img-profile" src={`${pic}`} alt="profile img" />
-                                            </>)
-                                        }
+                                    myprofile.media.map((pic, index) => {                      
+                                        return <ImageTile key={`${index}-img-key`} pic={pic} index={index} setIndex={setIndex} setMainPic={_setMainPicIndex} />
                                     })
                                 }
                             </>
