@@ -16,13 +16,14 @@ export default function MyProfileActions({ setShowEdit }) {
                             padding: 15px;
                             border-radius: 50px; 
                             width: 100%;
+                            padding-left: 15px;
                         }
                     `
                 }
                 </style>
                 <Col className="mt-4" xs="12" md="4">
                     <Button variant="dark" className="profileactionbutton" onClick={() => {}}>
-                        <Icon.CloudFill width={40} height={40} color={"#34dcbe"} />  My Uploads
+                        <Icon.CloudArrowUp width={40} height={40} color={"#34dcbe"} />  My Uploads
                     </Button>
                 </Col>
                 <Col className="mt-4" xs="12" md="4">

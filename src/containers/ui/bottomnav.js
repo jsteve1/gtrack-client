@@ -2,10 +2,15 @@ import { Navbar, Container, Row, Col, OverlayTrigger, Tooltip } from 'react-boot
 import * as Icon from 'react-bootstrap-icons';
 import { useSelector } from 'react-redux';
 import { loggedIn } from '../../app/features/users/userSlice';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useEffect, useLayoutEffect } from 'react';
 export default function BottomNav() {
     const _loggedIn = useSelector(loggedIn);
     const navigate = useNavigate();
+    const location = useLocation();
+    useEffect(() => {
+        console.log("location changed", location);
+    }, [location]);
     return (
         (_loggedIn) ? (
             <>
@@ -34,13 +39,22 @@ export default function BottomNav() {
                             background-color: #252525;
                             transform: scale(1.05);
                         }
+                        .bot-nav-home {
+                            ${(location.pathname === '/app/home') ? "background-color: #232323;" : ""} 
+                        }
+                        .bot-nav-goals-list {
+                            ${(location.pathname === '/app/goals') ? "background-color: #232323;" : ""} 
+                        }
+                        .bot-nav-feed {
+                            ${(location.pathname === '/app/feed') ? "background-color: #232323;" : ""} 
+                        }
                     `
                 }
                 </style>
                 <Navbar fixed="bottom" className="nav-bottom-logged-in">
                     <Container fluid className="h-100 nav-bottom-logged-in-cont w-100">
                         <Row className="w-100 h-100">
-                            <Col xs="4" onClick={() => navigate('/app/home')} className="p-2 h-100 d-flex justify-content-center icon-select-bottom-nav">
+                            <Col xs="4" onClick={() => { navigate('/app/home');  }} className="p-2 h-100 d-flex justify-content-center icon-select-bottom-nav bot-nav-home">
                                 <OverlayTrigger
                                     placement="top"
                                     delay={{ show: 250, hide: 400 }}
@@ -53,7 +67,7 @@ export default function BottomNav() {
                                     <Icon.HouseDoorFill width={45} height={45} />
                                 </OverlayTrigger>
                             </Col>
-                            <Col xs="4"  onClick={() => navigate('/app/goals')} className="p-2 d-flex justify-content-center icon-select-bottom-nav">
+                            <Col xs="4"  onClick={() => { navigate('/app/goals'); }} className="p-2 d-flex justify-content-center icon-select-bottom-nav bot-nav-goals-list">
                                 <OverlayTrigger
                                     placement="top"
                                     delay={{ show: 250, hide: 400 }}
@@ -66,17 +80,17 @@ export default function BottomNav() {
                                     <Icon.ListCheck width={45} height={45} />
                                 </OverlayTrigger>
                             </Col>
-                            <Col xs="4"  onClick={() => navigate('/app/goals')}  className="p-2 d-flex justify-content-center icon-select-bottom-nav">
+                            <Col xs="4"  onClick={() => { navigate('/app/feed') }}  className="p-2 d-flex justify-content-center icon-select-bottom-nav bot-nav-feed">
                                 <OverlayTrigger
                                     placement="top"
                                     delay={{ show: 250, hide: 400 }}
                                     overlay={
                                         <Tooltip id="button-tooltip">
-                                            Goals Completed
+                                            Feed
                                         </Tooltip>
                                     }
                                 >
-                                    <Icon.AwardFill width={45} height={45} />
+                                    <Icon.ViewList width={45} height={45} />
                                 </OverlayTrigger>
                             </Col>
                         </Row>

@@ -7,11 +7,23 @@ import Home from '../containers/views/home';
 import AboutView from '../containers/views/about';
 import Signin from '../containers/views/signin';
 import Signup from '../containers/views/signup';
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useLayoutEffect } from "react";
 import { useSelector } from 'react-redux';
 import { loggedIn } from "../app/features/users/userSlice";
 import AppHomeView from '../containers/views/apphome';
 import MyProfileView from "../containers/views/myprofile";
+import GoalsListView from "../containers/views/goalslist";
+import FeedView from '../containers/views/feed';
+
+const ScrollResetWrapper = ({children}) => {
+  const location = useLocation();
+  useLayoutEffect(() => {
+    document.documentElement.scrollTo(0, 0);
+  }, [location.pathname]);
+  return children
+} 
+
+
 export default function Router() {
     const location = useLocation();
     const [displayLocation, setDisplayLocation] = useState(location);
@@ -56,50 +68,55 @@ export default function Router() {
                 `
             }
             </style>
-            <div 
-                className={`${transitionStage}`} 
-                onAnimationEnd={() => {
-                    if (transitionStage === "fadeOut") {
-                    setTransistionStage("fadeIn");
-                    setDisplayLocation(location);
-                    }
-                }}
-            >                
-                    <Routes location={displayLocation}>    
-                        <Route path="/about" element={ <AboutView /> }/>
-                        <Route path="/home" element={ <Home /> } />
-                        <Route path="/app">
-                            <Route path="signin" element={ <Signin /> } />
-                            <Route path="signup" element={ <Signup /> } />
-                            <Route path="home" element={
+            <ScrollResetWrapper>
+              <div 
+                  className={`${transitionStage}`} 
+                  onAnimationEnd={() => {
+                      if (transitionStage === "fadeOut") {
+                      setTransistionStage("fadeIn");
+                      setDisplayLocation(location);
+                      }
+                  }}
+              >                
+                      <Routes location={displayLocation}>    
+                          <Route path="/about" element={ <AboutView /> }/>
+                          <Route path="/home" element={ <Home /> } />
+                          <Route path="/app">
+                              <Route path="signin" element={ <Signin /> } />
+                              <Route path="signup" element={ <Signup /> } />
+                              <Route path="home" element={
+                                  <RequireAuth>
+                                    <AppHomeView /> 
+                                  </RequireAuth>
+                                } />
+                              <Route path="profile" element={
                                 <RequireAuth>
-                                  <AppHomeView /> 
-                                </RequireAuth>
-                              } />
-                            <Route path="profile" element={
-                              <RequireAuth>
-                                <MyProfileView />   
-                              </RequireAuth>                  
-                            }/>
-                        </Route>
-                        <Route path="/app/goal/:id" element={
-                          <RequireAuth>
-                            <div>
-                              single goal
-                            </div>
-                          </RequireAuth>
-                        }/>
-                        <Route path="/app/goals" element={
-                          <RequireAuth>
-                            <div>
-                              goals list
-                            </div>
-                          </RequireAuth>
-                        }/>
-                        <Route path="/" element={<Home />} />
-                        <Route path="*" element={<Home />} />
-                    </Routes>
-            </div>
+                                  <MyProfileView />   
+                                </RequireAuth>                  
+                              }/>
+                              <Route path="feed" element={
+                                <RequireAuth>
+                                  <FeedView />   
+                                </RequireAuth>                  
+                              }/>
+                          </Route>
+                          <Route path="/app/goal/:id" element={
+                            <RequireAuth>
+                              <div>
+                                single goal
+                              </div>
+                            </RequireAuth>
+                          }/>
+                          <Route path="/app/goals" exact element={
+                            <RequireAuth>
+                                <GoalsListView />
+                            </RequireAuth>
+                          }/>
+                          <Route path="/" element={<Home />} />
+                          <Route path="*" element={<Home />} />
+                      </Routes>
+              </div>
+            </ScrollResetWrapper>
         </>
         )
 }

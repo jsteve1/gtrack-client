@@ -2,7 +2,7 @@ import { Container, Row, Col, Dropdown } from 'react-bootstrap';
 import * as Icon from 'react-bootstrap-icons';
 import { forwardRef } from 'react';
 
-export default function SmallGoalListItem({ name, deadline, priority }) {
+export default function SmallGoalListItem({ name, deadline, priority, lastOne }) {
     return (
         <>
         <style type="text/css">
@@ -39,7 +39,7 @@ export default function SmallGoalListItem({ name, deadline, priority }) {
             `
         }
         </style>
-        <Container fluid className="small-goal-list-item border-bottom border-secondary">
+        <Container fluid className={`small-goal-list-item ${lastOne ? "" : "border-bottom border-secondary"}`}>
             <Row>
                 <Col className="small-goal-list-item-name d-flex justify-content-start pt-2" xs='10'>
                     <span className="priority-list-item-span">{`${priority}  `}</span>{name}

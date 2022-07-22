@@ -1,18 +1,26 @@
-import { Container, Row, Col, Button, Dropdown } from 'react-bootstrap';
+import { Container, Row, Col, Button, Dropdown, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import * as Icon from 'react-bootstrap-icons';
 import { profile, addUpload, setMediaIndex, setMainPicIndex, removePicIndex } from '../../app/features/users/userSlice';
 import { useSelector, useDispatch } from 'react-redux';
-import React, { forwardRef, useEffect, useState } from 'react';
+import React, { forwardRef, useEffect, useState, useRef } from 'react';
 import UploadModal from '../ui/uploadmodal';
 
-const ImageTile = ({ pic, index, setIndex, setMainPic, removeImg }) => {
+const ImageTile = ({ pic, index, setIndex, setMainPic, removeImg, overallWidth, setOverallWidth }) => {
     const [show, setShow] = useState(false);
+    const dropdownRef = useRef(null);
+    useEffect(() => {
+        if(dropdownRef.current !== null && dropdownRef.current.offsetWidth !== overallWidth[index] && dropdownRef.current.offsetWidth > 0) {
+            const newWidth = JSON.parse(JSON.stringify(overallWidth));
+            newWidth[index] = dropdownRef.current.offsetWidth;
+            setOverallWidth(newWidth); 
+        }
+    }, [dropdownRef.current?.offsetWidth]);
     if(pic !== "") {
         return (<>
-        <Dropdown align="end" drop="left" variant="dark" className="img-dropdown">
+        <Dropdown ref={dropdownRef} align="end" drop="left" variant="dark" className="img-dropdown">
             <Dropdown.Toggle className="img-dropdown" as={ forwardRef(({ children, onClick }, ref) => {
                                         const [selected, setSelected] = useState(false);
-                                        const dispatch = useDispatch();
+                                        const dispatch = useDispatch();                                      
                                         return (<img ref={ref} className={(selected) ? "main-img-profile selected-image" : "main-img-profile"} 
                                                     src={`${pic}`} 
                                                     alt="profile img"                                                  
@@ -40,6 +48,9 @@ export default function MyProfileContent({ uploadModalShow, setUploadModalShow }
     const [myPics, setMyPics] = useState([]);
     const [mainPic, setMainPic] = useState(null);
     const [, updateState] = useState();
+    const [overallWidth, setOverallWidth] = useState({});
+    const [widerThanScreen, setWiderThanScreen] = useState(false);
+    const [widthListener, setWidthListener] = useState(false);
     const setIndex = (index, newIndex) => {
         dispatch(setMediaIndex({ index: index, newIndex: newIndex }));
         updateState();
@@ -87,7 +98,25 @@ export default function MyProfileContent({ uploadModalShow, setUploadModalShow }
     }, [myprofile.mainpic]);
     useEffect(() => {
         setMyPics(myprofile.media); 
-    }, [myprofile.media])
+        if(myprofile.media.length < 1)
+            setOverallWidth({});
+    }, [myprofile.media]);
+    useEffect(() => {
+        const handleChange = () => {
+            const width = window.innerWidth; 
+            let totalWidth = 0;
+            for(let key in overallWidth) {
+                if(overallWidth[key] > 0) {
+                    totalWidth += overallWidth[key];
+                }
+            }
+            setWiderThanScreen(totalWidth > width);
+        }
+        handleChange();
+        if(!widthListener)
+            window.addEventListener('resize', handleChange, false); 
+        return window.removeEventListener('resize', null);
+    }, [myprofile.media.length, overallWidth])
     return (
             <>
                 <style type="text/css">
@@ -124,6 +153,11 @@ export default function MyProfileContent({ uploadModalShow, setUploadModalShow }
                             animation-name: adduploadanimation;
                             animation-duration: 0.5s; 
                         }
+                        .profile-pic-add {
+                            color: #34a9be;
+                            align-self: center;
+                            margin-left: 45vw;
+                        }
                         .main-img-profile {
                             max-height: 350px;
                             max-height: 350px;
@@ -143,14 +177,15 @@ export default function MyProfileContent({ uploadModalShow, setUploadModalShow }
                             border-radius: 10px;
                         }
                         .images-list {
-                            ${(myprofile.media.length === 0) ? "min-height: 0px !important; height: 0px !important;" : "" }
-                            ${(myprofile.media.length === 1) ? "justify-content: center;" : "justify-content: start;" }
+                            ${(myprofile.media.length === 0) ? "min-height: 0px !important; height: 50px !important; justify-content: center;" : "" }
+                            ${(myprofile.media.length === 1 || !widerThanScreen) ? "justify-content: center;" : "padding-left: 50px; justify-content: start;" }
                             width: 100vw;
                             min-height: 350px;
                             max-height: 350px;
                             overflow-x: auto;
                             overflow-y: hidden;
                             display: flex;
+                            background-color: rgba(100, 100, 100, 0.2);
                         }
                         .images-list::-webkit-scrollbar-track {
                             -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
@@ -177,9 +212,7 @@ export default function MyProfileContent({ uploadModalShow, setUploadModalShow }
                             margin-top: 0px;
                         }
                         .menu-dropdown-img {
-                            margin-top: -70px;
-                            margin-left: 15px; 
-                            margin-right: 15px;
+
                         }
                         .menu-dropdown-img,
                         .menu-dropdown-img * {
@@ -200,17 +233,17 @@ export default function MyProfileContent({ uploadModalShow, setUploadModalShow }
                 </style>
                 <div className="images-list">
                     {
-                        (myprofile.mainpic !== "") ? 
+                        (myprofile.mainpic !== "" && myprofile.media.length !== 0) ? 
                         (
                             <>
                                 {                       
                                     myprofile.media.map((pic, index) => {                      
-                                        return <ImageTile removeImg={removeImg} key={`${index}-img-key`} pic={pic} index={index} setIndex={setIndex} setMainPic={_setMainPicIndex} />
+                                        return <ImageTile overallWidth={overallWidth} setOverallWidth={setOverallWidth} removeImg={removeImg} key={`${index}-img-key`} pic={pic} index={index} setIndex={setIndex} setMainPic={_setMainPicIndex} />
                                     })
                                 }
                             </>
                         )
-                        :  ""
+                        : ""
                     }
                 </div>
                 <UploadModal setUploadModalShow={setUploadModalShow} uploadModalShow={uploadModalShow} handleFileChange={(file) => processImgFile(file) }/>

@@ -8,7 +8,8 @@ export const mockUsersState = {
       "email": "jakestevens082@gmail.com",
       "media": [],
       "mainpic": 0, 
-      "bio":  "I love goals! BatChest!"
+      "bio":  "I love goals! BatChest!",
+      "currentGoal": "6a8af92c-7a41-479b-91fb-e4cc1ce9cbe1"
   },
   otherUsers: [
     {
@@ -56,7 +57,8 @@ const initialUser = {
   media: [], 
   pics: "", 
   private: false, 
-  bio: ""
+  bio: "",
+  currentGoal: ""
 }
 
 const initialState = {
@@ -136,6 +138,7 @@ export const userSlice = createSlice({
 export const profile = (state) => state.users.myProfile; 
 export const loggedIn = (state) => state.users.myProfile.id !== "";
 export const selectOtherUsers = (state) => state.users.otherUsers; 
+export const selectCurrentGoal = (state) => state.users.myProfile.currentGoal;
 
 export const { login, logout, searchOtherUsers, addUpload, rmUpload, editProfile, addOtherUser, setMediaIndex, setMainPicIndex, removePicIndex } = userSlice.actions
 

@@ -35,7 +35,7 @@ export default function MyProfileView() {
 
                         }
                         .profile-content {
-                            margin-top: 90px;
+                            margin-top: 75px;
                             margin-bottom: 0px;
                             max-height: 50vh;
                             min-width: 100vw; 
@@ -50,10 +50,18 @@ export default function MyProfileView() {
                         <MyProfileContent uploadModalShow={uploadModalShow} setUploadModalShow={setUploadModalShow} />
                     </Row>
                     <Row className="profile-main-row">
-                        <MyProfileInfo setShowEdit={setShowEdit} uploadModalShow={uploadModalShow} setUploadModalShow={setUploadModalShow} fname={_profile.fname} lname={_profile.lname} email={_profile.email} bio={_profile.bio} />
+                        <Col />
+                        <Col xs="12" sm="10" md="8">
+                            <MyProfileInfo setShowEdit={setShowEdit} uploadModalShow={uploadModalShow} setUploadModalShow={setUploadModalShow} fname={_profile.fname} lname={_profile.lname} email={_profile.email} bio={_profile.bio} />
+                        </Col>
+                        <Col />
                     </Row>
                     <Row className="profile-desc-row">
-                        <MyProfileDesc />
+                        <Col />
+                            <Col  xs="10" sm="10" md="8">
+                                <MyProfileDesc />
+                            </Col>
+                        <Col />
                     </Row>
                 </Container>
                 <EditProfile show={showEdit} setShow={setShowEdit} placement={"end"} />

@@ -25,7 +25,7 @@ export default function OtherUserList() {
                     }     
                     .other-users-label {
                         color: #aaaaaa; 
-                        font-size: 5vh;
+                        font-size: 4vh;
                         font-weight: 500;
                     }
                     .other-users-search {
@@ -70,15 +70,32 @@ export default function OtherUserList() {
                         overflow-y: auto;
                         overflow-x: hidden;
                     }
+                    .other-user-list-cont-row::-webkit-scrollbar-track {
+                        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+                        border-radius: 10px;
+                        background-color: rgba(100, 100, 100, 0.3);
+                    }
+                    .other-user-list-cont-row::-webkit-scrollbar {
+                        width: 12px;
+                        background-color: rgba(100, 100, 100, 0.3);
+                    }
+                    .other-user-list-cont-row::-webkit-scrollbar-thumb {
+                        border-radius: 10px;
+                        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+                        background-color: #191919;
+                    }
+                    .other-user-label-row {
+                        height: 100px;
+                    }
                 `
             }
             </style>
-            <Container fluid className="other-users-list-app-home">
-                <Row className={`${(showSearch) ? "" : "border-bottom border-secondary"} pb-1`}>
-                    <Col xs='6' className="other-users-label d-flex justify-content-start">
-                        Other Users
+            <Container fluid className="other-users-list-app-home border-top border-secondary">
+                <Row className={`${(showSearch) ? "" : "border-bottom border-secondary"} pb-1 other-user-label-row`}>
+                    <Col xs='6' className="other-users-label d-flex justify-content-start align-items-center">
+                        Other&nbsp;Users
                     </Col>
-                    <Col xs="2" className="other-users-search">
+                    <Col xs="2" className="other-users-search d-flex align-items-center">
                         <Icon.Search onClick={() => setShowSearch(!showSearch)} />
                     </Col>
                 </Row>

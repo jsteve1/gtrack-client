@@ -88,9 +88,9 @@ export default function LoggedInNavButtons() {
                 filter: invert(1);
             }
             .topnavbuttonsbrand {
-                color: #34dcbe !important; 
+                color: #34aaaa !important; 
                 transition: ease all 0.5s;
-                font-size: 30pt;
+                font-size: 3vh;
                 margin-right: 30px;
             }
             .topnavbuttonsbrand:hover {
@@ -110,9 +110,8 @@ export default function LoggedInNavButtons() {
             `
         }
         </style>
-        <Container className="topnavbuttonscont border-bottom border-dark pb-3 d-flex align-items-baseline" fluid>
-            <Link className="topnavbuttonsbrand link-no-underline" to="/home">Goals App</Link>
-            <Link className="link-color link-font-size nav-button-spacing link-no-underline about-link" to="/about">About</Link>
+        <Container className="topnavbuttonscont border-bottom border-dark pb-3 d-flex align-items-center" fluid>
+            <Link className="topnavbuttonsbrand link-no-underline" to="/home">Envision</Link>
             <Dropdown drop={'start'}>
                 <Dropdown.Toggle as={CustomProfileDropdown} id="dropdown-custom-components" />
                 <Dropdown.Menu variant="dark">

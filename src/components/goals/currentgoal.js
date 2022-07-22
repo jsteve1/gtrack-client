@@ -1,7 +1,16 @@
+import { useState, useEffect } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
-
+import { useSelector } from 'react-redux';
+import { selectCurrentGoal } from '../../app/features/users/userSlice';
+import { selectGoals } from '../../app/features/goals/goalSlice';
 export default function CurrentGoal() {
-
+    const currentGoal = useSelector(selectCurrentGoal);
+    const goals = useSelector(selectGoals);
+    const [_currentGoal, _setCurrentGoal] = useState(""); 
+    useEffect(() => {
+        const goal = goals.filter(goal => goal.id === currentGoal)[0];
+        _setCurrentGoal(goal.name);
+    }, [currentGoal]);
     return (
         <>
         <style type="text/css">
@@ -12,11 +21,12 @@ export default function CurrentGoal() {
                     padding-top: 15px;
                     padding-bottom: 15px;
                     background-color: rgba(100, 100, 100, 0.2);
+                    border-radius: 10px 10px 0px 0px ;
                 }     
                 .current-goal-label {
                     color: #34dcbe; 
                     font-size: 5vh;
-                    font-weight: 500;
+                    font-weight: 300;
 
                 }
                 .current-goal-name {
@@ -34,8 +44,9 @@ export default function CurrentGoal() {
         </style>
         <Container fluid className="current-goal-cont border-bottom border-secondary">
                 <Row>
-                    <Col xs="12" className="d-flex justify-content-start">
-                        <span className="current-goal-label">Current Goal:</span> <span className="current-goal-name">{`${"this is a great test for"}`}</span>
+                    <Col xs="12" md="4" className="d-flex justify-content-start align-items-center"><span className="current-goal-label">Current&nbsp;Goal:</span></Col>
+                    <Col xs="12" md="8" className="d-flex justify-content-start align-items-center">
+                         <span className="current-goal-name">{`${_currentGoal}`}</span>
                     </Col>
                 </Row>
         </Container>

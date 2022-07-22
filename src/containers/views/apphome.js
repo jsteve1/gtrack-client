@@ -12,7 +12,7 @@ export default function AppHomeView() {
                 {
                     `   
                         .app-home-cont {
-                            padding-top: 80px;
+                            padding-top: 120px;
                             text-align: center;
                             background-image: url("${mtn}");
                             background-repeat: no-repeat;
@@ -23,7 +23,11 @@ export default function AppHomeView() {
 
                         }
                         .app-home-row-2 {
-                            margin-bottom: 120px;
+
+                        }
+                        .app-home-row-3 {
+                            margin-top: -15px;
+                            margin-bottom: 120px;                            
                         }
                         .quick-info-col-home {
 
@@ -42,25 +46,35 @@ export default function AppHomeView() {
                 </style>
                 <Container fluid className="app-home-cont">
                     <Row>
-                        <Col xs="12" className="current-goal-col-home">
+                        <Col />
+                        <Col xs="10" className="current-goal-col-home">
                             <CurrentGoal />
                         </Col>
+                        <Col />
                     </Row>
                     <Row className="app-home-row-1">
-                        <Col xs="12" className="quick-info-col-home">
+                        <Col />
+                        <Col xs="10" className="quick-info-col-home">
                             <QuickInfo />
                         </Col>
+                        <Col />
                     </Row>
                     <Row className="mt-3 mb-3">
                         <AppHomeActions />
                     </Row>
-                    <Row className="app-home-row-2">                   
-                        <Col xs="12" md="6" className="small-goal-list-col-home">
+                    <Row className="app-home-row-2">       
+                        <Col />
+                        <Col xs="10" className="small-goal-list-col-home d-flex justify-content-center">
                             <SmallGoalList />
                         </Col>
-                        <Col xs="12" md="6" className="other-user-list-col-home">
+                        <Col />                     
+                    </Row>
+                    <Row className="app-home-row-3">       
+                        <Col />
+                        <Col xs="10" className="other-user-list-col-home d-flex justify-content-center">
                             <OtherUserList />
                         </Col>
+                        <Col />
                     </Row>
                 </Container>
             </>

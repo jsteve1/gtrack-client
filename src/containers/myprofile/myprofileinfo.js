@@ -33,7 +33,7 @@ export default function MyProfileInfo({ fname, lname, bio, email, profilepic, se
                                 padding-left: 50px;
                         }
                         .name-col {
-                            font-size: 7vh; 
+                            font-size: 4.5vh; 
                             font-weight: 500; 
                         }
                         .email-col, .bio-col {
@@ -44,20 +44,6 @@ export default function MyProfileInfo({ fname, lname, bio, email, profilepic, se
                             font-size: 2vh; 
 
                         }
-                        .name-col,
-                        .email-col,
-                        .bio-col {
-                            margin-left: 15vw;
-                        }
-
-                        @media only screen and (max-width: 550px) {
-                            .name-col,
-                            .email-col,
-                            .bio-col {
-                                margin-left: 5vw;
-                            }
-                        }
-
                         .edit-profile-btn {
                             font-weight: 300; 
                             font-size: 2vh;
@@ -70,58 +56,66 @@ export default function MyProfileInfo({ fname, lname, bio, email, profilepic, se
                             height: 100px;
                             outline: none; border: none;
                         }
-                        .profile-pic-add {
-                            color: #34a9be;
-                            align-self: center;
+                        .edit-profile-pencil:hover,
+                        .edit-profile-pencil:active,
+                        .edit-profile-pencil:focus,
+                        .edit-profile-pencil:focus-visible {
+                            color: #34dcbe;
+                            filter: brightness(1.05);
+                            cursor: pointer;
+                            animation-name: adduploadanimation;
+                            animation-duration: 0.5s; 
                         }
                         .action-buttons-col {
                             padding-right: 15px;
                             margin-top: 15px; 
                             margin-bottom: 15px;
                         }
+                        .fname-lname-span {
+                            white-space: nowrap;
+                            text-overflow: ellipsis;
+                            margin-right: 10%;
+                        }
+                        .edit-profile-span {
+                            display: flex; 
+                            width: 50%;
+                            justify-content: space-around;
+                            align-items: center;
+                        }
                     `
                 }
                 </style>
                 <Container fluid className="border-top border-secondary myprofileinfo-cont">
                     <Row className="mb-1 pl-5 border-bottom border-secondary">
-                        <Col xs="9" sm="8" className="d-flex justify-content-start name-col">
-                            {`${fname} ${lname}`}
-                        </Col>
-                        <Col className="d-flex align-items-center justify-content-around action-buttons-col">
-                            <OverlayTrigger
-                                placement="left"
-                                delay={{ show: 250, hide: 400 }}
-                                overlay={renderUploadTooltip}
-                            >
-                                <Icon.PlusCircleFill className="profile-pic-add" width={50} height={50} onClick={() => setUploadModalShow(true)} />
-                            </OverlayTrigger>
-                            <OverlayTrigger
-                                placement="left"
-                                delay={{ show: 250, hide: 400 }}
-                                overlay={renderEditTooltip}
-                            >
-                                <Icon.PencilFill className="profile-pic-add" width={50} height={50} onClick={() => setShowEdit(true)} />
-                            </OverlayTrigger>
-                            <OverlayTrigger
-                                placement="left"
-                                delay={{ show: 250, hide: 400 }}
-                                overlay={renderSettingsTooltip}
-                            >
-                                <Icon.GearFill className="profile-pic-add" width={50} height={50} onClick={() => setShowEdit(true)} />
-                            </OverlayTrigger>
+                        <Col xs="12" className="d-flex justify-content-between name-col">
+                            <span className="fname-lname-span">{`${fname} ${lname}`}</span> 
+                            <span className="edit-profile-span">
+                                <OverlayTrigger
+                                        placement="left"
+                                        delay={{ show: 250, hide: 400 }}
+                                        overlay={renderEditTooltip}
+                                    >
+                                        <Icon.PencilFill className="edit-profile-pencil" width={"25px"} height={"25px"} onClick={() => setShowEdit(true)} />
+                                </OverlayTrigger>
+                                <OverlayTrigger
+                                        placement="left"
+                                        delay={{ show: 250, hide: 400 }}
+                                        overlay={renderUploadTooltip}
+                                    >
+                                        <Icon.CloudUploadFill className="edit-profile-pencil upload-cloud" width={"25px"} height={"25px"} onClick={() => setUploadModalShow(true)} />
+                                </OverlayTrigger>
+                            </span>
                         </Col>
                     </Row>
                     <Row className="mb-1">
-                        <Col xs="9" sm="8" className="d-flex justify-content-start email-col">
+                        <Col xs="12" sm="12" md="10" className="d-flex justify-content-left email-col">
                             {`${email}`}
                         </Col>
-                        <Col />
                     </Row>
                     <Row className="mb-1">
-                        <Col xs="9" sm="8" className="d-flex justify-content-start bio-col">
+                        <Col xs="12" sm="12" md="10" className="d-flex justify-content-left bio-col">
                             {`${bio}`}
                         </Col>
-                        <Col />
                     </Row>
                 </Container>
             </>
