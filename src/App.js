@@ -6,6 +6,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { CookiesProvider } from 'react-cookie';
 import AppNav from './containers/ui/navbar';
 import BottomNav from './containers/ui/bottomnav';
+import * as Icon from 'react-bootstrap-icons';
 function App() {
   return (
       <Provider store={store}>

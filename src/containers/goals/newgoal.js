@@ -1,5 +1,5 @@
 import { Offcanvas, Container, Row } from 'react-bootstrap';
-export default function EditProfile({ show, setShow, ...props }) {
+export default function NewGoal({ show, setShow, ...props }) {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     return (
@@ -7,7 +7,7 @@ export default function EditProfile({ show, setShow, ...props }) {
             <style type="text/css">
             {
                 `
-                    .edit-profile-off-canvas {
+                    .new-goal-off-canvas {
                         background-color: rgba(10, 10, 10, 0.95);
                         color: #aaaaaa; 
                         height: 75vh;
@@ -15,9 +15,9 @@ export default function EditProfile({ show, setShow, ...props }) {
                 `
             }
             </style>
-            <Offcanvas className="edit-profile-off-canvas" show={show} onHide={handleClose} {...props}>
+            <Offcanvas placement={"bottom"} className="new-goal-off-canvas" show={show} onHide={handleClose} {...props}>
                 <Offcanvas.Header closeButton closeVariant="white">
-                    <Offcanvas.Title>Edit Profile</Offcanvas.Title>
+                    <Offcanvas.Title>New Goal</Offcanvas.Title>
                 </Offcanvas.Header>
                 <Offcanvas.Body as={Container}>
                     <Row>

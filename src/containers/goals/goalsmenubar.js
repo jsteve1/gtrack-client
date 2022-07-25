@@ -26,7 +26,7 @@ const renderShowGridViewTooltip = (props) => (
     </Tooltip>
 );
 
-export default function GoalsListMenuBar({ showTimeline, showGridView, showCompleted, setShowTimeline, setShowCompleted, setShowGridView }) {   
+export default function GoalsListMenuBar({ showTimeline, showGridView, showCompleted, setShowTimeline, setShowCompleted, setShowGridView, showNewGoal, setShowNewGoal }) {   
     const goals = useSelector(selectGoals); 
     const showGoalsList = (showTimeline === false && showGridView === false && showCompleted === false);
     const handleShowListClick = () => {
@@ -110,7 +110,7 @@ export default function GoalsListMenuBar({ showTimeline, showGridView, showCompl
                                 overlay={<Tooltip><h5>New Goal</h5></Tooltip>}
                      
                             >
-                        <Icon.PlusCircle width={40} height={40} color={(showGoalsList) ? "#34dcbe" : "#aaaaaa"} className="menu-bar-icon add-goal-icon" onClick={handleNewGoalSelected} />
+                        <Icon.PlusCircle onClick={() => setShowNewGoal(true) } width={40} height={40} color={"#34aaaaaa"} className="menu-bar-icon add-goal-icon" />
                     </OverlayTrigger>
                 </Col>
                 <Col xs="7" className="d-flex justify-content-end align-items-center">
@@ -134,13 +134,6 @@ export default function GoalsListMenuBar({ showTimeline, showGridView, showCompl
                             overlay={renderTimelineTooltip}
                         >
                         <Icon.CalendarRange width={30} height={30} color={(showTimeline) ? "#34dcbe" : "#aaaaaa"} className="menu-bar-icon" onClick={handleShowTimelineClick}/>
-                    </OverlayTrigger>
-                    <OverlayTrigger
-                            placement="bottom"
-                            delay={{ show: 250, hide: 400 }}
-                            overlay={renderShowCompletedTooltip}
-                        >
-                        <Icon.JournalCheck width={30} height={30} color={(showCompleted) ? "#34dcbe" : "#aaaaaa"} className="menu-bar-icon" onClick={handleShowCompletedClick}/>
                     </OverlayTrigger>
                 </Col>
             </Row>

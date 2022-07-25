@@ -14,7 +14,7 @@ import AppHomeView from '../containers/views/apphome';
 import MyProfileView from "../containers/views/myprofile";
 import GoalsListView from "../containers/views/goalslist";
 import FeedView from '../containers/views/feed';
-
+import * as Icon from 'react-bootstrap-icons';
 const ScrollResetWrapper = ({children}) => {
   const location = useLocation();
   useLayoutEffect(() => {

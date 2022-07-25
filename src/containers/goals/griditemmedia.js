@@ -1,0 +1,72 @@
+import { useEffect, useState } from 'react';
+import { Container, Row, Col } from 'react-bootstrap'; 
+import * as Icon from 'react-bootstrap-icons';
+export function SmallImageTile({ url, index }) {
+    return (
+        <img src={`${url}`} />        
+    );
+}
+
+export default function GridItemMedia({ media, setShowEditGoal }) {
+    const [mediaList, setMediaList] = useState(media);
+    useEffect(() => {
+        if(JSON.stringify(media) !== JSON.stringify(mediaList)) {
+            setMediaList(media); 
+        }
+    }, [media]);
+    
+    return (
+        <>
+            <style type="text/css">
+            {
+                `
+                    .grid-item-media-cont {
+                        margin-top: 15px; 
+                        min-height: 150px; 
+                        min-width: 175px;
+                        margin-bottom: 25px;
+                        background-color: rgba(75, 75, 75, 0.2); 
+                        padding-top: 1px;
+                    }
+                    .upload-button-grid-media {
+                        margin-top: 25px;
+                    }
+                    .grid-media-upload-div {
+                        margin-top: 25px;
+                    }
+                    .grid-media-upload-div:hover {
+                        color: #34aaaa;
+                    }
+                    .grid-media-image-list-div {
+                        display: flex; 
+                        justify-content: start; 
+                        overflow-x: auto; 
+                    }
+                `
+            }
+            </style>
+            <Container fluid className="grid-item-media-cont" onClick={() => { if(mediaList.length === 0 ){  setShowEditGoal(true);  } }}>
+            {
+                (mediaList.length > 0) ?
+                <div className="grid-media-image-list-div">
+                    {
+                        mediaList.map((link, index) => {     
+                            return (
+                                <>
+                                    <SmallImageTile url={link} index={index} />  
+                                </>
+                            );  
+                        }) 
+
+                    }
+                </div>
+                : 
+                <div className="grid-media-upload-div">
+                    Add media<br></br>
+                    <Icon.CloudUpload width={50} height={50} className="upload-button-grid-media" />
+                </div>
+            }
+            </Container>
+        </>
+    )
+}

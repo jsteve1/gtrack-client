@@ -6,11 +6,15 @@ import mtn from '../../static/images/mtn.jpg';
 import  { useState } from 'react';
 import GoalsGrid from '../goals/goalsgrid'; 
 import GoalsCompleted from '../goals/goalscompleted'; 
+import EditGoal from '../goals/editgoal';
+import NewGoal from '../goals/newgoal';
 
 export default function GoalsListView() {
     const [showTimeline, setShowTimeline] = useState(false);
     const [showCompleted, setShowCompleted] = useState(false);
     const [showGridView , setShowGridView] = useState(false);
+    const [showNewGoal, setShowNewGoal] = useState(false);
+    const [showEditGoal, setShowEditGoal] = useState(false);
     return (
             <>
                 <style type="text/css">
@@ -29,16 +33,16 @@ export default function GoalsListView() {
                 </style>
                 <Container fluid className="goals-list-cont">
                     <Row className="pr-5 pl-5">
-                        <GoalsListMenuBar showTimeline={showTimeline} showGridView={showGridView} showCompleted={showCompleted}  setShowTimeline={setShowTimeline} setShowCompleted={setShowCompleted} setShowGridView={setShowGridView} />
+                        <GoalsListMenuBar showNewGoal={showNewGoal} setShowNewGoal={setShowNewGoal} showTimeline={showTimeline} showGridView={showGridView} showCompleted={showCompleted}  setShowTimeline={setShowTimeline} setShowCompleted={setShowCompleted} setShowGridView={setShowGridView} />
                     </Row>
                     <Row className="pr-5 pl-5">
                     {   
-                        (showTimeline) ?  <GoalsTimeline /> : <>
+                        (showTimeline) ?  <GoalsTimeline showEditGoal={showEditGoal} setShowEditGoal={setShowEditGoal} /> : <>
                         {
-                            (showGridView) ? <GoalsGrid /> : <>
+                            (showGridView) ? <GoalsGrid showEditGoal={showEditGoal} setShowEditGoal={setShowEditGoal} /> : <>
                                 {
-                                    (showCompleted) ? <GoalsCompleted /> : <>
-                                        <GoalsList />
+                                    (showCompleted) ? <GoalsCompleted showEditGoal={showEditGoal} setShowEditGoal={setShowEditGoal} /> : <>
+                                        <GoalsList showEditGoal={showEditGoal} setShowEditGoal={setShowEditGoal} />
                                     </>
                                 }
                                 </>                          
@@ -47,6 +51,8 @@ export default function GoalsListView() {
                     }
                     </Row>
                 </Container>
+                <EditGoal show={showEditGoal} setShow={setShowEditGoal} />
+                <NewGoal show={showNewGoal} setShow={setShowNewGoal} />
             </>
         )
 }

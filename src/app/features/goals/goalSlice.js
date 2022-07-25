@@ -5,7 +5,7 @@ export const mockGoalState = {
     {
       "id": "6a8af92c-7a41-479b-91fb-e4cc1ce9cbe1",
       "name": "Bench Press 365", 
-      "deadline": 1655332007,
+      "deadline": 1655392007,
       "userid": "35942fde-d1a0-443e-aa0c-b383fe915bc5",
       "viewable": true, 
       "priority": 1, 
@@ -14,7 +14,8 @@ export const mockGoalState = {
       "starttime": 1654381607,
       "postponed": false, 
       "complete": true, 
-      "mediacomplete": 0
+      "mediacomplete": 0,
+      "completedtime": 1655391007
     },
     {
       id: "6a8af92c-7a41-479b-91fb-e4cc1ce9cbe2",
@@ -28,7 +29,8 @@ export const mockGoalState = {
       "starttime": 1654381607,
       "postponed": false, 
       "complete": false, 
-      "mediacomplete": 0
+      "mediacomplete": 0,
+      "completedtime": 0
     },
     {
       id: "6a8af92c-7a41-479b-91fb-e4cc1ce9cbe3",
@@ -36,27 +38,29 @@ export const mockGoalState = {
       "deadline": 1655332007,
       "userid": "35942fde-d1a0-443e-aa0c-b383fe915bc5",
       "viewable": true, 
-      "priority": 2, 
+      "priority": 3, 
       "reminders": true,
       "media": [], 
       "starttime": 1654381607,
       "postponed": false, 
       "complete": false, 
-      "mediacomplete": 0
+      "mediacomplete": 0,
+      "completedtime": 0
     },
     {
       id: "6a8af92c-7a41-479b-91fb-e4cc1ce9cbe4",
       "name": "Squat 455", 
-      "deadline": 1655332007,
+      "deadline": 1655532007,
       "userid": "35942fde-d1a0-443e-aa0c-b383fe915bc5",
       "viewable": true, 
-      "priority": 2, 
+      "priority": 4, 
       "reminders": true,
       "media": [], 
       "starttime": 1654381607,
       "postponed": false, 
       "complete": true, 
-      "mediacomplete": 0
+      "mediacomplete": 0,
+      "completedtime": 1655391007
     }
   ],
   progressMarkers: {

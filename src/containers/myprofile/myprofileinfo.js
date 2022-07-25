@@ -26,11 +26,13 @@ export default function MyProfileInfo({ fname, lname, bio, email, profilepic, se
                 {
                     `
                         .myprofileinfo-cont {
+                                padding-top: 25px;
                                 color: #aaaaaa;
-                                padding-bottom: 15px;
+                                padding-bottom: 30px;
                                 background-color: rgba(100, 100, 100, 0.2);
                                 min-height: 100px;
                                 padding-left: 50px;
+                                border-radius: 15px;
                         }
                         .name-col {
                             font-size: 4.5vh; 
@@ -78,14 +80,14 @@ export default function MyProfileInfo({ fname, lname, bio, email, profilepic, se
                         }
                         .edit-profile-span {
                             display: flex; 
-                            width: 50%;
+                            width: 30%;
                             justify-content: space-around;
                             align-items: center;
                         }
                     `
                 }
                 </style>
-                <Container fluid className="border-top border-secondary myprofileinfo-cont">
+                <Container fluid className="myprofileinfo-cont">
                     <Row className="mb-1 pl-5 border-bottom border-secondary">
                         <Col xs="12" className="d-flex justify-content-between name-col">
                             <span className="fname-lname-span">{`${fname} ${lname}`}</span> 
@@ -105,11 +107,6 @@ export default function MyProfileInfo({ fname, lname, bio, email, profilepic, se
                                         <Icon.CloudUploadFill className="edit-profile-pencil upload-cloud" width={"25px"} height={"25px"} onClick={() => setUploadModalShow(true)} />
                                 </OverlayTrigger>
                             </span>
-                        </Col>
-                    </Row>
-                    <Row className="mb-1">
-                        <Col xs="12" sm="12" md="10" className="d-flex justify-content-left email-col">
-                            {`${email}`}
                         </Col>
                     </Row>
                     <Row className="mb-1">

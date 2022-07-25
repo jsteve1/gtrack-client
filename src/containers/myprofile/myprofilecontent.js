@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import React, { forwardRef, useEffect, useState, useRef } from 'react';
 import UploadModal from '../ui/uploadmodal';
 
-const ImageTile = ({ pic, index, setIndex, setMainPic, removeImg, overallWidth, setOverallWidth }) => {
+const ImageTile = ({ pic, index, setIndex, setMainPic, removeImg, overallWidth, setOverallWidth, maxLength }) => {
     const [show, setShow] = useState(false);
     const dropdownRef = useRef(null);
     useEffect(() => {
@@ -32,9 +32,18 @@ const ImageTile = ({ pic, index, setIndex, setMainPic, removeImg, overallWidth, 
                                         })}>
             </Dropdown.Toggle>
             <Dropdown.Menu flip={false} className="menu-dropdown-img">
-                <Dropdown.Item eventKey="1" onClick={() => setMainPic(index)} ><Icon.StarFill color={"#34dcbe"} className="icon-dropdown-img" />Make Main Pic</Dropdown.Item>
-                <Dropdown.Item eventKey="2" onClick={() => setIndex(index, index - 1)}><Icon.ArrowLeft color={"#34dcbe"} className="icon-dropdown-img" /> Move Left</Dropdown.Item>
-                <Dropdown.Item eventKey="3" onClick={() => setIndex(index, index + 1)}><Icon.ArrowRight color={"#34dcbe"} className="icon-dropdown-img" /> Move Right</Dropdown.Item>
+                {
+                    (index !== 0) ? <Dropdown.Item eventKey="1" onClick={() => setMainPic(index)} ><Icon.StarFill color={"#34dcbe"} className="icon-dropdown-img" />Make Main Pic</Dropdown.Item>
+                    : ""
+                }
+                {
+                    (index !== 0) ? <Dropdown.Item eventKey="2" onClick={() => setIndex(index, index - 1)}><Icon.ArrowLeft color={"#34dcbe"} className="icon-dropdown-img" /> Move Left</Dropdown.Item>
+                    : ""
+                }
+                {
+                    (index !== maxLength - 1) ? <Dropdown.Item eventKey="3" onClick={() => setIndex(index, index + 1)}><Icon.ArrowRight color={"#34dcbe"} className="icon-dropdown-img" /> Move Right</Dropdown.Item>
+                    : ""
+                }   
                 <Dropdown.Item eventKey="4" onClick={() => removeImg(index)}><Icon.Trash2Fill  color={"#34dcbe"} className="icon-dropdown-img" />Delete Image</Dropdown.Item>
             </Dropdown.Menu>
         </Dropdown>
@@ -177,15 +186,15 @@ export default function MyProfileContent({ uploadModalShow, setUploadModalShow }
                             border-radius: 10px;
                         }
                         .images-list {
-                            ${(myprofile.media.length === 0) ? "min-height: 0px !important; height: 50px !important; justify-content: center;" : "" }
-                            ${(myprofile.media.length === 1 || !widerThanScreen) ? "justify-content: center;" : "padding-left: 50px; justify-content: start;" }
+                            background-color: rgba(0, 0, 0, 0.1);
+                            ${(myprofile.media.length === 0) ? "min-height: 0px !important; height: 50px !important; justify-content: center; background-color: transparent;" : "" }
+                            ${(myprofile.media.length === 1 || !widerThanScreen) ? "justify-content: center;" : "padding-left: 15px; justify-content: start;" }
                             width: 100vw;
                             min-height: 350px;
                             max-height: 350px;
                             overflow-x: auto;
                             overflow-y: hidden;
                             display: flex;
-                            background-color: rgba(100, 100, 100, 0.2);
                         }
                         .images-list::-webkit-scrollbar-track {
                             -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
@@ -238,7 +247,7 @@ export default function MyProfileContent({ uploadModalShow, setUploadModalShow }
                             <>
                                 {                       
                                     myprofile.media.map((pic, index) => {                      
-                                        return <ImageTile overallWidth={overallWidth} setOverallWidth={setOverallWidth} removeImg={removeImg} key={`${index}-img-key`} pic={pic} index={index} setIndex={setIndex} setMainPic={_setMainPicIndex} />
+                                        return <ImageTile maxLength={myprofile.media.length} overallWidth={overallWidth} setOverallWidth={setOverallWidth} removeImg={removeImg} key={`${index}-img-key`} pic={pic} index={index} setIndex={setIndex} setMainPic={_setMainPicIndex} />
                                     })
                                 }
                             </>

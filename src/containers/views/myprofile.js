@@ -64,7 +64,7 @@ export default function MyProfileView() {
                         <Col />
                     </Row>
                 </Container>
-                <EditProfile show={showEdit} setShow={setShowEdit} placement={"end"} />
+                <EditProfile show={showEdit} setShow={setShowEdit} placement={"bottom"} />
             </>
         )
 }
