@@ -99,6 +99,7 @@ export default function GoalsListItem({ name,
                                         sortByDeadline,
                                         setGoalDeadline,
                                         id,
+                                        openDeleteModal
                                     }) {       
     const [showEditDate, setShowEditDate] = useState(false);
     const [newDeadline, setNewDeadline] = useState(deadline);
@@ -127,7 +128,9 @@ export default function GoalsListItem({ name,
                     background-color: rgba(100, 100, 100, 0.08);
                 }
                 .goal-list-cont:hover {
-                    background-color: rgba(100, 100, 100, 0.2);
+                    ${(complete) ? "background-color: rgba(39, 245, 157, 0.15);"
+                        : "background-color: rgba(100, 100, 100, 0.2);"
+                    }
                     transform: scale(1.01);
                 }
                 .goal-list-cont:focus,
@@ -196,8 +199,11 @@ export default function GoalsListItem({ name,
                     100% {transform: scale(1.0); }
                 }
                 .goal-list-item-action {
-                    color: #34aaaa;
+                    color: #34aaaa; 
                     min-width: 60px;
+                }
+                .star-button {
+
                 }
                 .goal-list-item-action:hover,
                 .goal-list-item-action:active,
@@ -288,7 +294,7 @@ export default function GoalsListItem({ name,
                                     delay={{ show: 250, hide: 400 }}
                                     overlay={renderStarTooltip}
                                 >
-                                    <Icon.Star className="goal-list-item-action" color={"rgba(213, 176, 0, 0.5)"} width={40} height={40} /> 
+                                    <Icon.Star className="goal-list-item-action" onClick={() => setIndex(index, 0)} color={"rgba(213, 176, 0, 0.5)"} width={40} height={40} /> 
                                 </OverlayTrigger>
                                 )
                             }
@@ -403,7 +409,7 @@ export default function GoalsListItem({ name,
                                                             delay={{ show: 250, hide: 400 }}
                                                             overlay={renderFavoriteTooltip}
                                                         >
-                                                            <Icon.Star className="goal-list-item-action" width={40} height={40} /> 
+                                                            <Icon.Star className="goal-list-item-action" color={"rgba(213, 176, 0, 0.5)"} width={40} height={40} /> 
                                                         </OverlayTrigger>
                                                         <div className="icon-spacing-goal-list-actions"></div> 
                                                     </>
@@ -443,9 +449,9 @@ export default function GoalsListItem({ name,
                             <Dropdown drop={'start'}>
                                 <Dropdown.Toggle as={CustomGoalActions} id="dropdown-custom-components" />
                                 <Dropdown.Menu variant="dark">
-                                    <Dropdown.Item onClick={(e) => {  }}><Icon.Trophy color={"#34dcbe"} />&nbsp;&nbsp;View</Dropdown.Item>
-                                    <Dropdown.Item onClick={(e) => { setShowEditGoal(true) }}><Icon.PencilFill color={"#34dcbe"}/>&nbsp;&nbsp;Edit</Dropdown.Item>
-                                    <Dropdown.Item onClick={(e) => { }}><Icon.Trash color={"#34dcbe"}/>&nbsp;&nbsp;Delete</Dropdown.Item>
+                                    <Dropdown.Item as={Col} onClick={(e) => {  }}><Icon.Trophy color={"#34dcbe"} />&nbsp;&nbsp;View</Dropdown.Item>
+                                    <Dropdown.Item as={Col} onClick={(e) => { setShowEditGoal(true) }}><Icon.PencilFill color={"#34dcbe"}/>&nbsp;&nbsp;Edit</Dropdown.Item>
+                                    <Dropdown.Item as={Col} onClick={(e) => { e.preventDefault(); openDeleteModal(id); }}><Icon.Trash color={"#34dcbe"}/>&nbsp;&nbsp;Delete</Dropdown.Item>
                                 </Dropdown.Menu>
                             </Dropdown>
                         </OverlayTrigger>

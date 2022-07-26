@@ -15,7 +15,7 @@ export default function GoalGridItem({
                                         priority,
                                         rearrangeMode,
                                         showPrio,
-                                        index, setIndex,
+                                        index,
                                         length,
                                         showEditGoal, 
                                         setShowEditGoal,
@@ -23,7 +23,8 @@ export default function GoalGridItem({
                                         sortByDeadline,
                                         setGoalDeadline,
                                         id, 
-                                        currentSortState
+                                        currentSortState, 
+                                        openDeleteModal
                                      }){
 
     return (
@@ -115,7 +116,7 @@ export default function GoalGridItem({
                                 <Dropdown.Menu variant="dark">
                                     <Dropdown.Item onClick={(e) => {  }}><Icon.Trophy color={"#34dcbe"} />&nbsp;&nbsp;View</Dropdown.Item>
                                     <Dropdown.Item onClick={(e) => { setShowEditGoal(true) }}><Icon.PencilFill color={"#34dcbe"}/>&nbsp;&nbsp;Edit</Dropdown.Item>
-                                    <Dropdown.Item onClick={(e) => { }}><Icon.Trash color={"#34dcbe"}/>&nbsp;&nbsp;Delete</Dropdown.Item>
+                                    <Dropdown.Item onClick={(e) => {  e.preventDefault(); openDeleteModal(id); }}><Icon.Trash color={"#34dcbe"}/>&nbsp;&nbsp;Delete</Dropdown.Item>
                                 </Dropdown.Menu>
                             </Dropdown>
                         </OverlayTrigger>

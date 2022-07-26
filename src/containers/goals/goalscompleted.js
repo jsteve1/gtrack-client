@@ -1,13 +1,13 @@
 import  { useSelector } from 'react-redux';
-import { selectGoals } from '../../app/features/goals/goalSlice';
+import { selectCompleteGoals, selectGoals } from '../../app/features/goals/goalSlice';
 import { Container, Row, Col, Tooltip, OverlayTrigger, Button } from 'react-bootstrap'; 
 import { useEffect, useState } from 'react';
 import GoalListItem from '../../components/goals/goallistitem';
 import * as Icon from 'react-bootstrap-icons';
 
-export default function GoalsCompleted() {   
+export default function GoalsCompleted({ openDeleteModal }) {   
     const [_goals, _setGoals] = useState([]);
-    const goals = useSelector(selectGoals);
+    const goals = useSelector(selectCompleteGoals);
     const [currentSortState, setCurrentSortState] = useState();
     useEffect(() => {
         console.log("goals list loaded", goals);
@@ -100,7 +100,7 @@ export default function GoalsCompleted() {
         {
             _goals.map((goal, index) => (
                 <Row className="goal-list-item-row" key={goal.id}>
-                    <GoalListItem priority={index + 1} name={goal.name} deadline={goal.deadline} />
+                    <GoalListItem openDeleteModal={openDeleteModal} priority={index + 1} name={goal.name} deadline={goal.deadline} />
                 </Row>
             ))
         }

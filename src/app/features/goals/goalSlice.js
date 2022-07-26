@@ -1,29 +1,14 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, current } from '@reduxjs/toolkit'
 
 export const mockGoalState = {
   goals: [
-    {
-      "id": "6a8af92c-7a41-479b-91fb-e4cc1ce9cbe1",
-      "name": "Bench Press 365", 
-      "deadline": 1655392007,
-      "userid": "35942fde-d1a0-443e-aa0c-b383fe915bc5",
-      "viewable": true, 
-      "priority": 1, 
-      "reminders": true,
-      "media": [], 
-      "starttime": 1654381607,
-      "postponed": false, 
-      "complete": true, 
-      "mediacomplete": 0,
-      "completedtime": 1655391007
-    },
     {
       id: "6a8af92c-7a41-479b-91fb-e4cc1ce9cbe2",
       "name": "Bench Press 405", 
       "deadline": 1655332007,
       "userid": "35942fde-d1a0-443e-aa0c-b383fe915bc5",
       "viewable": true, 
-      "priority": 2, 
+      "priority": 1, 
       "reminders": true,
       "media": [], 
       "starttime": 1654381607,
@@ -38,7 +23,7 @@ export const mockGoalState = {
       "deadline": 1655332007,
       "userid": "35942fde-d1a0-443e-aa0c-b383fe915bc5",
       "viewable": true, 
-      "priority": 3, 
+      "priority": 2, 
       "reminders": true,
       "media": [], 
       "starttime": 1654381607,
@@ -53,6 +38,21 @@ export const mockGoalState = {
       "deadline": 1655532007,
       "userid": "35942fde-d1a0-443e-aa0c-b383fe915bc5",
       "viewable": true, 
+      "priority": 3, 
+      "reminders": true,
+      "media": [], 
+      "starttime": 1654381607,
+      "postponed": false, 
+      "complete": true, 
+      "mediacomplete": 0,
+      "completedtime": 1655391007
+    },
+    {
+      "id": "6a8af92c-7a41-479b-91fb-e4cc1ce9cbe1",
+      "name": "Bench Press 365", 
+      "deadline": 1655392007,
+      "userid": "35942fde-d1a0-443e-aa0c-b383fe915bc5",
+      "viewable": true, 
       "priority": 4, 
       "reminders": true,
       "media": [], 
@@ -61,7 +61,7 @@ export const mockGoalState = {
       "complete": true, 
       "mediacomplete": 0,
       "completedtime": 1655391007
-    }
+    },
   ],
   progressMarkers: {
    "6a8af92c-7a41-479b-91fb-e4cc1ce9cbe1": [
@@ -123,15 +123,68 @@ export const goalSlice = createSlice({
         } else return true;
       });
     },
+    setGoals: (state, action) => {
+      state.goals = action.payload.goals;
+    },
     updateGoal: (state, action) => {
       for(let goal of state.goals) {
         if(goal.id === action.payload.id) {
-          for(let key in action.payload.goalUpdate) {
+          for(let key in action.payload.updateGoal) {
             if(goal[key] !== undefined) {
-              goal[key] = action.payload.goalUpdate[key]; 
+              goal[key] = action.payload.updateGoal[key];
             }
           }
         }
+      }
+    },
+    setGoalIndex: (state, action) => {
+      const index = action.payload.index; 
+      const newIndex = action.payload.newIndex; 
+      const _goals = state.goals;
+      if(index > -1 && index < _goals.length && index !== 0 && newIndex === 0) {
+          const goal = JSON.parse(JSON.stringify(_goals[index])); 
+          let newGoals = JSON.parse(JSON.stringify(_goals)).filter(goal => goal.complete === false);
+          newGoals = newGoals.filter((val, idx) => {
+              return index !== idx;
+          });
+          newGoals.unshift(goal);
+          for(let i = 0; i < newGoals.length; i++) {
+              let newGoal = JSON.parse(JSON.stringify(newGoals[i]));
+              newGoal.priority = i + 1;
+              newGoals[i] = JSON.parse(JSON.stringify(newGoal));
+          }
+          const completedGoals = _goals.filter(goal => goal.complete === true || goal.completedtime !== 0); 
+          for(let goal of completedGoals) {
+            goal.priority = -1;
+          }
+          state.goals = [...newGoals, ...completedGoals];
+      }
+      if(index > _goals.length - 1 || index < 0) {
+          console.log("index does not exist", index); 
+      } else if(index === _goals.length - 1 && newIndex > index) {
+          console.log("already at end");
+      } else if(newIndex > _goals.length - 1) {
+          console.log("cannot swap beyond length");
+      } else if(newIndex < 0) {
+          console.log("invalid new index");
+      } else if(newIndex === index) {
+          console.log("invalid new index");
+      } else {
+          const goalsCopy = JSON.parse(JSON.stringify(_goals)).filter(goal => goal.complete === false);
+          const currGoal = _goals[index]; 
+          const otherGoal = _goals[newIndex];
+          goalsCopy[newIndex] = currGoal; 
+          goalsCopy[index] = otherGoal; 
+          for(let i = 0; i < goalsCopy.length; i++) {
+            let newGoal = JSON.parse(JSON.stringify(goalsCopy[i]));
+            newGoal.priority = i + 1;
+            goalsCopy[i] = JSON.parse(JSON.stringify(newGoal));
+        }
+        const completedGoals = _goals.filter(goal => goal.complete === true || goal.completedtime !== 0); 
+        for(let goal of completedGoals) {
+          goal.priority = -1;
+        }
+        state.goals = [...goalsCopy, ...completedGoals];
       }
     },
     addProgressMarker: (state, action) => {
@@ -161,8 +214,10 @@ export const goalSlice = createSlice({
 })
 
 export const selectGoals = (state) => state.goals.goals; 
+export const selectTodoGoals = (state) => state.goals.goals.filter(goal => goal.complete === false || goal.completedtime === 0); 
+export const selectCompleteGoals = (state) => state.goals.goals.filter(goal => goal.complete === true); 
 export const selectProgressMarkers = (state) => state.goals.progressMarkers;
 
-export const { addGoal, removeGoal, editGoal, addProgressMarker, rmProgressMarker } = goalSlice.actions
+export const { addGoal, removeGoal, addProgressMarker, rmProgressMarker, setGoals, updateGoal, setGoalIndex } = goalSlice.actions
 
 export default goalSlice.reducer

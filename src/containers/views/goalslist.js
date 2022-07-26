@@ -8,6 +8,7 @@ import GoalsGrid from '../goals/goalsgrid';
 import GoalsCompleted from '../goals/goalscompleted'; 
 import EditGoal from '../goals/editgoal';
 import NewGoal from '../goals/newgoal';
+import DeleteGoalModal from '../ui/DeleteModal';
 
 export default function GoalsListView() {
     const [showTimeline, setShowTimeline] = useState(false);
@@ -15,6 +16,12 @@ export default function GoalsListView() {
     const [showGridView , setShowGridView] = useState(false);
     const [showNewGoal, setShowNewGoal] = useState(false);
     const [showEditGoal, setShowEditGoal] = useState(false);
+    const [showDeleteGoal, setShowDeleteGoal] = useState(false);
+    const [deleteId, setDeleteId] = useState(""); 
+    const openDeleteModal = (id) => {
+        setShowDeleteGoal(true);
+        setDeleteId(id); 
+    }
     return (
             <>
                 <style type="text/css">
@@ -37,13 +44,11 @@ export default function GoalsListView() {
                     </Row>
                     <Row className="pr-5 pl-5">
                     {   
-                        (showTimeline) ?  <GoalsTimeline showEditGoal={showEditGoal} setShowEditGoal={setShowEditGoal} /> : <>
+                        (showTimeline) ?  <GoalsTimeline openDeleteModal={openDeleteModal} showEditGoal={showEditGoal} setShowEditGoal={setShowEditGoal} /> : <>
                         {
-                            (showGridView) ? <GoalsGrid showEditGoal={showEditGoal} setShowEditGoal={setShowEditGoal} /> : <>
+                            (showGridView) ? <GoalsGrid openDeleteModal={openDeleteModal}  showEditGoal={showEditGoal} setShowEditGoal={setShowEditGoal} /> : <>
                                 {
-                                    (showCompleted) ? <GoalsCompleted showEditGoal={showEditGoal} setShowEditGoal={setShowEditGoal} /> : <>
-                                        <GoalsList showEditGoal={showEditGoal} setShowEditGoal={setShowEditGoal} />
-                                    </>
+                                    <GoalsList openDeleteModal={openDeleteModal} showEditGoal={showEditGoal} setShowEditGoal={setShowEditGoal} />
                                 }
                                 </>                          
                         }
@@ -51,6 +56,7 @@ export default function GoalsListView() {
                     }
                     </Row>
                 </Container>
+                <DeleteGoalModal id={deleteId} deleteModalShow={showDeleteGoal} setDeleteModalShow={setShowDeleteGoal} />
                 <EditGoal show={showEditGoal} setShow={setShowEditGoal} />
                 <NewGoal show={showNewGoal} setShow={setShowNewGoal} />
             </>
