@@ -32,7 +32,7 @@ export default function MyProfileDesc({ goalsAchieved, goalsPostponed, goalsTodo
                     <Row className="desc-data-row">
                         <Col />
                         <Col xs="12" md="8" className="d-flex justify-content-between border-bottom border-secondary align-items-center">
-                            <span>Vision Score&nbsp;<Icon.TriangleHalf width={30} height={30} /></span> <span className="desc-data-stats">0</span>
+                            <span><Icon.Trophy width={30} height={30} />&nbsp;Goal Score</span> <span className="desc-data-stats">0</span>
                         </Col>
                         <Col />
                     </Row>

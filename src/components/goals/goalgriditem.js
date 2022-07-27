@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Container, Row, Col, OverlayTrigger, Dropdown } from 'react-bootstrap';
+import { Container, Row, Col, OverlayTrigger, Dropdown, Tooltip } from 'react-bootstrap';
 import * as Icon from 'react-bootstrap-icons';
+import { useNavigate } from 'react-router-dom';
 import GridItemMedia from '../../containers/goals/griditemmedia';
 import { getDeadlineFormatted } from './goallistitem';
 import { renderFavoriteTooltip, renderMarkCompleteTooltip, renderMoreTooltip, CustomGoalActions } from './goallistitem';
@@ -19,14 +20,17 @@ export default function GoalGridItem({
                                         length,
                                         showEditGoal, 
                                         setShowEditGoal,
+                                        setShowEditGoalId,
                                         sortState,
                                         sortByDeadline,
                                         setGoalDeadline,
                                         id, 
                                         currentSortState, 
-                                        openDeleteModal
+                                        openDeleteModal,
+                                        setMarkCompleteId, 
+                                        setMarkCompleteModalShow
                                      }){
-
+    const navigate = useNavigate();
     return (
         <>
             <style type="text/css">
@@ -71,8 +75,12 @@ export default function GoalGridItem({
                         font-weight: 500;
                         font-size: 22pt;
                     }
-                    .grid-item-actions-row {
+                    .grid-item-actions-row,
+                    .grid-item-actions-row-complete {
                         min-height: 80px;
+                    }
+                    .grid-item-actions-row-complete {
+                        margin-top: 70%;
                     }
                     .goal-completed {
                        background-color: rgba(39, 245, 157, 0.10);
@@ -114,8 +122,8 @@ export default function GoalGridItem({
                             <Dropdown drop={'start'}>
                                 <Dropdown.Toggle as={CustomGoalActions} id="dropdown-custom-components" />
                                 <Dropdown.Menu variant="dark">
-                                    <Dropdown.Item onClick={(e) => {  }}><Icon.Trophy color={"#34dcbe"} />&nbsp;&nbsp;View</Dropdown.Item>
-                                    <Dropdown.Item onClick={(e) => { setShowEditGoal(true) }}><Icon.PencilFill color={"#34dcbe"}/>&nbsp;&nbsp;Edit</Dropdown.Item>
+                                    <Dropdown.Item onClick={(e) => { navigate(`/app/goal/${id}`); }}><Icon.Trophy color={"#34dcbe"} />&nbsp;&nbsp;View</Dropdown.Item>
+                                    <Dropdown.Item onClick={(e) => { setShowEditGoalId(id); setShowEditGoal(true); }}><Icon.PencilFill color={"#34dcbe"}/>&nbsp;&nbsp;Edit</Dropdown.Item>
                                     <Dropdown.Item onClick={(e) => {  e.preventDefault(); openDeleteModal(id); }}><Icon.Trash color={"#34dcbe"}/>&nbsp;&nbsp;Delete</Dropdown.Item>
                                 </Dropdown.Menu>
                             </Dropdown>
@@ -134,45 +142,65 @@ export default function GoalGridItem({
                     </Col>
                 }  
                 </Row>
-                <Row>
-                    <Col>
-                        <GridItemMedia setShowEditGoal={setShowEditGoal} media={media} />                    
-                    </Col>
-                </Row>
                 {
-                    (!complete) ? <Row className="grid-item-actions-row">
-                                    <Col className="d-flex justify-content-center">
-                                        {
-                                            (priority !== 1 && currentSortState === "priority") ? (
-                                            <OverlayTrigger
-                                                placement="top"
-                                                delay={{ show: 250, hide: 400 }}
-                                                overlay={renderFavoriteTooltip}
-                                                >
-                                                <Icon.Star color={"rgba(213, 176, 0, 0.5)"} width={40} height={40} className="mark-complete-button" />
-                                            </OverlayTrigger>
-                                            ) : <>
-                                                {
-                                                    (currentSortState !== "priority") ? "" : (
-                                                        <Icon.StarFill color={"rgba(213, 176, 0, 0.5)"} width={40} height={40} className="mark-complete-button" />
-                                                    )
-                                                }
-                                            </>
-                                            
-                                        }
-                                    </Col>
-                                    <Col className="d-flex justify-content-center">
-                                        <OverlayTrigger
-                                            placement="top"
-                                            delay={{ show: 250, hide: 400 }}
-                                            overlay={renderMarkCompleteTooltip}
+                    (media.length > 0 || !complete) ? 
+                    <Row>
+                        <Col>
+                            <GridItemMedia 
+                                id={id}
+                                setShowEditGoalId={setShowEditGoalId} 
+                                setShowEditGoal={setShowEditGoal} 
+                                media={media} />                    
+                        </Col>
+                    </Row> : ""
+                }
+                {
+                    (!complete) ? 
+                        <Row className="grid-item-actions-row">
+                            <Col className="d-flex justify-content-center">
+                                {
+                                    (priority !== 1 && currentSortState === "priority") ? (
+                                    <OverlayTrigger
+                                        placement="top"
+                                        delay={{ show: 250, hide: 400 }}
+                                        overlay={renderFavoriteTooltip}
                                         >
-                                            <Icon.CheckCircleFill width={40} height={40} className="mark-complete-button" />
-                                        </OverlayTrigger>
-                                    </Col>
-                                </Row> 
-                                : 
-                                ""
+                                        <Icon.Star color={"rgba(213, 176, 0, 0.5)"} width={40} height={40} className="mark-complete-button" />
+                                    </OverlayTrigger>
+                                    ) : <>
+                                        {
+                                            (currentSortState !== "priority") ? "" : (
+                                                <Icon.StarFill color={"rgba(213, 176, 0, 0.5)"} width={40} height={40} className="mark-complete-button" />
+                                            )
+                                        }
+                                    </>
+                                    
+                                }
+                            </Col>
+                            <Col className="d-flex justify-content-center">
+                                <OverlayTrigger
+                                    placement="top"
+                                    delay={{ show: 250, hide: 400 }}
+                                    overlay={renderMarkCompleteTooltip}
+                                >
+                                    <Icon.CheckCircleFill width={40} height={40} color={"#34dcbe"} className="mark-complete-button" onClick={() => { setMarkCompleteId(id); setMarkCompleteModalShow(true); }} />
+                                </OverlayTrigger>
+                            </Col>
+                        </Row> 
+                    : 
+                        <Row className="grid-item-actions-row-complete">
+                            <Col className="d-flex justify-content-center">
+                                {
+                                    <OverlayTrigger
+                                        placement="top"
+                                        delay={{ show: 250, hide: 400 }}
+                                        overlay={<Tooltip><h4>Share</h4></Tooltip>}
+                                        >
+                                        <Icon.ShareFill color={"#34aaaa"} width={40} height={40} className="mark-complete-button" />
+                                    </OverlayTrigger>
+                                }
+                            </Col>
+                        </Row> 
                 }
             </Container>
         </>

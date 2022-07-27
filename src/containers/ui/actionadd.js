@@ -1,4 +1,4 @@
-import { Offcanvas, Container, Row, Button, Col } from 'react-bootstrap';
+import { Offcanvas, Container, Row, Button, Col, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import NewGoal from '../goals/newgoal';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -17,44 +17,68 @@ export default function ActionAdd({ show, setShow, ...props }) {
                     .action-add-off-canvas {
                         background-color: rgba(10, 10, 10, 0.95);
                         color: #aaaaaa; 
-                        height: 25vh;
+                        height: 30vh;
                     }
                     .action-button-offcanvas-actions {
                         background-color: #121212;
                         height: 100px;
-                        color: #098899;
+                        color: #34aaaa;
                         width: 80%;
-                        font-size: 30pt;
+                        max-width: 200px;
+                        font-size: 16pt;
                         border-radius: 15px;
-                        border: #34dcbe 1px solid;
-
+                        border: #34aaaa 1px solid;
+                        transition: all ease 0.2s;
                     }   
                     .action-button-offcanvas-actions:hover, 
                     .action-button-offcanvas-actions:focus,
                     .action-button-offcanvas-actions:active,
                     .action-button-offcanvas-actions:focus-visible {
                         background-color: #121212;
-                        border: #34dcbe 1px solid;
-                        color: #098899;
+                        border: #34aaaa 1px solid;
+                        color: #34dcbe;
+                        transform: scale(1.01);
                     }
                 `
             }
             </style>
             <Offcanvas placement={"bottom"} className="action-add-off-canvas" show={show} onHide={handleClose} {...props}>
-                <Offcanvas.Header closeButton closeVariant="white">
-                    <Offcanvas.Title></Offcanvas.Title>
-                </Offcanvas.Header>
+                <Offcanvas.Header />
                 <Offcanvas.Body as={Container}>
                     <Row className="d-flex justify-content-end">
                         <Col className="d-flex justify-content-center">
-                            <Button className="action-button-offcanvas-actions" variant="dark" onClick={() => { navigate('/app/feed/') }}>
-                                <Icon.ShareFill width={40} height={40} color={"#098899"} />&nbsp;&nbsp;&nbsp;Post
-                            </Button>
+                            <OverlayTrigger
+                                placement="left"
+                                delay={{ show: 250, hide: 400 }}
+                                overlay={
+                                    <Tooltip>
+                                        <h4>
+                                            New Post
+                                        </h4>
+                                    </Tooltip>
+                                }
+                            >
+                                <Button className="action-button-offcanvas-actions" variant="dark" onClick={() => { navigate('/app/feed/') }}>
+                                    New Post&nbsp;<Icon.PencilSquare width={40} height={40} color={"#098899"} />
+                                </Button>
+                            </OverlayTrigger>
                         </Col>
                         <Col className="d-flex justify-content-center">
-                            <Button className="action-button-offcanvas-actions" variant="dark" onClick={() => {setShowNewGoal(true) }}>
-                                <Icon.PlusCircleFill  width={40} height={40} color={"#098899"} />&nbsp;&nbsp;&nbsp;New Goal
-                            </Button>
+                            <OverlayTrigger
+                                placement="left"
+                                delay={{ show: 250, hide: 400 }}
+                                overlay={
+                                    <Tooltip>
+                                        <h4>
+                                            New Goal
+                                        </h4>
+                                    </Tooltip>
+                                }
+                            >
+                                <Button className="action-button-offcanvas-actions" variant="dark" onClick={() => {setShowNewGoal(true) }}>
+                                    New Goal&nbsp;<Icon.PlusCircleFill  width={40} height={40} color={"#098899"} />
+                                </Button>
+                            </OverlayTrigger>
                         </Col>
                     </Row>
                 </Offcanvas.Body>

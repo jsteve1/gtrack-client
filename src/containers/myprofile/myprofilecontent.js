@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import React, { forwardRef, useEffect, useState, useRef } from 'react';
 import UploadModal from '../ui/uploadmodal';
 
-const ImageTile = ({ pic, index, setIndex, setMainPic, removeImg, overallWidth, setOverallWidth, maxLength }) => {
+export const ImageTile = ({ pic, index, setIndex, setMainPic, removeImg, overallWidth, setOverallWidth, maxLength }) => {
     const [show, setShow] = useState(false);
     const dropdownRef = useRef(null);
     useEffect(() => {

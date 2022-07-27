@@ -1,6 +1,8 @@
 import { useEffect, forwardRef, useState } from 'react';
 import { Container, Row, Col, Tooltip, OverlayTrigger, Dropdown, Form } from 'react-bootstrap'; 
 import * as Icon from 'react-bootstrap-icons';
+import { useNavigate } from 'react-router-dom';
+
 export const getDeadlineFormatted = (deadline) => {
     const unixEpochTimeMS = deadline * 1000;
     const d = new Date(unixEpochTimeMS);
@@ -58,7 +60,7 @@ export const renderFavoriteTooltip = (props) => (
                 `
                     .icon-person-top-nav {
                         cursor: pointer;
-                        color: #34aaaa;
+                        color: #aaaaaa;
                     }
                     .icon-person-top-nav:hover {
                         transform: scale(1.05); 
@@ -95,15 +97,19 @@ export default function GoalsListItem({ name,
                                         length,
                                         showEditGoal, 
                                         setShowEditGoal,
+                                        setShowEditGoalId, 
                                         sortState,
                                         sortByDeadline,
                                         setGoalDeadline,
                                         id,
-                                        openDeleteModal
+                                        openDeleteModal,
+                                        setMarkCompleteModalShow,
+                                        setMarkCompleteId 
                                     }) {       
     const [showEditDate, setShowEditDate] = useState(false);
     const [newDeadline, setNewDeadline] = useState(deadline);
     const [enteredDate, setEnteredDate] = useState("");
+    const navigate = useNavigate();
     useEffect(() => {
         if(sortState === "deadline") {
             sortByDeadline();
@@ -434,7 +440,7 @@ export default function GoalsListItem({ name,
                                         delay={{ show: 250, hide: 400 }}
                                         overlay={renderMarkCompleteTooltip}
                                         >
-                                        <Icon.CheckCircleFill className="goal-list-item-action" width={40} height={40} /> 
+                                        <Icon.CheckCircleFill className="goal-list-item-action" width={40} height={40} onClick={() => { setMarkCompleteModalShow(true); setMarkCompleteId(id); }} /> 
                                     </OverlayTrigger>
                                 </>
                             )
@@ -449,8 +455,8 @@ export default function GoalsListItem({ name,
                             <Dropdown drop={'start'}>
                                 <Dropdown.Toggle as={CustomGoalActions} id="dropdown-custom-components" />
                                 <Dropdown.Menu variant="dark">
-                                    <Dropdown.Item as={Col} onClick={(e) => {  }}><Icon.Trophy color={"#34dcbe"} />&nbsp;&nbsp;View</Dropdown.Item>
-                                    <Dropdown.Item as={Col} onClick={(e) => { setShowEditGoal(true) }}><Icon.PencilFill color={"#34dcbe"}/>&nbsp;&nbsp;Edit</Dropdown.Item>
+                                    <Dropdown.Item as={Col} onClick={(e) => {  navigate(`/app/goal/${id}`);   }}><Icon.Trophy color={"#34dcbe"} />&nbsp;&nbsp;View</Dropdown.Item>
+                                    <Dropdown.Item as={Col} onClick={(e) => { setShowEditGoalId(id); setShowEditGoal(true) }}><Icon.PencilFill color={"#34dcbe"}/>&nbsp;&nbsp;Edit</Dropdown.Item>
                                     <Dropdown.Item as={Col} onClick={(e) => { e.preventDefault(); openDeleteModal(id); }}><Icon.Trash color={"#34dcbe"}/>&nbsp;&nbsp;Delete</Dropdown.Item>
                                 </Dropdown.Menu>
                             </Dropdown>

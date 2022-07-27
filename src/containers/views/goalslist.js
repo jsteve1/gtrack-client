@@ -10,14 +10,18 @@ import EditGoal from '../goals/editgoal';
 import NewGoal from '../goals/newgoal';
 import DeleteGoalModal from '../ui/DeleteModal';
 import * as Icon from 'react-bootstrap-icons';
+import MarkCompleteModal from '../ui/markcompletemodal';
 export default function GoalsListView({ startingSortState }) {
     const [showTimeline, setShowTimeline] = useState(false);
     const [showCompleted, setShowCompleted] = useState(false);
     const [showGridView , setShowGridView] = useState(false);
     const [showNewGoal, setShowNewGoal] = useState(false);
     const [showEditGoal, setShowEditGoal] = useState(false);
+    const [editGoalId, setShowEditGoalId] = useState("");
     const [showDeleteGoal, setShowDeleteGoal] = useState(false);
     const [deleteId, setDeleteId] = useState(""); 
+    const [markCompleteId, setMarkCompleteId] = useState("");
+    const [markCompleteModalShow, setMarkCompleteModalShow] = useState(false);
     const openDeleteModal = (id) => {
         setShowDeleteGoal(true);
         setDeleteId(id); 
@@ -44,11 +48,28 @@ export default function GoalsListView({ startingSortState }) {
                     </Row>
                     <Row className="pr-5 pl-5">
                     {   
-                        (showTimeline) ?  <GoalsTimeline openDeleteModal={openDeleteModal} showEditGoal={showEditGoal} setShowEditGoal={setShowEditGoal} /> : <>
+                        (showTimeline) ?  <GoalsTimeline 
+                                            openDeleteModal={openDeleteModal} 
+                                            showEditGoal={showEditGoal} 
+                                            setShowEditGoal={setShowEditGoal} /> : <>
                         {
-                            (showGridView) ? <GoalsGrid startingSortState={startingSortState} openDeleteModal={openDeleteModal}  showEditGoal={showEditGoal} setShowEditGoal={setShowEditGoal} /> : <>
+                            (showGridView) ? <GoalsGrid 
+                                                setMarkCompleteModalShow={setMarkCompleteModalShow} 
+                                                setMarkCompleteId={setMarkCompleteId} 
+                                                startingSortState={startingSortState} 
+                                                openDeleteModal={openDeleteModal}  
+                                                showEditGoal={showEditGoal}
+                                                setShowEditGoal={setShowEditGoal} 
+                                                setShowEditGoalId={setShowEditGoalId} /> : <>
                                 {
-                                    <GoalsList startingSortState={startingSortState} openDeleteModal={openDeleteModal} showEditGoal={showEditGoal} setShowEditGoal={setShowEditGoal} />
+                                    <GoalsList 
+                                        setMarkCompleteModalShow={setMarkCompleteModalShow} 
+                                        setMarkCompleteId={setMarkCompleteId} 
+                                        startingSortState={startingSortState} 
+                                        openDeleteModal={openDeleteModal} 
+                                        showEditGoal={showEditGoal} 
+                                        setShowEditGoal={setShowEditGoal} 
+                                        setShowEditGoalId={setShowEditGoalId} />
                                 }
                                 </>                          
                         }
@@ -56,9 +77,23 @@ export default function GoalsListView({ startingSortState }) {
                     }
                     </Row>
                 </Container>
-                <DeleteGoalModal id={deleteId} deleteModalShow={showDeleteGoal} setDeleteModalShow={setShowDeleteGoal} />
-                <EditGoal show={showEditGoal} setShow={setShowEditGoal} />
-                <NewGoal show={showNewGoal} setShow={setShowNewGoal} />
+                <DeleteGoalModal 
+                    id={deleteId}
+                    deleteModalShow={showDeleteGoal} 
+                    setDeleteModalShow={setShowDeleteGoal} />
+                <MarkCompleteModal 
+                    id={markCompleteId} 
+                    markCompleteModalShow={markCompleteModalShow} 
+                    setMarkCompleteModalShow={setMarkCompleteModalShow} 
+                    setShowEditGoal={setShowEditGoal}
+                    setShowEditGoalId={setShowEditGoalId} />
+                <EditGoal 
+                    show={showEditGoal} 
+                    setShow={setShowEditGoal} 
+                    editGoalId={editGoalId} />
+                <NewGoal 
+                    show={showNewGoal} 
+                    setShow={setShowNewGoal} />
             </>
         )
 }

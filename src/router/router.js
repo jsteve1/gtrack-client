@@ -15,6 +15,7 @@ import MyProfileView from "../containers/views/myprofile";
 import GoalsListView from "../containers/views/goalslist";
 import FeedView from '../containers/views/feed';
 import * as Icon from 'react-bootstrap-icons';
+import SingleGoalView from "../containers/views/singlegoal";
 const ScrollResetWrapper = ({children}) => {
   const location = useLocation();
   useLayoutEffect(() => {
@@ -36,7 +37,6 @@ export default function Router({ showActionButton, setShowActionButton }) {
         if(displayLocation.pathname.slice(0, 4) !== "/app" && showActionButton !== false) {
           setShowActionButton(false);
         } else {
-          console.log(displayLocation)
           if(showActionButton !== true)
             setShowActionButton(true);
         }
@@ -92,6 +92,13 @@ export default function Router({ showActionButton, setShowActionButton }) {
                           <Route path="/about" element={ <AboutView /> }/>
                           <Route path="/home" element={ <Home /> } />
                           <Route path="/app">
+                              <Route path="goal">
+                                <Route path=":goalId" element={
+                                      <RequireAuth>
+                                        <SingleGoalView />
+                                      </RequireAuth>
+                                }/>
+                              </Route>
                               <Route path="signin" element={ <Signin /> } />
                               <Route path="signup" element={ <Signup /> } />
                               <Route path="home" element={
@@ -109,19 +116,12 @@ export default function Router({ showActionButton, setShowActionButton }) {
                                   <FeedView />   
                                 </RequireAuth>                  
                               }/>
-                          </Route>
-                          <Route path="/app/goal/:id" element={
-                            <RequireAuth>
-                              <div>
-                                single goal
-                              </div>
-                            </RequireAuth>
-                          }/>
-                          <Route path="/app/goals" exact element={
-                            <RequireAuth>
+                              <Route path="goals" element={
+                                <RequireAuth>
                                   <GoalsListView startingSortState={startingSortState} />
-                            </RequireAuth>
-                          }/>
+                                </RequireAuth>               
+                              }/>
+                          </Route>
                           <Route path="/" element={<Home />} />
                           <Route path="*" element={<Home />} />
                       </Routes>

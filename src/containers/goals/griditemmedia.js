@@ -18,7 +18,7 @@ export function SmallImageTile({ url, index }) {
     );
 }
 
-export default function GridItemMedia({ media, setShowEditGoal }) {
+export default function GridItemMedia({ media, setShowEditGoal, setShowEditGoalId, id }) {
     const [mediaList, setMediaList] = useState(media);
     useEffect(() => {
         if(JSON.stringify(media) !== JSON.stringify(mediaList)) {
@@ -60,7 +60,7 @@ export default function GridItemMedia({ media, setShowEditGoal }) {
                 `
             }
             </style>
-            <Container fluid className="grid-item-media-cont" onClick={() => { if(mediaList.length === 0 ){  setShowEditGoal(true);  } }}>
+            <Container fluid className="grid-item-media-cont" onClick={() => { if(mediaList.length === 0 ){  setShowEditGoalId(id); setShowEditGoal(true);  } }}>
             {
                 (mediaList.length !== 0) ?
                 <div className="grid-media-image-list-div">

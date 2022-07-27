@@ -6,8 +6,9 @@ import GoalGridItem from '../../components/goals/goalgriditem';
 import * as Icon from 'react-bootstrap-icons';
 import { showCompleted, setGoalsDeadline, setGoalsIndex, sortGoalsByDeadline, sortGoalsByPriority } from './goalslist';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
+import MarkCompleteModal from '../ui/markcompletemodal';
 
-export default function GoalsGrid({ setShowEditGoal, openDeleteModal }) {   
+export default function GoalsGrid({ setShowEditGoal, setShowEditGoalId, openDeleteModal, setMarkCompleteModalShow, setMarkCompleteId  }) {   
     const { height, width } = useWindowDimensions();
     const [_goals, _setGoals] = useState([]);
     const goals = useSelector(selectGoals);
@@ -165,7 +166,7 @@ export default function GoalsGrid({ setShowEditGoal, openDeleteModal }) {
                     (currentSortState === "completed") ?
                     <ButtonGroup>
                         <Button className={`sort-button-grid ${(currentSortState === 'completed') ? "selected-sort-button" : ""}`} variant="dark">Completed</Button>
-                        <Button className={`sort-button-grid sort-button-secondary ${(sortAscending) ? "selected-sort-button-secondary" : ""}`} variant="dark" onClick={() => { setSortAscending(true);  }}><Icon.SortUpAlt />&nbsp;Ascending</Button>
+                        <Button className={`sort-button-grid sort-button-secondary ${(sortAscending) ? "selected-sort-button-secondary" : ""}`} variant="dark" onClick={() => { setSortAscending(true);  }}><Icon.SortUpAlt />&nbsp;Most Recent</Button>
                         <Button className={`sort-button-grid sort-button-secondary ${(!sortAscending) ? "selected-sort-button-secondary" : ""}`} variant="dark" onClick={() => { setSortAscending(false);  }}><Icon.SortDown />&nbsp;Descending</Button>
                     </ButtonGroup>
                         :  
@@ -184,6 +185,7 @@ export default function GoalsGrid({ setShowEditGoal, openDeleteModal }) {
                 _goals.map((goal, index) => (
                     <GoalGridItem 
                         setShowEditGoal={setShowEditGoal}
+                        setShowEditGoalId={setShowEditGoalId}
                         media={goal.media} id={goal.id} 
                         setGoalDeadline={setGoalDeadline} 
                         sortByDeadline={sortByDeadline} 
@@ -199,6 +201,8 @@ export default function GoalsGrid({ setShowEditGoal, openDeleteModal }) {
                         complete={goal.complete === true}
                         completedtime={goal.completedtime}
                         openDeleteModal={openDeleteModal}
+                        setMarkCompleteModalShow={setMarkCompleteModalShow} 
+                        setMarkCompleteId={setMarkCompleteId} 
                     />
                 ))
             }

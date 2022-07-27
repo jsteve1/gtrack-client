@@ -99,7 +99,7 @@ export const showCompleted = ({ _goals, _setGoals, sortAscending = false }) => {
     _setGoals(goalsCopy);   
 }
 
-export default function GoalsList({ startingSortState, setShowEditGoal, openDeleteModal  }) {   
+export default function GoalsList({ startingSortState, setShowEditGoal, setShowEditGoalId, openDeleteModal, setMarkCompleteModalShow, setMarkCompleteId  }) {   
     const dispatch = useDispatch();
     const [_goals, _setGoals] = useState([]);
     const goals = useSelector(selectGoals);
@@ -376,7 +376,26 @@ export default function GoalsList({ startingSortState, setShowEditGoal, openDele
                                 (goal.complete === true) ? "" :
                                 (
                                     <Row className="goal-list-item-row" key={goal.id}>
-                                        <GoalListItem openDeleteModal={openDeleteModal} complete={goal.complete} completedtime={goal.completedtime} id={goal.id} setGoalDeadline={setGoalDeadline} sortByDeadline={sortByDeadline} sortState={currentSortState} setShowEditGoal={setShowEditGoal} length={_goals.length} setIndex={setIndex} index={index} rearrangeMode={true}  showPrio={currentSortState !== "deadline"} priority={goal.priority} name={goal.name} deadline={goal.deadline} />
+                                        <GoalListItem 
+                                            setMarkCompleteModalShow={setMarkCompleteModalShow} 
+                                            setMarkCompleteId={setMarkCompleteId} 
+                                            openDeleteModal={openDeleteModal} 
+                                            complete={goal.complete} 
+                                            completedtime={goal.completedtime} 
+                                            id={goal.id}
+                                            setGoalDeadline={setGoalDeadline} 
+                                            sortByDeadline={sortByDeadline} 
+                                            sortState={currentSortState} 
+                                            setShowEditGoal={setShowEditGoal} 
+                                            setShowEditGoalId={setShowEditGoalId}
+                                            length={_goals.length} 
+                                            setIndex={setIndex} 
+                                            index={index} 
+                                            rearrangeMode={true} 
+                                            showPrio={currentSortState !== "deadline"} 
+                                            priority={goal.priority} 
+                                            name={goal.name} 
+                                            deadline={goal.deadline} />
                                     </Row>
                                 )
                             }
@@ -388,7 +407,26 @@ export default function GoalsList({ startingSortState, setShowEditGoal, openDele
                       _goals.map((goal, index) => (
                         <>
                             <Row className="goal-list-item-row" key={goal.id}>
-                                <GoalListItem openDeleteModal={openDeleteModal}  complete={goal.complete} completedtime={goal.completedtime} id={goal.id} setGoalDeadline={setGoalDeadline} sortByDeadline={sortByDeadline} sortState={currentSortState} setShowEditGoal={setShowEditGoal} length={_goals.length} setIndex={setIndex} index={index} rearrangeMode={false} showPrio={currentSortState !== "deadline"} priority={goal.priority} name={goal.name} deadline={goal.deadline} />
+                                <GoalListItem 
+                                    setMarkCompleteModalShow={setMarkCompleteModalShow} 
+                                    setMarkCompleteId={setMarkCompleteId} 
+                                    openDeleteModal={openDeleteModal} 
+                                    complete={goal.complete} 
+                                    completedtime={goal.completedtime} 
+                                    id={goal.id} 
+                                    setGoalDeadline={setGoalDeadline} 
+                                    sortByDeadline={sortByDeadline} 
+                                    sortState={currentSortState} 
+                                    setShowEditGoal={setShowEditGoal} 
+                                    setShowEditGoalId={setShowEditGoalId}
+                                    length={_goals.length} 
+                                    setIndex={setIndex} 
+                                    index={index} 
+                                    rearrangeMode={false} 
+                                    showPrio={currentSortState !== "deadline"} 
+                                    priority={goal.priority}
+                                    name={goal.name} 
+                                    deadline={goal.deadline} />
                             </Row>
                         </>
                     ))

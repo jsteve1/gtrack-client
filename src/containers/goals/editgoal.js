@@ -1,5 +1,5 @@
 import { Offcanvas, Container, Row } from 'react-bootstrap';
-export default function EditGoal({ show, setShow, ...props }) {
+export default function EditGoal({ show, setShow, editGoalId, ...props }) {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     return (
@@ -21,7 +21,7 @@ export default function EditGoal({ show, setShow, ...props }) {
                 </Offcanvas.Header>
                 <Offcanvas.Body as={Container}>
                     <Row>
-                        
+                        Goal ID: {editGoalId}
                     </Row>
                     <Row>
                         

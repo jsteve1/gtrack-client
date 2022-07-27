@@ -1,4 +1,5 @@
 import { createSlice, current } from '@reduxjs/toolkit'
+import produce from 'immer';
 
 export const mockGoalState = {
   goals: [
@@ -15,7 +16,8 @@ export const mockGoalState = {
       "postponed": false, 
       "complete": false, 
       "mediacomplete": 0,
-      "completedtime": 0
+      "completedtime": 0,
+      "mainpic": ""
     },
     {
       id: "6a8af92c-7a41-479b-91fb-e4cc1ce9cbe3",
@@ -30,7 +32,8 @@ export const mockGoalState = {
       "postponed": false, 
       "complete": false, 
       "mediacomplete": 0,
-      "completedtime": 0
+      "completedtime": 0,
+      "mainpic": ""
     },
     {
       id: "6a8af92c-7a41-479b-91fb-e4cc1ce9cbe4",
@@ -45,7 +48,8 @@ export const mockGoalState = {
       "postponed": false, 
       "complete": true, 
       "mediacomplete": 0,
-      "completedtime": 1655391007
+      "completedtime": 1655391007,
+      "mainpic": ""
     },
     {
       "id": "6a8af92c-7a41-479b-91fb-e4cc1ce9cbe1",
@@ -60,7 +64,8 @@ export const mockGoalState = {
       "postponed": false, 
       "complete": true, 
       "mediacomplete": 0,
-      "completedtime": 1655391007
+      "completedtime": 1655391007,
+      "mainpic": ""
     },
   ],
   progressMarkers: {
@@ -210,14 +215,70 @@ export const goalSlice = createSlice({
           //no op
         }
       }
-    }}
+    },
+    setMainPicIndex: (state, action) => {
+      console.log("set main pic id " + action.payload.id);
+      const goal = state.goals.find(goal => goal.id === action.payload.id); 
+      goal.media = produce(goal.media, draft => {
+        const temp = draft[action.payload.index]; 
+        draft.splice(action.payload.index, 1);
+        draft.unshift(temp);
+      });
+    },
+    setMediaIndex: (state, action) => {
+      console.log("set media index goal id " + action.payload.id);
+      const goal = state.goals.find(goal => goal.id === action.payload.id); 
+      if(goal.media.length === 1) {
+        return;
+      }
+      if(action.payload.index === 0) {
+        if(action.payload.newIndex === -1) { 
+          return; 
+        }
+      }
+      if(action.payload.index === goal.media.length - 1)
+         if(action.payload.newIndex === goal.media.length) {
+           return;
+        }
+      const temp = JSON.parse(JSON.stringify(goal.media[action.payload.index])); 
+      const swap = JSON.parse(JSON.stringify(goal.media[action.payload.newIndex])); 
+      goal.media[action.payload.newIndex] = temp; 
+      goal.media[action.payload.index] = swap; 
+    },
+    addUpload: (state, action) => {
+      console.log("add media goal id " + action.payload.id);
+      const goal = state.goals.find(goal => goal.id === action.payload.id);
+      goal.media.push(action.payload.img);
+    },
+    removePicIndex: (state, action) => {
+      console.log("remove media goal id " + action.payload.id);
+      const goal = state.goals.find(goal => goal.id === action.payload.id);
+      goal.media = produce(goal.media, draft => {
+        draft.splice(action.payload.index, 1);
+      })
+    }
+  }
 })
 
+export const selectGoal = (id) => (state) => {
+  return state.goals.goals.find(goal => goal.id === id);
+}
 export const selectGoals = (state) => state.goals.goals; 
 export const selectTodoGoals = (state) => state.goals.goals.filter(goal => goal.complete === false || goal.completedtime === 0); 
 export const selectCompleteGoals = (state) => state.goals.goals.filter(goal => goal.complete === true); 
 export const selectProgressMarkers = (state) => state.goals.progressMarkers;
 
-export const { addGoal, removeGoal, addProgressMarker, rmProgressMarker, setGoals, updateGoal, setGoalIndex } = goalSlice.actions
+export const { addGoal, 
+              removeGoal, 
+              addProgressMarker, 
+              rmProgressMarker, 
+              setGoals, 
+              updateGoal, 
+              setGoalIndex,
+              setMainPicIndex,
+              setMediaIndex,
+              addUpload,
+              removePicIndex
+            } = goalSlice.actions
 
 export default goalSlice.reducer
