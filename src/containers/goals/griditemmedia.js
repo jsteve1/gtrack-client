@@ -3,7 +3,18 @@ import { Container, Row, Col } from 'react-bootstrap';
 import * as Icon from 'react-bootstrap-icons';
 export function SmallImageTile({ url, index }) {
     return (
-        <img src={`${url}`} />        
+        <>
+        <style type="text/css">
+        {
+            `
+                .small-image-tile {
+                    max-height: 175px;
+                }
+            `
+        }
+        </style>
+        <img className="small-image-tile shadow-lg" src={`${url}`} />        
+        </>
     );
 }
 
@@ -14,7 +25,9 @@ export default function GridItemMedia({ media, setShowEditGoal }) {
             setMediaList(media); 
         }
     }, [media]);
-    
+    useEffect(() => {
+        setMediaList(["blob:http://localhost:3000/f574c7b8-8096-43fc-8474-21e2af336ee2"]); 
+    }, [])
     return (
         <>
             <style type="text/css">
@@ -22,10 +35,12 @@ export default function GridItemMedia({ media, setShowEditGoal }) {
                 `
                     .grid-item-media-cont {
                         margin-top: 15px; 
-                        min-height: 150px; 
-                        min-width: 175px;
+                        height: 185px; 
+                        min-width: 185px;
                         margin-bottom: 25px;
-                        background-color: rgba(75, 75, 75, 0.2); 
+                        max-height: 175px;
+                        overflow-y: hidden;
+                        ${(mediaList.length === 0) ? "background-color: rgba(75, 75, 75, 0.2); " : "transparent"} 
                         padding-top: 1px;
                     }
                     .upload-button-grid-media {
@@ -39,7 +54,7 @@ export default function GridItemMedia({ media, setShowEditGoal }) {
                     }
                     .grid-media-image-list-div {
                         display: flex; 
-                        justify-content: start; 
+                        justify-content: center; 
                         overflow-x: auto; 
                     }
                 `
@@ -47,7 +62,7 @@ export default function GridItemMedia({ media, setShowEditGoal }) {
             </style>
             <Container fluid className="grid-item-media-cont" onClick={() => { if(mediaList.length === 0 ){  setShowEditGoal(true);  } }}>
             {
-                (mediaList.length > 0) ?
+                (mediaList.length !== 0) ?
                 <div className="grid-media-image-list-div">
                     {
                         mediaList.map((link, index) => {     

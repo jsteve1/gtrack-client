@@ -22,6 +22,10 @@ export default function CurrentGoal() {
                     padding-bottom: 15px;
                     background-color: rgba(100, 100, 100, 0.2);
                     border-radius: 10px 10px 0px 0px ;
+                    border-top: 1px solid #096666;
+                    border-left: 1px solid #096666;
+                    border-right: 1px solid #096666;
+                    border-bottom: none !important;
                 }     
                 .current-goal-label {
                     color: #34dcbe; 
@@ -42,7 +46,7 @@ export default function CurrentGoal() {
             `
         }
         </style>
-        <Container fluid className="current-goal-cont border-bottom border-secondary">
+        <Container fluid className="current-goal-cont">
                 <Row>
                     <Col xs="12" md="4" className="d-flex justify-content-start align-items-center"><span className="current-goal-label">Current&nbsp;Goal:</span></Col>
                     <Col xs="12" md="8" className="d-flex justify-content-start align-items-center">

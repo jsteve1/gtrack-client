@@ -40,13 +40,13 @@ export default function BottomNav() {
                             transform: scale(1.05);
                         }
                         .bot-nav-home {
-                            ${(location.pathname === '/app/home') ? "background-color: #232323;" : ""} 
+                            ${(location.pathname === '/app/home/' || location.pathname === '/app/home') ? "background-color: #232323;" : ""} 
                         }
                         .bot-nav-goals-list {
-                            ${(location.pathname === '/app/goals') ? "background-color: #232323;" : ""} 
+                            ${(location.pathname === '/app/goals/' || location.pathname === '/app/goals') ? "background-color: #232323;" : ""} 
                         }
                         .bot-nav-feed {
-                            ${(location.pathname === '/app/feed') ? "background-color: #232323;" : ""} 
+                            ${(location.pathname === '/app/feed/' || location.pathname === '/app/feed') ? "background-color: #232323;" : ""} 
                         }
                     `
                 }

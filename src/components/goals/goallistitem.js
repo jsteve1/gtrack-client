@@ -258,7 +258,7 @@ export default function GoalsListItem({ name,
             `
         }
         </style>
-        <Container className={`goal-list-cont ${(complete) ? "goal-completed" : ""}`} fluid>
+        <Container className={`shadow-lg goal-list-cont ${(complete) ? "goal-completed" : ""}`} fluid>
             <Row className="goal-list-item-row">
                 {
                     (rearrangeMode == true) ?    <>
@@ -409,7 +409,7 @@ export default function GoalsListItem({ name,
                                                             delay={{ show: 250, hide: 400 }}
                                                             overlay={renderFavoriteTooltip}
                                                         >
-                                                            <Icon.Star className="goal-list-item-action" color={"rgba(213, 176, 0, 0.5)"} width={40} height={40} /> 
+                                                            <Icon.Star onClick={() => setIndex(index, 0) } className="goal-list-item-action" color={"rgba(213, 176, 0, 0.5)"} width={40} height={40} /> 
                                                         </OverlayTrigger>
                                                         <div className="icon-spacing-goal-list-actions"></div> 
                                                     </>

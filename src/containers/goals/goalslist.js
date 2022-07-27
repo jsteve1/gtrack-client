@@ -99,12 +99,12 @@ export const showCompleted = ({ _goals, _setGoals, sortAscending = false }) => {
     _setGoals(goalsCopy);   
 }
 
-export default function GoalsList({ setShowEditGoal, openDeleteModal  }) {   
+export default function GoalsList({ startingSortState, setShowEditGoal, openDeleteModal  }) {   
     const dispatch = useDispatch();
     const [_goals, _setGoals] = useState([]);
     const goals = useSelector(selectGoals);
-    const [currentSortState, setCurrentSortState] = useState("priority");
-    const [sortAscending, setSortAscending] = useState(false);
+    const [currentSortState, setCurrentSortState] = useState(startingSortState || "priority");
+    const [sortAscending, setSortAscending] = useState(true);
     const [rearrangeMode, setRearrangeMode] = useState(false); 
     const setGoalDeadline = (deadline, id) => {
         dispatch(updateGoal({ id: id, updateGoal: { deadline }}));
@@ -259,11 +259,19 @@ export default function GoalsList({ setShowEditGoal, openDeleteModal  }) {
                     outline: none; 
                 }
                 .sort-by-span {
-                    margin-right: 25px;
+                    margin-right: 10px;
+                    color: #34dcbe;
                 }
                 .sort-button-row {
                     min-height: 60px;
                     width: 100%;
+                }
+                .sort-button-secondary {
+                    white-space: nowrap;
+                    font-size: 13pt ;
+                    background-color: transparent;
+                    color: #34aaaa;
+                    border: none;
                 }
                 .selected-sort-button {
                     background-color: #34aaaa;
@@ -294,13 +302,6 @@ export default function GoalsList({ setShowEditGoal, openDeleteModal  }) {
                 .icon-add-new {
                     margin-top: 40px;
                 }
-                .sort-button-secondary {
-                    white-space: nowrap;
-                    font-size: 13pt ;
-                    background-color: transparent;
-                    color: #34aaaa;
-                    border: none;
-                }
 
             `
         }
@@ -311,17 +312,19 @@ export default function GoalsList({ setShowEditGoal, openDeleteModal  }) {
                 <span className="sort-by-span">Sort by:</span>
                 {
                 (currentSortState === "priority") ? 
-                    <ButtonGroup>
-                        <Button className={`sort-button-grid ${(currentSortState === 'priority') ? "selected-sort-button" : ""}`} variant="dark">Priority</Button>
-                        <Button className={`sort-button-grid sort-button-secondary ${(sortAscending) ? "selected-sort-button-secondary" : ""}`} variant="dark" onClick={() => { setSortAscending(true); setRearrangeMode(false); }}><Icon.SortUpAlt />&nbsp;Ascending</Button>
-                        <Button className={`sort-button-grid sort-button-secondary ${(!sortAscending) ? "selected-sort-button-secondary" : ""}`} variant="dark" onClick={() => { setSortAscending(false); setRearrangeMode(false);   }}><Icon.SortDown />&nbsp;Descending</Button>
-                        <Button 
-                            variant="dark" 
-                            className={`sort-button-grid sort-button-secondary ${(rearrangeMode === true) ? "selected-sort-button-secondary"  : ""}`}
-                            onClick={() => { setSortAscending(true); setRearrangeMode(!rearrangeMode) }} >
-                                Rearrange
-                        </Button>
-                    </ButtonGroup> 
+                    <>
+                        <ButtonGroup>
+                            <Button className={`sort-button-grid ${(currentSortState === 'priority') ? "selected-sort-button" : ""}`} variant="dark">Priority</Button>
+                            <Button className={`sort-button-grid sort-button-secondary ${(sortAscending) ? "selected-sort-button-secondary" : ""}`} variant="dark" onClick={() => { setSortAscending(true); setRearrangeMode(false); }}><Icon.SortUpAlt />&nbsp;Ascending</Button>
+                            <Button className={`sort-button-grid sort-button-secondary ${(!sortAscending) ? "selected-sort-button-secondary" : ""}`} variant="dark" onClick={() => { setSortAscending(false); setRearrangeMode(false);   }}><Icon.SortDown />&nbsp;Descending</Button>
+                            <Button 
+                                variant="dark" 
+                                className={`sort-button-grid sort-button-secondary ${(rearrangeMode === true) ? "selected-sort-button-secondary"  : ""}`}
+                                onClick={() => { setSortAscending(true); setRearrangeMode(!rearrangeMode) }} >
+                                    Rearrange
+                            </Button>
+                        </ButtonGroup> 
+                    </>
                     :
                     <Button 
                         variant="dark" 
@@ -332,11 +335,13 @@ export default function GoalsList({ setShowEditGoal, openDeleteModal  }) {
                 }
                 {
                     (currentSortState === "deadline") ? 
-                    <ButtonGroup>
-                        <Button className={`sort-button-grid ${(currentSortState === 'deadline') ? "selected-sort-button" : ""}`} variant="dark">Deadline</Button>
-                        <Button className={`sort-button-grid sort-button-secondary ${(sortAscending) ? "selected-sort-button-secondary" : ""}`} variant="dark" onClick={() => setSortAscending(true)}><Icon.SortUpAlt />&nbsp;Upcoming</Button>
-                        <Button className={`sort-button-grid sort-button-secondary ${(!sortAscending) ? "selected-sort-button-secondary" : ""}`} variant="dark" onClick={() => setSortAscending(false)}><Icon.SortDown />&nbsp;Descending</Button>
-                    </ButtonGroup> 
+                    <>
+                        <ButtonGroup>
+                            <Button className={`sort-button-grid ${(currentSortState === 'deadline') ? "selected-sort-button" : ""}`} variant="dark">Deadline</Button>
+                            <Button className={`sort-button-grid sort-button-secondary ${(sortAscending) ? "selected-sort-button-secondary" : ""}`} variant="dark" onClick={() => setSortAscending(true)}><Icon.SortUpAlt />&nbsp;Upcoming</Button>
+                            <Button className={`sort-button-grid sort-button-secondary ${(!sortAscending) ? "selected-sort-button-secondary" : ""}`} variant="dark" onClick={() => setSortAscending(false)}><Icon.SortDown />&nbsp;Descending</Button>
+                        </ButtonGroup>
+                    </> 
                   :  <Button 
                         variant="dark" 
                         className={`sort-button-grid ${(currentSortState === 'deadline') ? "selected-sort-button" : ""}`}
@@ -346,7 +351,7 @@ export default function GoalsList({ setShowEditGoal, openDeleteModal  }) {
                 }
                 {
                     (currentSortState === "completed") ?
-                    <ButtonGroup>
+                    <ButtonGroup >
                         <Button className={`sort-button-grid ${(currentSortState === 'completed') ? "selected-sort-button" : ""}`} variant="dark">Completed</Button>
                         <Button className={`sort-button-grid sort-button-secondary ${(sortAscending) ? "selected-sort-button-secondary" : ""}`} variant="dark" onClick={() => { setSortAscending(true); setRearrangeMode(false); }}><Icon.SortUpAlt />&nbsp;Ascending</Button>
                         <Button className={`sort-button-grid sort-button-secondary ${(!sortAscending) ? "selected-sort-button-secondary" : ""}`} variant="dark" onClick={() => { setSortAscending(false); setRearrangeMode(false);   }}><Icon.SortDown />&nbsp;Descending</Button>

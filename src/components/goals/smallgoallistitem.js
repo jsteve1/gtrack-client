@@ -1,8 +1,9 @@
 import { Container, Row, Col, Dropdown } from 'react-bootstrap';
 import * as Icon from 'react-bootstrap-icons';
 import { forwardRef } from 'react';
-
+import { useNavigate } from 'react-router-dom';
 export default function SmallGoalListItem({ name, deadline, priority, lastOne }) {
+    const navigate = useNavigate();
     return (
         <>
         <style type="text/css">
@@ -39,19 +40,13 @@ export default function SmallGoalListItem({ name, deadline, priority, lastOne })
             `
         }
         </style>
-        <Container fluid className={`small-goal-list-item ${lastOne ? "" : "border-bottom border-secondary"}`}>
+        <Container fluid className={`small-goal-list-item ${lastOne ? "" : "border-bottom border-secondary"}`}  onClick={(e) => { e.preventDefault(); navigate('/app/goals/'); }}>
             <Row>
                 <Col className="small-goal-list-item-name d-flex justify-content-start pt-2" xs='10'>
                     <span className="priority-list-item-span">{`${priority}  `}</span>{name}
                 </Col>
                 <Col className="small-goal-list-item-deadline d-flex justify-content-end pt-2 align-items-center" xs="2">
-                    <Dropdown drop={'start'}>
-                        <Dropdown.Toggle as={CustomGoalItemDropdown} id="dropdown-custom-components" />
-                        <Dropdown.Menu variant="dark">
-                            <Dropdown.Item><Icon.EyeFill color={"#34dcbe"} /> View</Dropdown.Item>
-                            <Dropdown.Item><Icon.Check color={"#34dcbe"}/> Set As Current </Dropdown.Item>
-                        </Dropdown.Menu>
-                    </Dropdown>                    
+                    <Icon.ThreeDotsVertical className="icon-person-top-nav" width={30} height={30} onClick={(e) => { e.preventDefault(); navigate('/app/goals/'); }} />
                 </Col>
             </Row>
             <Row>
@@ -88,7 +83,6 @@ const CustomGoalItemDropdown = forwardRef(( { onClick }, ref) => (
         }}
         className="icon-person-top-nav"
     >
-        <Icon.ThreeDotsVertical className="icon-person-top-nav" width={30} height={30} />
     </span>
   </>
 ));

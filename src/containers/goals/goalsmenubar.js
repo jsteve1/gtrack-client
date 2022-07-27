@@ -128,13 +128,13 @@ export default function GoalsListMenuBar({ showTimeline, showGridView, showCompl
                             >
                         <Icon.Grid width={30} height={30} color={(showGridView) ? "#34dcbe" : "#aaaaaa"} className="menu-bar-icon" onClick={handleShowGridClick} />
                     </OverlayTrigger>
-                    <OverlayTrigger
+                    {/* <OverlayTrigger
                             placement="bottom"
                             delay={{ show: 250, hide: 400 }}
                             overlay={renderTimelineTooltip}
                         >
                         <Icon.CalendarRange width={30} height={30} color={(showTimeline) ? "#34dcbe" : "#aaaaaa"} className="menu-bar-icon" onClick={handleShowTimelineClick}/>
-                    </OverlayTrigger>
+                    </OverlayTrigger> */}
                 </Col>
             </Row>
         </Container>

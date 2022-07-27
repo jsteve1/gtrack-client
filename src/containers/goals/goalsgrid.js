@@ -12,7 +12,7 @@ export default function GoalsGrid({ setShowEditGoal, openDeleteModal }) {
     const [_goals, _setGoals] = useState([]);
     const goals = useSelector(selectGoals);
     const [currentSortState, setCurrentSortState] = useState("priority");
-    const [sortAscending, setSortAscending] = useState(false);
+    const [sortAscending, setSortAscending] = useState(true);
     const setGoalDeadline = (deadline, id) => {
         setGoalsDeadline({ deadline, id,  _goals: goals,  _setGoals });
     }
@@ -27,18 +27,24 @@ export default function GoalsGrid({ setShowEditGoal, openDeleteModal }) {
     }
     useEffect(() => {
         if(currentSortState === "deadline") {
-            console.log("sorting by deadline descending")
+            console.log("sorting by deadline " + `${sortAscending ? "ascending" : "descending"}`)
             sortByDeadline();
         }
         if(currentSortState === "priority") {
-            console.log("sorting by prio ascending")
+            console.log("sorting by prio" + `${sortAscending ? "ascending" : "descending"}`)
             sortByPriority();
         }
         if(currentSortState === "completed") {
-            console.log("showing completed goals"); 
+            console.log("showing completed goals " + `${sortAscending ? "ascending" : "descending"}`); 
             showCompletedGoals();
         }
     }, [currentSortState, goals, sortAscending]);
+    useEffect(() => {
+        if(currentSortState === "priority") {
+            console.log("sorting by prio " + `${sortAscending ? "ascending" : "descending"}`)
+            sortByPriority();
+        }
+    }, []);
     return (
         <>
         <style type="text/css">

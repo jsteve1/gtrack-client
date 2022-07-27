@@ -9,8 +9,8 @@ import GoalsCompleted from '../goals/goalscompleted';
 import EditGoal from '../goals/editgoal';
 import NewGoal from '../goals/newgoal';
 import DeleteGoalModal from '../ui/DeleteModal';
-
-export default function GoalsListView() {
+import * as Icon from 'react-bootstrap-icons';
+export default function GoalsListView({ startingSortState }) {
     const [showTimeline, setShowTimeline] = useState(false);
     const [showCompleted, setShowCompleted] = useState(false);
     const [showGridView , setShowGridView] = useState(false);
@@ -32,7 +32,7 @@ export default function GoalsListView() {
                                     background-image: url("${mtn}");
                                     background-repeat: no-repeat;
                                     background-size: cover;
-                                    min-height: 120vh;
+                                    min-height: 100vh;
                                     overflow-y: auto;
                             }
                         `
@@ -46,9 +46,9 @@ export default function GoalsListView() {
                     {   
                         (showTimeline) ?  <GoalsTimeline openDeleteModal={openDeleteModal} showEditGoal={showEditGoal} setShowEditGoal={setShowEditGoal} /> : <>
                         {
-                            (showGridView) ? <GoalsGrid openDeleteModal={openDeleteModal}  showEditGoal={showEditGoal} setShowEditGoal={setShowEditGoal} /> : <>
+                            (showGridView) ? <GoalsGrid startingSortState={startingSortState} openDeleteModal={openDeleteModal}  showEditGoal={showEditGoal} setShowEditGoal={setShowEditGoal} /> : <>
                                 {
-                                    <GoalsList openDeleteModal={openDeleteModal} showEditGoal={showEditGoal} setShowEditGoal={setShowEditGoal} />
+                                    <GoalsList startingSortState={startingSortState} openDeleteModal={openDeleteModal} showEditGoal={showEditGoal} setShowEditGoal={setShowEditGoal} />
                                 }
                                 </>                          
                         }

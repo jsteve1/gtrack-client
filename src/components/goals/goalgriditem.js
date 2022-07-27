@@ -40,8 +40,8 @@ export default function GoalGridItem({
                     .grid-item {
                         min-width: 325px; 
                         max-width: 325px;
-                        max-height: 340px;
-                        min-height: 320px;
+                        max-height: 375px;
+                        min-height: 375px;
                         color: #aaaaaa; 
                         background-color: rgba(100, 100, 100, 0.2);
                         cursor: pointer; 
@@ -97,7 +97,7 @@ export default function GoalGridItem({
                 `
             }
             </style>
-            <Container fluid className={`grid-item ${(complete === true) ? "goal-completed" : ""} `}>
+            <Container fluid className={` shadow-lg grid-item ${(complete === true) ? "goal-completed" : ""} `}>
                 <Row className="d-flex justify-content-between mt-2">
                     <Col xs="8" className="d-flex justify-content-start goal-griditem-name-col align-items-center">
                         {

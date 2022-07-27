@@ -24,13 +24,23 @@ const ScrollResetWrapper = ({children}) => {
 } 
 
 
-export default function Router() {
+export default function Router({ showActionButton, setShowActionButton }) {
     const location = useLocation();
     const [displayLocation, setDisplayLocation] = useState(location);
     const [transitionStage, setTransistionStage] = useState("fadeIn");
+    const [startingSortState, setStartingSortState] = useState("priority")
     useEffect(() => {
         if (location.pathname !== displayLocation.pathname) setTransistionStage("fadeOut");
       }, [location, displayLocation]);
+    useEffect(() => {
+        if(displayLocation.pathname.slice(0, 4) !== "/app" && showActionButton !== false) {
+          setShowActionButton(false);
+        } else {
+          console.log(displayLocation)
+          if(showActionButton !== true)
+            setShowActionButton(true);
+        }
+    }, [displayLocation])
     return ( 
             <>
             <style type="text/css">
@@ -86,12 +96,12 @@ export default function Router() {
                               <Route path="signup" element={ <Signup /> } />
                               <Route path="home" element={
                                   <RequireAuth>
-                                    <AppHomeView /> 
+                                    <AppHomeView setStartingSortState={setStartingSortState} /> 
                                   </RequireAuth>
                                 } />
                               <Route path="profile" element={
                                 <RequireAuth>
-                                  <MyProfileView />   
+                                  <MyProfileView  />   
                                 </RequireAuth>                  
                               }/>
                               <Route path="feed" element={
@@ -109,7 +119,7 @@ export default function Router() {
                           }/>
                           <Route path="/app/goals" exact element={
                             <RequireAuth>
-                                <GoalsListView />
+                                  <GoalsListView startingSortState={startingSortState} />
                             </RequireAuth>
                           }/>
                           <Route path="/" element={<Home />} />
