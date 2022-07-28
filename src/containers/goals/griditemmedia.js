@@ -1,33 +1,59 @@
 import { useEffect, useState } from 'react';
 import { Container, Row, Col } from 'react-bootstrap'; 
 import * as Icon from 'react-bootstrap-icons';
+import { selectGoal } from '../../app/features/goals/goalSlice';
+import { useSelector } from 'react-redux';
 export function SmallImageTile({ url, index }) {
+    const [showLarge, setShowLarge] = useState(false);
     return (
         <>
         <style type="text/css">
         {
             `
                 .small-image-tile {
+                    width: 100%;
+                    overflow-y: hidden;
+                    overflow-x: hidden;
+                }    
+                .zoomin-div {                    
+                    overflow-y: hidden;
+                    overflow-x: hidden;
+                    width: 100%;
+                }
+                .small-image-tile, .zoomin-div {
                     max-height: 175px;
+                }
+                .zoomin-div .small-image-tile {
+                    max-width: 100%;
+                    transition: all 0.3s;
+                    display: block;
+                    width: 100%;
+                    height: auto;
+                    aspect-ratio: 1 / 1;
+                    transform: scale(1);
+                    object-fit: cover;
+                }
+                .zoomin-div:hover .small-image-tile {
+                    transform: scale(1.5);
                 }
             `
         }
         </style>
-        <img className="small-image-tile shadow-lg" src={`${url}`} />        
+        <div className="zoomin-div shadow-lg" onClick={() => setShowLarge(!showLarge)} >
+            <img className="small-image-tile shadow-lg" src={`${url}`} />        .
+        </div>
         </>
     );
 }
 
 export default function GridItemMedia({ media, setShowEditGoal, setShowEditGoalId, id }) {
-    const [mediaList, setMediaList] = useState(media);
+    const _goal = useSelector(selectGoal(id));
+    const [mediaList, setMediaList] = useState(_goal.media);
     useEffect(() => {
-        if(JSON.stringify(media) !== JSON.stringify(mediaList)) {
-            setMediaList(media); 
+        if(JSON.stringify(_goal.media) !== JSON.stringify(mediaList)) {
+            setMediaList(_goal.media); 
         }
-    }, [media]);
-    useEffect(() => {
-        setMediaList(["blob:http://localhost:3000/f574c7b8-8096-43fc-8474-21e2af336ee2"]); 
-    }, [])
+    }, [_goal.media]);
     return (
         <>
             <style type="text/css">
@@ -40,7 +66,6 @@ export default function GridItemMedia({ media, setShowEditGoal, setShowEditGoalI
                         margin-bottom: 25px;
                         max-height: 175px;
                         overflow-y: hidden;
-                        ${(mediaList.length === 0) ? "background-color: rgba(75, 75, 75, 0.2); " : "transparent"} 
                         padding-top: 1px;
                     }
                     .upload-button-grid-media {
@@ -60,20 +85,11 @@ export default function GridItemMedia({ media, setShowEditGoal, setShowEditGoalI
                 `
             }
             </style>
-            <Container fluid className="grid-item-media-cont" onClick={() => { if(mediaList.length === 0 ){  setShowEditGoalId(id); setShowEditGoal(true);  } }}>
+            <Container fluid className="grid-item-media-cont">
             {
-                (mediaList.length !== 0) ?
+                (mediaList && mediaList.length !== 0) ?
                 <div className="grid-media-image-list-div">
-                    {
-                        mediaList.map((link, index) => {     
-                            return (
-                                <>
-                                    <SmallImageTile url={link} index={index} />  
-                                </>
-                            );  
-                        }) 
-
-                    }
+                        <SmallImageTile url={mediaList[0]} index={0} /> 
                 </div>
                 : 
                 <div className="grid-media-upload-div">

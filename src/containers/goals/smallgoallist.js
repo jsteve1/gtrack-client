@@ -81,7 +81,7 @@ export default function SmallGoalList() {
                 {
                     _goals.map((goal, index) => (
                         <Row>
-                            <SmallGoalListItem lastOne={(index === goals.length - 1)} priority={index + 1} name={`${goal.name}`} deadline={getDeadlineFormatted(goal.deadline)} />
+                            <SmallGoalListItem id={goal.id} lastOne={(index === goals.length - 1)} priority={index + 1} name={`${goal.name}`} deadline={getDeadlineFormatted(goal.deadline)} />
                         </Row>
                     ))
                 }                

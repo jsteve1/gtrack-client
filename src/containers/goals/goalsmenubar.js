@@ -2,6 +2,8 @@ import  { useSelector } from 'react-redux';
 import { selectGoals } from '../../app/features/goals/goalSlice';
 import { Container, Row, Col, OverlayTrigger, Tooltip, Button } from 'react-bootstrap'; 
 import * as Icon from 'react-bootstrap-icons';
+import { useDispatch } from 'react-redux';
+import { setListMode } from '../../app/features/users/userSlice';
 
 const renderTimelineTooltip = (props) => (
     <Tooltip id="button-tooltip" {...props}>
@@ -28,26 +30,13 @@ const renderShowGridViewTooltip = (props) => (
 
 export default function GoalsListMenuBar({ showTimeline, showGridView, showCompleted, setShowTimeline, setShowCompleted, setShowGridView, showNewGoal, setShowNewGoal }) {   
     const goals = useSelector(selectGoals); 
+    const dispatch = useDispatch();
     const showGoalsList = (showTimeline === false && showGridView === false && showCompleted === false);
     const handleShowListClick = () => {
-        setShowTimeline(false);
-        setShowGridView(false);
-        setShowCompleted(false);
-    }
-    const handleShowTimelineClick = () => {
-        setShowTimeline(true);
-        setShowGridView(false);
-        setShowCompleted(false);
-    }
-    const handleShowCompletedClick = () => {
-        setShowTimeline(false);
-        setShowGridView(false);
-        setShowCompleted(true);
+        dispatch(setListMode("list"));
     }
     const handleShowGridClick = () => {
-        setShowTimeline(false);
-        setShowGridView(true);
-        setShowCompleted(false);
+        dispatch(setListMode("grid"));
     }
     const handleNewGoalSelected = () => {
         alert("add item")
@@ -110,7 +99,7 @@ export default function GoalsListMenuBar({ showTimeline, showGridView, showCompl
                                 overlay={<Tooltip><h5>New Goal</h5></Tooltip>}
                      
                             >
-                        <Icon.PlusCircle onClick={() => setShowNewGoal(true) } width={40} height={40} color={"#34aaaaaa"} className="menu-bar-icon add-goal-icon" />
+                        <Icon.PlusCircle onClick={() => setShowNewGoal(true) } width={40} height={40} color={"#34aaaa"} className="menu-bar-icon add-goal-icon" />
                     </OverlayTrigger>
                 </Col>
                 <Col xs="7" className="d-flex justify-content-end align-items-center">

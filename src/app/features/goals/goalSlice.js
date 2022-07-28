@@ -263,10 +263,15 @@ export const goalSlice = createSlice({
 export const selectGoal = (id) => (state) => {
   return state.goals.goals.find(goal => goal.id === id);
 }
+export const selectGoalProgressMarkers = (id) => (state) => {
+  console.log(state.goals.progressMarkers[id]);
+  return state.goals.progressMarkers[id];
+}
 export const selectGoals = (state) => state.goals.goals; 
 export const selectTodoGoals = (state) => state.goals.goals.filter(goal => goal.complete === false || goal.completedtime === 0); 
 export const selectCompleteGoals = (state) => state.goals.goals.filter(goal => goal.complete === true); 
 export const selectProgressMarkers = (state) => state.goals.progressMarkers;
+
 
 export const { addGoal, 
               removeGoal, 

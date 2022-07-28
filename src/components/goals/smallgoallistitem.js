@@ -2,7 +2,7 @@ import { Container, Row, Col, Dropdown } from 'react-bootstrap';
 import * as Icon from 'react-bootstrap-icons';
 import { forwardRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-export default function SmallGoalListItem({ name, deadline, priority, lastOne }) {
+export default function SmallGoalListItem({ name, deadline, priority, lastOne, id }) {
     const navigate = useNavigate();
     return (
         <>
@@ -40,7 +40,7 @@ export default function SmallGoalListItem({ name, deadline, priority, lastOne })
             `
         }
         </style>
-        <Container fluid className={`small-goal-list-item ${lastOne ? "" : "border-bottom border-secondary"}`}  onClick={(e) => { e.preventDefault(); navigate('/app/goals/'); }}>
+        <Container fluid className={`small-goal-list-item ${lastOne ? "" : "border-bottom border-secondary"}`}  onClick={(e) => { e.preventDefault(); navigate(`/app/goal/${id}`); }}>
             <Row>
                 <Col className="small-goal-list-item-name d-flex justify-content-start pt-2" xs='10'>
                     <span className="priority-list-item-span">{`${priority}  `}</span>{name}

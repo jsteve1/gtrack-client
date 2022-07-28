@@ -9,7 +9,8 @@ export const mockUsersState = {
       "media": [],
       "mainpic": 0, 
       "bio":  "I love goals! BatChest!",
-      "currentGoal": "6a8af92c-7a41-479b-91fb-e4cc1ce9cbe1"
+      "currentGoal": "6a8af92c-7a41-479b-91fb-e4cc1ce9cbe1",
+      "listMode": "grid"
   },
   otherUsers: [
     {
@@ -131,6 +132,9 @@ export const userSlice = createSlice({
       state.myProfile.media = produce(state.myProfile.media, draft => {
         draft.splice(action.payload.index, 1);
       })
+    },
+    setListMode: (state, action) => {
+      state.myProfile.listMode = action.payload;
     }
   }
 })
@@ -139,7 +143,8 @@ export const profile = (state) => state.users.myProfile;
 export const loggedIn = (state) => state.users.myProfile.id !== "";
 export const selectOtherUsers = (state) => state.users.otherUsers; 
 export const selectCurrentGoal = (state) => state.users.myProfile.currentGoal;
+export const selectListMode = (state) => state.users.myProfile.listMode;
 
-export const { login, logout, searchOtherUsers, addUpload, rmUpload, editProfile, addOtherUser, setMediaIndex, setMainPicIndex, removePicIndex } = userSlice.actions
+export const { setListMode, login, logout, searchOtherUsers, addUpload, rmUpload, editProfile, addOtherUser, setMediaIndex, setMainPicIndex, removePicIndex } = userSlice.actions
 
 export default userSlice.reducer

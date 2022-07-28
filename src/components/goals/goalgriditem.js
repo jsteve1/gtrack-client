@@ -52,8 +52,6 @@ export default function GoalGridItem({
                         margin: 10px;
                     }
                     .grid-item:hover {
-                        animation-name: growshrink;
-                        animation-duration: 0.3s; 
                         background-color: rgba(100, 100, 100, 0.3);                        
                     }
                     .goal-griditem-name-col {
@@ -143,8 +141,8 @@ export default function GoalGridItem({
                 }  
                 </Row>
                 {
-                    (media.length > 0 || !complete) ? 
-                    <Row>
+                    (!complete || media.length > 0) ? 
+                    <Row onClick={() => { navigate(`/app/goal/${id}`)}}>
                         <Col>
                             <GridItemMedia 
                                 id={id}

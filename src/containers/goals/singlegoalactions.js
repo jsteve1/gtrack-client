@@ -112,6 +112,7 @@ export default function SingleGoalActions({ goal, setShowEdit, openDeleteModal }
                             <Dropdown drop={'start'}>
                                 <Dropdown.Toggle as={CustomGoalActions} id="dropdown-custom-components" />
                                 <Dropdown.Menu variant="dark">
+                                    <Dropdown.Item className="dropdown-ctm-cols" as={Col} onClick={(e) => { }}><Icon.ShareFill color={"#34dcbe"}/>&nbsp;&nbsp;Share Goal</Dropdown.Item>
                                     <Dropdown.Item className="dropdown-ctm-cols" as={Col} onClick={(e) => { setShowEdit(true) }}><Icon.PencilFill color={"#34dcbe"}/>&nbsp;&nbsp;Edit Goal</Dropdown.Item>
                                     <Dropdown.Item className="dropdown-ctm-cols" as={Col} onClick={(e) => { e.preventDefault(); openDeleteModal(true); }}><Icon.Trash color={"#34dcbe"}/>&nbsp;&nbsp;Delete Goal</Dropdown.Item>
                                 </Dropdown.Menu>

@@ -264,7 +264,7 @@ export default function GoalsListItem({ name,
             `
         }
         </style>
-        <Container className={`shadow-lg goal-list-cont ${(complete) ? "goal-completed" : ""}`} fluid>
+        <Container className={`shadow-lg goal-list-cont ${(complete) ? "goal-completed" : ""}`} onClick={() => navigate(`/app/goal/${id}`) } fluid>
             <Row className="goal-list-item-row">
                 {
                     (rearrangeMode == true) ?    <>

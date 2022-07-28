@@ -75,9 +75,6 @@ export default function SingleGoalView() {
                     <SingleGoalActions goal={currentGoal} setShowEdit={setShowEditGoal} openDeleteModal={setShowDeleteGoal} />
                 </Row>
                 <Row className="single-goal-desc-row">
-                    <SingleGoalProgressMarkers goal={currentGoal} />
-                </Row>
-                <Row className="single-goal-desc-row">
                     <SingleGoalDesc goal={currentGoal} />
                 </Row>
             </Container>

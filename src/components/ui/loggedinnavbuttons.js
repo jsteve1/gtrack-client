@@ -5,7 +5,7 @@ import {
 import { Link } from 'react-router-dom';
 import { forwardRef } from 'react';
 import * as Icon from 'react-bootstrap-icons';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 const CustomProfileDropdown = forwardRef(( { onClick }, ref) => (
     <>
     <style type="text/css">
@@ -37,6 +37,7 @@ const CustomProfileDropdown = forwardRef(( { onClick }, ref) => (
 
 export default function LoggedInNavButtons() {
     const navigate = useNavigate();
+    const location = useLocation();
     return (
         <>
         <style type="text/css">
@@ -107,11 +108,33 @@ export default function LoggedInNavButtons() {
                 margin-top: 10px;
                 margin-right: auto;
             }
+            .back-button {
+                cursor: pointer;
+                color: #999999;
+            }
+            .back-button:hover, 
+                .back-button:active, 
+                    .back-button:focus, 
+                        .back-button:focus-visible {
+                color: #34aaaa !important;
+            }
             `
         }
         </style>
         <Container className="topnavbuttonscont border-bottom border-dark pb-3 d-flex align-items-center" fluid>
-            <Link className="topnavbuttonsbrand link-no-underline" to="/home">Envision</Link>
+            <span className="d-flex align-items-center justify-content-around">
+                <span className="topnavbuttonsbrand link-no-underline">
+                    Envision
+                </span>
+                {
+                    (location.pathname.slice(0, 10) === '/app/goal/') ?
+                    (
+                        <Icon.ArrowLeftShort className="back-button" width={75} height={75} onClick={() => { navigate("/app/goals/") }}/>
+                    )
+                    :
+                    ""
+                }
+            </span>
             <Dropdown drop={'start'}>
                 <Dropdown.Toggle as={CustomProfileDropdown} id="dropdown-custom-components" />
                 <Dropdown.Menu variant="dark">

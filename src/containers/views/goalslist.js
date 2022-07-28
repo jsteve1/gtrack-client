@@ -11,7 +11,12 @@ import NewGoal from '../goals/newgoal';
 import DeleteGoalModal from '../ui/DeleteModal';
 import * as Icon from 'react-bootstrap-icons';
 import MarkCompleteModal from '../ui/markcompletemodal';
+import { selectListMode } from '../../app/features/users/userSlice';
+import { useSelector } from 'react-redux';
+import { useEffect } from 'react';
+
 export default function GoalsListView({ startingSortState }) {
+    const listMode = useSelector(selectListMode); 
     const [showTimeline, setShowTimeline] = useState(false);
     const [showCompleted, setShowCompleted] = useState(false);
     const [showGridView , setShowGridView] = useState(false);
@@ -26,6 +31,18 @@ export default function GoalsListView({ startingSortState }) {
         setShowDeleteGoal(true);
         setDeleteId(id); 
     }
+    useEffect(() => {
+        if(listMode === "grid") {
+            setShowGridView(true);
+            setShowEditGoal(false);
+            setShowCompleted(false);
+        }
+        if(listMode === "list") {
+            setShowGridView(false);
+            setShowEditGoal(false);
+            setShowCompleted(false);
+        }
+    }, [listMode]);
     return (
             <>
                 <style type="text/css">
@@ -44,7 +61,17 @@ export default function GoalsListView({ startingSortState }) {
                 </style>
                 <Container fluid className="goals-list-cont">
                     <Row className="pr-5 pl-5">
-                        <GoalsListMenuBar showNewGoal={showNewGoal} setShowNewGoal={setShowNewGoal} showTimeline={showTimeline} showGridView={showGridView} showCompleted={showCompleted}  setShowTimeline={setShowTimeline} setShowCompleted={setShowCompleted} setShowGridView={setShowGridView} />
+                        <GoalsListMenuBar 
+                        showNewGoal={showNewGoal} 
+                        setShowNewGoal={setShowNewGoal} 
+                        showTimeline={showTimeline} 
+                        showGridView={showGridView} 
+                        showCompleted={showCompleted}  
+                        etShowTimeline={setShowTimeline} 
+                        setShowCompleted={setShowCompleted} 
+                        setShowGridView={setShowGridView}
+                        
+                        />
                     </Row>
                     <Row className="pr-5 pl-5">
                     {   
