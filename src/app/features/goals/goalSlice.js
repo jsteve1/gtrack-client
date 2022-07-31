@@ -71,39 +71,51 @@ export const mockGoalState = {
   progressMarkers: {
    "6a8af92c-7a41-479b-91fb-e4cc1ce9cbe1": [
     {
+      "id": "6a8af92c-7a41-479b-91fb-e4cc1ce9abc1",
       "name": "Bench Press 355", 
       "deadline": 1654829637,
-      "goalid": "6a8af92c-7a41-479b-91fb-e4cc1ce9cbe1"
+      "goalid": "6a8af92c-7a41-479b-91fb-e4cc1ce9cbe1",
+      "completed": true
     },
     {
+      "id": "6a8af92c-7a41-479b-91fb-e4cc1ce9abc2",
       "name": "Floor Press 315", 
       "deadline": 1654829637,
-      "goalid": "6a8af92c-7a41-479b-91fb-e4cc1ce9cbe1"
+      "goalid": "6a8af92c-7a41-479b-91fb-e4cc1ce9cbe1",
+      "completed": false
     }
    ],
    "6a8af92c-7a41-479b-91fb-e4cc1ce9cbe2": [],
    "6a8af92c-7a41-479b-91fb-e4cc1ce9cbe3": [
     {
+      "id": "6a8af92c-7a41-479b-91fb-e4cc1ce9abc3",
       "name": "Squat 455 for 2", 
       "deadline": 1654899637,
-      "goalid": "6a8af92c-7a41-479b-91fb-e4cc1ce9cbe3"
+      "goalid": "6a8af92c-7a41-479b-91fb-e4cc1ce9cbe3",
+      "completed": true
     },
     {
+      "id": "6a8af92c-7a41-479b-91fb-e4cc1ce9abc4",
       "name": "Squat 405 for 5", 
       "deadline": 1654923937,
-      "goalid": "6a8af92c-7a41-479b-91fb-e4cc1ce9cbe3"
+      "goalid": "6a8af92c-7a41-479b-91fb-e4cc1ce9cbe3",
+      "completed": false
     }
    ], 
    "6a8af92c-7a41-479b-91fb-e4cc1ce9cbe4": [
       {
+        "id": "6a8af92c-7a41-479b-91fb-e4cc1ce9abc5",
         "name": "Squat 405 for 3", 
         "deadline": 1654899637,
-        "goalid": "6a8af92c-7a41-479b-91fb-e4cc1ce9cbe4"
+        "goalid": "6a8af92c-7a41-479b-91fb-e4cc1ce9cbe4",
+        "completed": false
       },
       {
+        "id": "6a8af92c-7a41-479b-91fb-e4cc1ce9abc16",
         "name": "Bentover Row 315 for 8", 
         "deadline": 1654923937,
-        "goalid": "6a8af92c-7a41-479b-91fb-e4cc1ce9cbe4"
+        "goalid": "6a8af92c-7a41-479b-91fb-e4cc1ce9cbe4",
+        "completed": false,
       }
    ]
   }

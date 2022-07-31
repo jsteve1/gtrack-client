@@ -2,11 +2,17 @@ import { useEffect, forwardRef, useState } from 'react';
 import { Container, Row, Col, Tooltip, OverlayTrigger, Dropdown, Form } from 'react-bootstrap'; 
 import * as Icon from 'react-bootstrap-icons';
 import { useNavigate } from 'react-router-dom';
+import TimePicker from 'react-bootstrap-time-picker';
 
 export const getDeadlineFormatted = (deadline) => {
     const unixEpochTimeMS = deadline * 1000;
     const d = new Date(unixEpochTimeMS);
-    return d.toLocaleDateString();
+    const time = d.toLocaleTimeString(); 
+    const ampm = time.split(" ")[1]; 
+    const hour = time.split(":")[0]; 
+    const minute = time.split(":")[1];
+
+    return d.toLocaleDateString() + `, ${hour}:${minute}${ampm}`;
 }
 export const renderMarkCompleteTooltip = (props) => (
     <Tooltip id="button-tooltip" {...props}>
@@ -109,12 +115,17 @@ export default function GoalsListItem({ name,
     const [showEditDate, setShowEditDate] = useState(false);
     const [newDeadline, setNewDeadline] = useState(deadline);
     const [enteredDate, setEnteredDate] = useState("");
+    const [time, setTime] = useState("");
     const navigate = useNavigate();
     useEffect(() => {
         if(sortState === "deadline") {
             sortByDeadline();
         }
     }, [newDeadline]);
+    const handleTimeChange = (time) => {
+        console.log(time);
+        setTime(time);
+    }
     return (
         <>
         <style type="text/css">
@@ -261,10 +272,18 @@ export default function GoalsListItem({ name,
                  .goal-name-span-center-align {
                     margin-left: 55px;
                  }
+                 .time-picker-input {
+                    background-color: rgba(100, 100, 100, 0.3); 
+                    color: #34dcbe;
+                    max-width: 200px;
+                    width:175px;
+                    border: none; 
+                    text-align: center;
+                }
             `
         }
         </style>
-        <Container className={`shadow-lg goal-list-cont ${(complete) ? "goal-completed" : ""}`} onClick={() => navigate(`/app/goal/${id}`) } fluid>
+        <Container className={`shadow-lg goal-list-cont ${(complete) ? "goal-completed" : ""}`} fluid>
             <Row className="goal-list-item-row">
                 {
                     (rearrangeMode == true) ?    <>
@@ -309,9 +328,9 @@ export default function GoalsListItem({ name,
                 }
                 <Col sm="5" xs="12" className="goal-list-item-col d-flex justify-content-start">
                 {
-                    (rearrangeMode || showPrio === false || complete === true) ? "" : <span className="priority-span">{priority}</span>
+                    (rearrangeMode || showPrio === false || complete === true) ? "" : <span className="priority-span" onClick={() => navigate(`/app/goal/${id}`) }>{priority}</span>
                 }    
-                <span className={(complete === "true") ? "goal-name-span goal-name-span-center-align" :  "goal-name-span"}>{name}</span>
+                <span className={(complete === "true") ? "goal-name-span goal-name-span-center-align" :  "goal-name-span"} onClick={() => navigate(`/app/goal/${id}`) }>{name}</span>
                 </Col>
                 <Col sm="12" xs="12" md="5" className="goal-list-item-col d-flex justify-content-start deadline-col">
                     <span className="deadline-span d-inline align-items-center">
@@ -341,6 +360,7 @@ export default function GoalsListItem({ name,
                                 variant="dark"
                                 className="form-control-date-picker"
                             />
+                            <TimePicker className="time-picker-input" onChange={handleTimeChange} value={time} start="00:00" end="23:59" step={15} />
                             <Icon.Check onClick={() => {
                                                             const [year, month, day] = enteredDate.split("-"); 
                                                             const date = new Date(year, month - 1, day);
@@ -377,7 +397,7 @@ export default function GoalsListItem({ name,
                                 delay={{ show: 250, hide: 400 }}
                                 overlay={renderEditDeadlineTooltip}
                         >
-                            <span className="deadline-date" onClick={() => setShowEditDate(true)}>
+                            <span className="deadline-date" onClick={(e) => { e.preventDefault(); }}>
                                 {getDeadlineFormatted(newDeadline)}
                             </span>
                         </OverlayTrigger>) 

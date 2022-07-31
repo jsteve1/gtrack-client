@@ -44,8 +44,8 @@ export default function GoalGridItem({
                     .grid-item {
                         min-width: 325px; 
                         max-width: 325px;
-                        max-height: 375px;
-                        min-height: 375px;
+                        max-height: 400px;
+                        min-height: 400px;
                         color: #aaaaaa; 
                         background-color: rgba(100, 100, 100, 0.2);
                         cursor: pointer; 

@@ -19,7 +19,7 @@ export default function BottomNav() {
                     `
                         .nav-bottom-logged-in {
                             margin-bottom: -10px;
-                            width: 105vw;
+                            width: 110vw
                         }
                         .nav-bottom-logged-in-cont {
 
@@ -47,6 +47,9 @@ export default function BottomNav() {
                         }
                         .bot-nav-feed {
                             ${(location.pathname === '/app/feed/' || location.pathname === '/app/feed') ? "background-color: #232323;" : ""} 
+                        }
+                        @media only screen and (max-width: 668px) {
+                            width: 110vw
                         }
                     `
                 }

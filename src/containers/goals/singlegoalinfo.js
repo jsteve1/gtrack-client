@@ -118,13 +118,10 @@ export default function SingleGoalInfo({ goal, setUploadModalShow, setShowEdit, 
                             cursor: pointer;
                         }
                         .deadline-name-col {
-                            max-width: 400px;
-                            min-width: 300px;
+                            width: 80%;
+                            margin-left: 25px;
                         }
-                        .deadline-col {
-                            display: flex; 
-                            justify-content: center;
-                        }
+
                         .goal-single-action-star {
                             cursor: pointer; 
 
@@ -139,7 +136,14 @@ export default function SingleGoalInfo({ goal, setUploadModalShow, setShowEdit, 
                             animation-name: growshrink;
                             animation-duration: 0.5s; 
                         }
-
+                        .nowrap {
+                            white-space: nowrap;
+                        }
+                        @media only screen and (max-width: 668px) {
+                            .deadline-span {
+                                white-space: normal !important;
+                            }
+                        }
                     `
                 }
                 </style>
@@ -151,19 +155,19 @@ export default function SingleGoalInfo({ goal, setUploadModalShow, setShowEdit, 
                         {
                             (goal.complete || goal.completedtime !== 0) ?
                             <>
-                                <Col xs="10" sm="9" md="4" className="d-flex justify-content-between name-col">
+                                <Col xs="12" sm="9" md="4" className="d-flex justify-content-between name-col nowrap">
                                     <span className="deadline-text-span">Completed:</span><span className="deadline-span">{getDeadlineFormatted(goal.completedtime)}</span>             
                                 </Col> 
                             </>
                             : 
                             <>
-                                <Col xs="10" className="deadline-col">
-                                    <div className="d-flex justify-content-between deadline-name-col">
+                                <Col xs="12" className="deadline-col ml-5">
+                                    <div className="d-flex justify-content-between deadline-name-col nowrap">
                                         <span className="deadline-text-span">Deadline:</span><span className="deadline-span">{getDeadlineFormatted(goal.deadline)}</span>             
                                     </div>
                                 </Col>
-                                <Col xs="10" className="deadline-col">
-                                    <div className="d-flex justify-content-between deadline-name-col">
+                                <Col xs="12" className="deadline-col">
+                                    <div className="d-flex justify-content-between deadline-name-col nowrap">
                                         <span className="priority-text-span">Priority:</span><span className="deadline-span">{goal.priority}</span>  
                                     </div>          
                                 </Col>

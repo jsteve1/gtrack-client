@@ -1,12 +1,23 @@
 import { useEffect, useState } from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import * as Icon from 'react-bootstrap-icons';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { selectGoal, selectGoalProgressMarkers } from '../../app/features/goals/goalSlice';
+import { getDeadlineFormatted } from '../../components/goals/goallistitem';
 import ProgressMarker from '../../components/goals/progressmarker';
 export default function SingleGoalDesc({ goal }) {
     const progressMarkers = useSelector(selectGoalProgressMarkers(goal.id));
+    const dispatch = useDispatch();
     const [_markers, setMarkers] = useState([]);
+    const newProgressMarker = () => {
+        if(Array.isArray(_markers) && _markers.length > 0 && _markers[0].newmarker === true) {
+            return;
+        }
+        setMarkers([{ name: "", deadline: getDeadlineFormatted(Date.now()), goalid: goal.id, completed: false, newmarker: true }, ..._markers])
+    }
+    const submitNewMarker = () => {
+
+    }
     useEffect(() => {
         if(Array.isArray(progressMarkers) && progressMarkers.length > 0 &&
             JSON.parse(JSON.stringify(_markers)) !== JSON.stringify(progressMarkers))
@@ -54,7 +65,7 @@ export default function SingleGoalDesc({ goal }) {
                     <Row className="desc-data-row">
                         <Col />
                         <Col xs="10" className="d-flex justify-content-start border-bottom border-secondary align-items-center">
-                            Progress Markers<Icon.Plus width={50} height={50} className="add-prg-mrk" />
+                            Progress Markers<Icon.Plus width={50} height={50} className="add-prg-mrk" onClick={() => newProgressMarker()}/>
                         </Col>
                         <Col />
                     </Row>
@@ -64,7 +75,7 @@ export default function SingleGoalDesc({ goal }) {
                         {
                         (_markers.length > 0) ? _markers.map(pm => {
                                                     return (
-                                                        <ProgressMarker marker={pm} />
+                                                        <ProgressMarker marker={pm} markers={_markers} setMarkers={setMarkers} />
                                                     )
                                                 }) : ""
                         }

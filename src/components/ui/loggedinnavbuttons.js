@@ -138,8 +138,9 @@ export default function LoggedInNavButtons() {
             <Dropdown drop={'start'}>
                 <Dropdown.Toggle as={CustomProfileDropdown} id="dropdown-custom-components" />
                 <Dropdown.Menu variant="dark">
-                    <Dropdown.Item onClick={(e) => { e.preventDefault(); navigate('/app/profile') } }><Icon.Person color={"#34dcbe"} /> My Profile</Dropdown.Item>
-                    <Dropdown.Item onClick={(e) => { e.preventDefault(); navigate('/app/goals') } }><Icon.ListCheck color={"#34dcbe"}/> My Goals</Dropdown.Item>
+                    <Dropdown.Item onClick={(e) => { e.preventDefault(); navigate('/app/profile') } }><Icon.Person width={20} height={20} color={"#34dcbe"} /> My Profile</Dropdown.Item>
+                    <Dropdown.Item onClick={(e) => { e.preventDefault(); navigate('/app/goals') } }><Icon.ListCheck width={20} height={20} color={"#34dcbe"}/> My Goals</Dropdown.Item>
+                    <Dropdown.Item onClick={(e) => { e.preventDefault(); navigate('/app/profile') } }><Icon.BoxArrowRight width={20} height={20} color={"#34dcbe"}/> Sign Out</Dropdown.Item>
                 </Dropdown.Menu>
             </Dropdown>
         </Container>

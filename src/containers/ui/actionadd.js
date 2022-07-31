@@ -17,25 +17,26 @@ export default function ActionAdd({ show, setShow, ...props }) {
                     .action-add-off-canvas {
                         background-color: rgba(10, 10, 10, 0.95);
                         color: #aaaaaa; 
-                        height: 30vh;
+                        height: 20vh;
                     }
                     .action-button-offcanvas-actions {
-                        background-color: #121212;
+                        background-color: #151515;
                         height: 100px;
                         color: #34aaaa;
+                        padding: 15px;
                         width: 80%;
                         max-width: 200px;
-                        font-size: 16pt;
+                        font-size: 17pt;
+                        font-weight: 400;
                         border-radius: 15px;
-                        border: #34aaaa 1px solid;
                         transition: all ease 0.2s;
+                        outline: none;
                     }   
                     .action-button-offcanvas-actions:hover, 
                     .action-button-offcanvas-actions:focus,
                     .action-button-offcanvas-actions:active,
                     .action-button-offcanvas-actions:focus-visible {
                         background-color: #121212;
-                        border: #34aaaa 1px solid;
                         color: #34dcbe;
                         transform: scale(1.01);
                     }
@@ -46,24 +47,24 @@ export default function ActionAdd({ show, setShow, ...props }) {
                 <Offcanvas.Header />
                 <Offcanvas.Body as={Container}>
                     <Row className="d-flex justify-content-end">
-                        <Col className="d-flex justify-content-center">
+                        <Col className="d-flex justify-content-end">
                             <OverlayTrigger
                                 placement="left"
                                 delay={{ show: 250, hide: 400 }}
                                 overlay={
                                     <Tooltip>
                                         <h4>
-                                            New Post
+                                            Share Goal
                                         </h4>
                                     </Tooltip>
                                 }
                             >
-                                <Button className="action-button-offcanvas-actions" variant="dark" onClick={() => { navigate('/app/feed/') }}>
-                                    New Post&nbsp;<Icon.PencilSquare width={40} height={40} color={"#098899"} />
+                                <Button className="action-button-offcanvas-actions shadow-lg" variant="dark" onClick={() => { navigate('/app/feed/') }}>
+                                    Share Goal&nbsp;<Icon.PencilSquare width={40} height={40} color={"#098899"} />
                                 </Button>
                             </OverlayTrigger>
                         </Col>
-                        <Col className="d-flex justify-content-center">
+                        <Col className="d-flex justify-content-end">
                             <OverlayTrigger
                                 placement="left"
                                 delay={{ show: 250, hide: 400 }}
@@ -75,7 +76,7 @@ export default function ActionAdd({ show, setShow, ...props }) {
                                     </Tooltip>
                                 }
                             >
-                                <Button className="action-button-offcanvas-actions" variant="dark" onClick={() => {setShowNewGoal(true) }}>
+                                <Button className="action-button-offcanvas-actions shadow-lg" variant="dark" onClick={() => {setShowNewGoal(true) }}>
                                     New Goal&nbsp;<Icon.PlusCircleFill  width={40} height={40} color={"#098899"} />
                                 </Button>
                             </OverlayTrigger>

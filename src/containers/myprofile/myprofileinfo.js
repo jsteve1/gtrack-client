@@ -9,7 +9,7 @@ const renderUploadTooltip = (props) => (
 
 const renderEditTooltip = (props) => (
     <Tooltip id="button-tooltip" {...props}>
-        <h3>Edit Profile</h3>
+        <h3>Settings</h3>
     </Tooltip>
 );
 
@@ -76,7 +76,7 @@ export default function MyProfileInfo({ fname, lname, bio, email, profilepic, se
                         .fname-lname-span {
                             white-space: nowrap;
                             text-overflow: ellipsis;
-                            margin-right: 10%;
+                            margin-right: 20px;
                         }
                         .edit-profile-span {
                             display: flex; 
@@ -95,16 +95,17 @@ export default function MyProfileInfo({ fname, lname, bio, email, profilepic, se
                                 <OverlayTrigger
                                         placement="left"
                                         delay={{ show: 250, hide: 400 }}
-                                        overlay={renderEditTooltip}
+                                        overlay={renderUploadTooltip}
                                     >
-                                        <Icon.PencilFill className="edit-profile-pencil" width={"25px"} height={"25px"} onClick={() => setShowEdit(true)} />
+                                        <Icon.CloudUploadFill className="edit-profile-pencil upload-cloud mr-2" width={"30px"} height={"30px"} onClick={() => setUploadModalShow(true)} />
                                 </OverlayTrigger>
+                                <span>&nbsp;</span>
                                 <OverlayTrigger
                                         placement="left"
                                         delay={{ show: 250, hide: 400 }}
-                                        overlay={renderUploadTooltip}
+                                        overlay={renderEditTooltip}
                                     >
-                                        <Icon.CloudUploadFill className="edit-profile-pencil upload-cloud" width={"25px"} height={"25px"} onClick={() => setUploadModalShow(true)} />
+                                        <Icon.GearFill className="edit-profile-pencil" width={"30px"} height={"30px"} onClick={() => setShowEdit(true)} />
                                 </OverlayTrigger>
                             </span>
                         </Col>
