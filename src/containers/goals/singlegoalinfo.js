@@ -2,6 +2,8 @@ import { Container, Row, Col, Button, OverlayTrigger , Tooltip, Dropdown } from 
 import * as Icon from 'react-bootstrap-icons'; 
 import { useState, useEffect } from 'react';
 import { getDeadlineFormatted, CustomGoalActions } from '../../components/goals/goallistitem';
+import { useDispatch, useSelector } from 'react-redux';
+import { setGoalIndex, selectGoal } from '../../app/features/goals/goalSlice';
 
 const renderUploadTooltip = (props) => (
     <Tooltip id="button-tooltip" {...props}>
@@ -27,7 +29,12 @@ const renderStarTooltip = (props) => (
 );
 
 
-export default function SingleGoalInfo({ goal, setUploadModalShow, setShowEdit, openDeleteModal, setMarkCompleteModalShow }) {
+export default function SingleGoalInfo({ goalid, setUploadModalShow, setShowEdit, openDeleteModal, setMarkCompleteModalShow }) {
+    const dispatch = useDispatch(); 
+    const goal = useSelector(selectGoal(goalid));
+    const setIndex = (index, newIndex) => {
+        dispatch(setGoalIndex({ index, newIndex }));
+    }
     return (
         <>
              <style type="text/css">
@@ -42,7 +49,7 @@ export default function SingleGoalInfo({ goal, setUploadModalShow, setShowEdit, 
                                 padding-top: 25px;
                                 color: #aaaaaa;
                                 padding-bottom: 30px;
-                                background-color: rgba(100, 100, 100, 0.2);
+                                ${(goal?.complete === true) ? "background-color: rgba(0, 99, 56, 0.5);" : "background-color: rgba(100, 100, 100, 0.2);"}
                                 min-height: 100px;
                                 padding-left: 50px;
                                 border-radius: 15px;
@@ -148,7 +155,7 @@ export default function SingleGoalInfo({ goal, setUploadModalShow, setShowEdit, 
                 }
                 </style>
                 <Container fluid className="myprofileinfo-cont shadow-lg">
-                    <Row className="mb-1 ml-5 pb-3 border-bottom border-secondary">
+                    <Row className={`mb-1 ml-5 pb-3 ${(goal?.complete === true) ? "" : "border-bottom border-secondary "}`}>
                         <Col xs="12" className="d-flex justify-content-center name-col">
                             <span className="fname-lname-span">{`${goal.name}`}</span>                
                         </Col>
@@ -174,42 +181,48 @@ export default function SingleGoalInfo({ goal, setUploadModalShow, setShowEdit, 
                             </>
                         }
                     </Row>
-                    <Row>
-                        <Col />
-                                <Col xs="8" className="d-flex justify-content-between mt-4 p-1">
-                                    {
-                                        (goal.complete || goal.completedtime !== 0) ? "" :     
-                                            <OverlayTrigger
+                    {
+                        
+                        (goal?.complete !== true) ?
+                        <Row>
+                                <Col />
+                                    <Col xs="8" className="d-flex justify-content-between mt-4 p-1">
+                                        {
+                                            (goal.complete || goal.completedtime !== 0) ? "" :     
+                                                <OverlayTrigger
+                                                    placement="left"
+                                                    delay={{ show: 250, hide: 400 }}
+                                                    overlay={<Tooltip><h3>Mark Complete</h3></Tooltip>}
+                                                    >
+                                                        <Icon.CheckCircleFill className="edit-profile-pencil upload-cloud" color={"#34dcbe"} width={"40px"} height={"40px"} onClick={() => { setMarkCompleteModalShow(true) }} />
+                                                </OverlayTrigger>
+                                        }
+                                        <OverlayTrigger
                                                 placement="left"
                                                 delay={{ show: 250, hide: 400 }}
-                                                overlay={<Tooltip><h3>Mark Complete</h3></Tooltip>}
-                                                >
-                                                    <Icon.CheckCircleFill className="edit-profile-pencil upload-cloud" color={"#34dcbe"} width={"40px"} height={"40px"} onClick={() => { setMarkCompleteModalShow(true) }} />
-                                            </OverlayTrigger>
-                                    }
-                                    <OverlayTrigger
-                                            placement="left"
-                                            delay={{ show: 250, hide: 400 }}
-                                            overlay={renderUploadTooltip}
-                                        >
-                                            <Icon.CloudUploadFill className="edit-profile-pencil upload-cloud" width={"40px"} height={"40px"} onClick={() => setUploadModalShow(true)} />
-                                    </OverlayTrigger>
-                                    {
-                                        (goal.priority === 1) ? (
-                                                <Icon.StarFill className="goal-single-action-star" color={"rgba(213, 176, 0, 0.5)"} width={40} height={40} /> 
-                                            ) : (
-                                            <OverlayTrigger
-                                                placement="top"
-                                                delay={{ show: 250, hide: 400 }}
-                                                overlay={renderStarTooltip}
+                                                overlay={renderUploadTooltip}
                                             >
-                                                <Icon.Star className="goal-single-action-star" onClick={() => {}} color={"rgba(213, 176, 0, 0.5)"} width={40} height={40} /> 
-                                            </OverlayTrigger>
-                                            )
-                                    }
-                                </Col>
-                            <Col />
-                        </Row>
+                                                <Icon.CloudUploadFill className="edit-profile-pencil upload-cloud" width={"40px"} height={"40px"} onClick={() => setUploadModalShow(true)} />
+                                        </OverlayTrigger>
+                                        {
+                                                (goal.priority === 1) ? (
+                                                        <Icon.StarFill className="goal-single-action-star" color={"rgba(213, 176, 0, 0.5)"} width={40} height={40} /> 
+                                                    ) : (
+                                                    <OverlayTrigger
+                                                        placement="top"
+                                                        delay={{ show: 250, hide: 400 }}
+                                                        overlay={renderStarTooltip}
+                                                    >
+                                                        <Icon.Star className="goal-single-action-star" onClick={() => setIndex(goal?.priority - 1, 0)} color={"rgba(213, 176, 0, 0.5)"} width={40} height={40} /> 
+                                                    </OverlayTrigger>
+                                                    )
+                                        }
+                                    </Col>
+                                <Col />
+                            </Row>
+                        :
+                        ""
+                    }
                 </Container>
         </>
     )

@@ -7,16 +7,17 @@ import Home from '../containers/views/home';
 import AboutView from '../containers/views/about';
 import Signin from '../containers/views/signin';
 import Signup from '../containers/views/signup';
-import React, { useState, useEffect,useLayoutEffect } from "react";
-import { useSelector } from 'react-redux';
+import React, { useState, useEffect, useLayoutEffect } from "react";
+import { useDispatch, useSelector } from 'react-redux';
 import { loggedIn } from "../app/features/users/userSlice";
 import AppHomeView from '../containers/views/apphome';
 import MyProfileView from "../containers/views/myprofile";
 import GoalsListView from "../containers/views/goalslist";
 import FeedView from '../containers/views/feed';
-import * as Icon from 'react-bootstrap-icons';
 import SingleGoalView from "../containers/views/singlegoal";
-const ScrollResetWrapper = ({children}) => {
+import { setShowActionButton, selectShowActionButton, setSt } from "../app/features/ui/uiSlice";
+
+const ScrollResetWrapper = ({ children }) => {
   const location = useLocation();
   useLayoutEffect(() => {
     document.documentElement.scrollTo(0, 0);
@@ -24,23 +25,37 @@ const ScrollResetWrapper = ({children}) => {
   return children
 } 
 
+const RequireAuth = ({ children, redirectTo, location }) => {
+  const _loggedIn = useSelector(loggedIn); 
+  useEffect(() => {
+    if(!_loggedIn) {
+      window.history.pushState({}, null, '/app/signin');
+    }
+  }, [_loggedIn])
+  return _loggedIn ? children : <Signin />;
+}
 
-export default function Router({ showActionButton, setShowActionButton }) {
+export default function Router() {
     const location = useLocation();
+    const dispatch = useDispatch();
     const [displayLocation, setDisplayLocation] = useState(location);
     const [transitionStage, setTransistionStage] = useState("fadeIn");
-    const [startingSortState, setStartingSortState] = useState("priority")
+    const showActionButton = useSelector(selectShowActionButton);
+    const _loggedIn = useSelector(loggedIn); 
+
     useEffect(() => {
         if (location.pathname !== displayLocation.pathname) setTransistionStage("fadeOut");
       }, [location, displayLocation]);
     useEffect(() => {
-        if(displayLocation.pathname.slice(0, 4) !== "/app" && showActionButton !== false) {
-          setShowActionButton(false);
+        if(displayLocation.pathname.slice(0, 5) === '/home') {
+          dispatch(setShowActionButton(false));
+        } else if(displayLocation.pathname.slice(0, 4) !== "/app" && showActionButton !== false) {
+            dispatch(setShowActionButton(false));
         } else {
-          if(showActionButton !== true)
-            setShowActionButton(true);
+          if(showActionButton !== true && _loggedIn === true)
+            dispatch(setShowActionButton(true));
         }
-    }, [displayLocation])
+    }, [displayLocation]);
     return ( 
             <>
             <style type="text/css">
@@ -83,8 +98,8 @@ export default function Router({ showActionButton, setShowActionButton }) {
                   className={`${transitionStage}`} 
                   onAnimationEnd={() => {
                       if (transitionStage === "fadeOut") {
-                      setTransistionStage("fadeIn");
-                      setDisplayLocation(location);
+                        setTransistionStage("fadeIn");
+                        setDisplayLocation(location);
                       }
                   }}
               >                
@@ -103,7 +118,7 @@ export default function Router({ showActionButton, setShowActionButton }) {
                               <Route path="signup" element={ <Signup /> } />
                               <Route path="home" element={
                                   <RequireAuth>
-                                    <AppHomeView setStartingSortState={setStartingSortState} /> 
+                                    <AppHomeView /> 
                                   </RequireAuth>
                                 } />
                               <Route path="profile" element={
@@ -118,7 +133,7 @@ export default function Router({ showActionButton, setShowActionButton }) {
                               }/>
                               <Route path="goals" element={
                                 <RequireAuth>
-                                  <GoalsListView startingSortState={startingSortState} />
+                                  <GoalsListView />
                                 </RequireAuth>               
                               }/>
                           </Route>
@@ -129,14 +144,4 @@ export default function Router({ showActionButton, setShowActionButton }) {
             </ScrollResetWrapper>
         </>
         )
-}
-
-const RequireAuth = ({ children, redirectTo, location }) => {
-  const _loggedIn = useSelector(loggedIn); 
-  useEffect(() => {
-    if(!_loggedIn) {
-      window.history.pushState({}, null, '/app/signin');
-    }
-  }, [_loggedIn])
-  return _loggedIn ? children : <Signin />;
 }

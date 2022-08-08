@@ -10,7 +10,9 @@ export const mockUsersState = {
       "mainpic": 0, 
       "bio":  "I love goals! BatChest!",
       "currentGoal": "6a8af92c-7a41-479b-91fb-e4cc1ce9cbe1",
-      "listMode": "grid"
+      "listMode": "grid",
+      "joinDate": 1654332007,
+      "privateProfile": false
   },
   otherUsers: [
     {
@@ -57,8 +59,11 @@ const initialUser = {
   mainpic: "",
   media: [], 
   pics: "", 
-  private: false, 
   bio: "",
+  currentGoal: "",
+  joinDate: 0,
+  privateProfile: false,
+  listMode: "list",
   currentGoal: ""
 }
 
@@ -80,6 +85,7 @@ export const userSlice = createSlice({
     },
     logout: (state, action) => {
       state.myProfile = initialUser;
+      state.otherUsers = []; 
     },
     addOtherUser: (state, action) => {
       state.otherUsers.push(action.payload);

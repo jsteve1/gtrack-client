@@ -1,23 +1,30 @@
 import { Modal, Container, Row, Col, Button } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux'; 
-import { removeGoal, selectGoal } from '../../app/features/goals/goalSlice';
-export default function DeleteGoalModal({ id, deleteModalShow, setDeleteModalShow }) {
-    const goal = useSelector(selectGoal(id)); 
-    const deleteGoal = () => {
-        dispatch(removeGoal({ id }));
-        setDeleteModalShow(false); 
-    }
+import { profile, logout } from '../../app/features/users/userSlice';
+import { logoutGoals } from '../../app/features/goals/goalSlice';
+import { logoutUI } from '../../app/features/ui/uiSlice';
+import { useNavigate } from 'react-router-dom';
+
+export default function ResetPasswordModal({ resetPwModalShow, setResetPwModalShow }) {
     const dispatch = useDispatch();
+    const _profile = useSelector(profile); 
+    const navigate = useNavigate();
+    const resetPw = () => {
+        navigate('/home');
+        dispatch(logout());
+        dispatch(logoutUI());
+        dispatch(logoutGoals());
+        alert('Password reset successful. Please check your email');
+    }
     return (
         <>
             <style type="text/css">
             {`
-                .delete-goal-cont {
+                .reset-pw-cont {
                     background-color: rgba(19, 19, 19, 0.9);
                     padding-top: 25px;
-                
-                    min-width: 200px;
-                    height: 275px;
+                    min-width: 250px;
+                    height: 325px;
                     margin: 0px;
                     padding: 0px;
                 }
@@ -47,41 +54,41 @@ export default function DeleteGoalModal({ id, deleteModalShow, setDeleteModalSho
             `}
             </style>
             <Modal 
-                show={deleteModalShow} 
-                onHide={() => setDeleteModalShow(false)}
+                show={resetPwModalShow} 
+                onHide={() => setResetPwModalShow(false)}
                 centered
                 className="custom-modal-delete"
                 as={Container}
                 >
                 <Modal.Body as={Container}>
-                    <Container fluid className="delete-goal-cont pt-2">
+                    <Container fluid className="reset-pw-cont pt-2">
                         <Row className="d-flex justify-content-center mt-3 mb-1">
                             <Col />
                                 <Col>
                                     <span className="confirm-delete-span">
-                                        Are you sure?
+                                        Reset Password
                                     </span>
                                 </Col>
                             <Col />
                         </Row>
-                        <Row className="d-flex justify-content-center mt-1 mb-3 border-bottom border-dark pb-2">
+                        <Row className="d-flex justify-content-center mt-1 mb-3 pb-2">
                             <Col />
                                     <Col xs="8">
                                         <span className="confirm-delete-span-info">
-                                            All info and progress markers for "{goal?.name}" will be deleted
+                                            Your account will be locked, you will be logged out, and an account reset email will be sent to {_profile.email}
                                         </span>
                                     </Col>
                             <Col />
                         </Row>
                         <Row>
                             <Col className="justify-content-center d-flex">
-                                <Button variant="dark" className="delete-action-buttons" onClick={() => setDeleteModalShow(false)}>
+                                <Button variant="dark" className="delete-action-buttons" onClick={() => setResetPwModalShow(false)}>
                                     Cancel
                                 </Button>
                             </Col>
                             <Col className="justify-content-center d-flex">
-                                <Button variant="danger"  className="delete-action-buttons" onClick={() => deleteGoal(id)}>
-                                    Delete
+                                <Button variant="danger"  className="delete-action-buttons" onClick={() => resetPw()}>
+                                    Confirm
                                 </Button>
                             </Col>
                         </Row>

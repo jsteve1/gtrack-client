@@ -1,6 +1,12 @@
 import { Container, Row,  Col } from 'react-bootstrap';
+import { useSelector } from 'react-redux'; 
+import { selectNumCompleted, selectNumTodo } from '../../app/features/goals/goalSlice';
+import { profile } from '../../app/features/users/userSlice';
 
 export default function QuickInfo() {
+    const _profile = useSelector(profile);
+    const numCompleted = useSelector(selectNumCompleted(_profile?.id));
+    const numTodo = useSelector(selectNumTodo(_profile?.id));
     return (
         <>
             <style type="text/css">
@@ -38,13 +44,19 @@ export default function QuickInfo() {
             </style>
             <Container fluid className="quick-info-cont shadow-lg">
                 <Row>
-                    <Col  className="justify-content-between d-flex mt-1" xs="12" sm="6">
-                        <span className="goals-achieved">Achieved:</span><span className="number-goals-quick-info">0</span> 
+                    <Col />
+                    <Col className="justify-content-between d-flex mt-1" xs="10" md="6">
+                        <span className="goals-inprogress">Todo: </span><span className="number-goals-quick-info">{numTodo}</span>
                     </Col>
-                    <Col className="justify-content-between d-flex mt-1" xs="12" sm="6">
-                        <span className="goals-inprogress">Todo: </span><span className="number-goals-quick-info">0</span>
-                    </Col>
+                    <Col />
                 </Row>   
+                <Row>
+                    <Col />
+                    <Col className="justify-content-between d-flex mt-1" xs="10" md="6">
+                        <span className="goals-achieved">Completed:</span><span className="number-goals-quick-info">{numCompleted}</span> 
+                    </Col>
+                    <Col />
+                </Row>
             </Container>
         </>
     )

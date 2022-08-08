@@ -25,8 +25,8 @@ export default function SignupStyle() {
                         height: 100% !important;
                 }
                 .signup-col {
-                    background-color: rgba(3, 3, 3, 0.9);
-                    padding: 35px;
+                    background-color: rgba(9, 9, 9, 0.7);
+                    padding: 55px;
                     border-radius: 10px;
                     max-height: 100%;
                     max-width: 750px;
@@ -74,7 +74,7 @@ export default function SignupStyle() {
                     outline: none;
                 }
                 .signup-title-row {
-                    color: #aaaaaa;
+                    color: #34aaaa;
                     font-size: 4vh;
                     font-weight: 500;
                 }

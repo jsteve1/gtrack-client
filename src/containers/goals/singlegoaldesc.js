@@ -65,7 +65,10 @@ export default function SingleGoalDesc({ goal }) {
                     <Row className="desc-data-row">
                         <Col />
                         <Col xs="10" className="d-flex justify-content-start border-bottom border-secondary align-items-center">
-                            Progress Markers<Icon.Plus width={50} height={50} className="add-prg-mrk" onClick={() => newProgressMarker()}/>
+                            Progress Markers
+                            {
+                                (goal?.complete === true) ? "" :  <Icon.Plus width={50} height={50} className="add-prg-mrk" onClick={() => newProgressMarker()}/>
+                            }
                         </Col>
                         <Col />
                     </Row>
@@ -75,7 +78,7 @@ export default function SingleGoalDesc({ goal }) {
                         {
                         (_markers.length > 0) ? _markers.map(pm => {
                                                     return (
-                                                        <ProgressMarker marker={pm} markers={_markers} setMarkers={setMarkers} />
+                                                        <ProgressMarker goalid={goal.id} marker={pm} markers={_markers} setMarkers={setMarkers} />
                                                     )
                                                 }) : ""
                         }

@@ -19,7 +19,7 @@ export default function BottomNav() {
                     `
                         .nav-bottom-logged-in {
                             margin-bottom: -10px;
-                            width: 110vw
+                            width: 104vw
                         }
                         .nav-bottom-logged-in-cont {
 
@@ -46,10 +46,12 @@ export default function BottomNav() {
                             ${(location.pathname === '/app/goals/' || location.pathname === '/app/goals') ? "background-color: #232323;" : ""} 
                         }
                         .bot-nav-feed {
-                            ${(location.pathname === '/app/feed/' || location.pathname === '/app/feed') ? "background-color: #232323;" : ""} 
+                            ${(location.pathname === '/app/profile/' || location.pathname === '/app/profile') ? "background-color: #232323;" : ""} 
                         }
                         @media only screen and (max-width: 668px) {
-                            width: 110vw
+                            .nav-bottom-logged-in {
+                                width: 110vw
+                            }
                         }
                     `
                 }
@@ -83,17 +85,17 @@ export default function BottomNav() {
                                     <Icon.ListCheck width={45} height={45} />
                                 </OverlayTrigger>
                             </Col>
-                            <Col xs="4"  onClick={() => { navigate('/app/feed') }}  className="p-2 d-flex justify-content-center icon-select-bottom-nav bot-nav-feed">
+                            <Col xs="4"  onClick={() => { navigate('/app/profile') }}  className="p-2 d-flex justify-content-center icon-select-bottom-nav bot-nav-feed">
                                 <OverlayTrigger
                                     placement="top"
                                     delay={{ show: 250, hide: 400 }}
                                     overlay={
                                         <Tooltip id="button-tooltip">
-                                            Feed
+                                            Profile
                                         </Tooltip>
                                     }
                                 >
-                                    <Icon.ViewList width={45} height={45} />
+                                    <Icon.PersonFill width={45} height={45} />
                                 </OverlayTrigger>
                             </Col>
                         </Row>

@@ -3,13 +3,26 @@ import { Container, Row, Col } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import { selectCurrentGoal } from '../../app/features/users/userSlice';
 import { selectGoals } from '../../app/features/goals/goalSlice';
+import { useNavigate } from 'react-router-dom';
+import * as Icon from 'react-bootstrap-icons';
+
 export default function CurrentGoal() {
     const currentGoal = useSelector(selectCurrentGoal);
     const goals = useSelector(selectGoals);
     const [_currentGoal, _setCurrentGoal] = useState(""); 
+    const [id, setId] = useState("");
+    const navigate = useNavigate();
     useEffect(() => {
-        const goal = goals.filter(goal => goal.id === currentGoal)[0];
-        _setCurrentGoal(goal.name);
+        const goal = goals.filter(goal => 
+            goal.priority === 1 && goal.complete !== true && goal.name !== _currentGoal
+        )[0];
+        if(goal) { 
+            _setCurrentGoal(goal.name);
+            setId(goal.id); 
+        } 
+        else {
+            _setCurrentGoal("No Goal Selected");
+        } 
     }, [currentGoal]);
     return (
         <>
@@ -29,7 +42,7 @@ export default function CurrentGoal() {
                 }     
                 .current-goal-label {
                     color: #34dcbe; 
-                    font-size: 5vh;
+                    font-size: 14pt;
                     font-weight: 300;
 
                 }
@@ -48,9 +61,16 @@ export default function CurrentGoal() {
         </style>
         <Container fluid className="current-goal-cont">
                 <Row>
-                    <Col xs="12" md="4" className="d-flex justify-content-start align-items-center"><span className="current-goal-label">Current&nbsp;Goal:</span></Col>
-                    <Col xs="12" md="8" className="d-flex justify-content-start align-items-center">
-                         <span className="current-goal-name">{`${_currentGoal}`}</span>
+                    <Col xs="12" className="d-flex justify-content-center align-items-center"><span className="current-goal-label"><Icon.StarFill color={"rgba(213, 176, 0, 0.5)"} width={25} height={25}/>&nbsp;Current&nbsp;Goal</span></Col>
+                    <Col xs="12" className="d-flex justify-content-center align-items-center">
+                         <span 
+                            className="current-goal-name"
+                            onClick={() => {
+                                if(id !== "")
+                                    navigate(`/app/goal/${id}`)
+                                }
+                            }
+                         >{`${_currentGoal}`}</span>
                     </Col>
                 </Row>
         </Container>

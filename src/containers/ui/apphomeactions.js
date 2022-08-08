@@ -1,8 +1,13 @@
 import { Button, Col } from 'react-bootstrap';
 import * as Icon from 'react-bootstrap-icons';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-export default function AppHomeActions({ setStartingSortState }){
+import { setStartingSortState } from '../../app/features/ui/uiSlice';
+
+export default function AppHomeActions(){
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+
     return (
         <>
            <style type="text/css">
@@ -23,12 +28,12 @@ export default function AppHomeActions({ setStartingSortState }){
            </style>
            <Col />
            <Col className="mt-1" xs="12" md="3">
-                <Button variant="dark" className="shadow-lg apphomeactionbtn" onClick={() => { setStartingSortState("deadline"); navigate('/app/goals/'); }}>
+                <Button variant="dark" className="shadow-lg apphomeactionbtn" onClick={() => { dispatch(setStartingSortState("deadline")); navigate('/app/goals/'); }}>
                     <Icon.Hourglass width={50} height={50} color={"#34dcbe"} /><br></br>Upcoming
                 </Button>
            </Col>
            <Col className="mt-1" xs="12" md="3">
-                <Button variant="dark" className=" shadow-lg apphomeactionbtn" onClick={() => { setStartingSortState("completed"); navigate('/app/goals/')}}>
+                <Button variant="dark" className=" shadow-lg apphomeactionbtn" onClick={() => { dispatch(setStartingSortState("completed")); navigate('/app/goals/')}}>
                     <Icon.Award width={50} height={50} color={"#34dcbe"} /><br></br>Achieved
                 </Button>
            </Col>

@@ -4,6 +4,7 @@ import { Container, Row, Col, OverlayTrigger, Tooltip, Button } from 'react-boot
 import * as Icon from 'react-bootstrap-icons';
 import { useDispatch } from 'react-redux';
 import { setListMode } from '../../app/features/users/userSlice';
+import { setShowNewGoal } from '../../app/features/ui/uiSlice';
 
 const renderTimelineTooltip = (props) => (
     <Tooltip id="button-tooltip" {...props}>
@@ -28,10 +29,10 @@ const renderShowGridViewTooltip = (props) => (
     </Tooltip>
 );
 
-export default function GoalsListMenuBar({ showTimeline, showGridView, showCompleted, setShowTimeline, setShowCompleted, setShowGridView, showNewGoal, setShowNewGoal }) {   
+export default function GoalsListMenuBar({ showTimeline, showGridView, setShowTimeline, setShowGridView }) {   
     const goals = useSelector(selectGoals); 
     const dispatch = useDispatch();
-    const showGoalsList = (showTimeline === false && showGridView === false && showCompleted === false);
+    const showGoalsList = (showTimeline === false && showGridView === false);
     const handleShowListClick = () => {
         dispatch(setListMode("list"));
     }
@@ -39,7 +40,7 @@ export default function GoalsListMenuBar({ showTimeline, showGridView, showCompl
         dispatch(setListMode("grid"));
     }
     const handleNewGoalSelected = () => {
-        alert("add item")
+        dispatch(setShowNewGoal(true));
     }
     return (
         <>
@@ -92,14 +93,14 @@ export default function GoalsListMenuBar({ showTimeline, showGridView, showCompl
         <Container fluid className="goals-list-menubar border-bottom border-secondary">
             <Row>
                 <Col className="menu-bar-title justify-content-start align-items-center d-flex" xs="5">
-                    My&nbsp;Goals 
+                    Goals 
                     <OverlayTrigger
                                 placement="bottom"
                                 delay={{ show: 250, hide: 400 }}
                                 overlay={<Tooltip><h5>New Goal</h5></Tooltip>}
                      
                             >
-                        <Icon.PlusCircle onClick={() => setShowNewGoal(true) } width={40} height={40} color={"#34aaaa"} className="menu-bar-icon add-goal-icon" />
+                        <Icon.PlusCircle onClick={() => handleNewGoalSelected() } width={40} height={40} color={"#34aaaa"} className="menu-bar-icon add-goal-icon" />
                     </OverlayTrigger>
                 </Col>
                 <Col xs="7" className="d-flex justify-content-end align-items-center">
@@ -117,13 +118,6 @@ export default function GoalsListMenuBar({ showTimeline, showGridView, showCompl
                             >
                         <Icon.Grid width={30} height={30} color={(showGridView) ? "#34dcbe" : "#aaaaaa"} className="menu-bar-icon" onClick={handleShowGridClick} />
                     </OverlayTrigger>
-                    {/* <OverlayTrigger
-                            placement="bottom"
-                            delay={{ show: 250, hide: 400 }}
-                            overlay={renderTimelineTooltip}
-                        >
-                        <Icon.CalendarRange width={30} height={30} color={(showTimeline) ? "#34dcbe" : "#aaaaaa"} className="menu-bar-icon" onClick={handleShowTimelineClick}/>
-                    </OverlayTrigger> */}
                 </Col>
             </Row>
         </Container>

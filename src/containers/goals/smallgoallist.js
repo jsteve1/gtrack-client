@@ -5,11 +5,15 @@ import { useNavigate } from 'react-router-dom';
 import { selectGoals, selectProgressMarkers } from '../../app/features/goals/goalSlice';
 import SmallGoalListItem from '../../components/goals/smallgoallistitem';
 import { sortGoalsByDeadline } from './goalslist';
+import { useDispatch } from 'react-redux';
+import { setShowNewGoal } from '../../app/features/ui/uiSlice';
 export default function SmallGoalList() {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const goals = useSelector(selectGoals);
     const [_goals, _setGoals] = useState(goals);
     const progressMarkers = useSelector(selectProgressMarkers);
+
     const getDeadlineFormatted = (deadline) => {
         const unixEpochTimeMS = deadline * 1000;
         const d = new Date(unixEpochTimeMS);
@@ -68,6 +72,16 @@ export default function SmallGoalList() {
                         -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
                         background-color: #191919;
                     }
+                    .add-goal-small-list-item {
+                        min-height: 100px;
+                    }
+                    .add-goal-list-item-action {
+                        font-size: 17pt;
+                        cursor: pointer;
+                    }
+                    .add-goal-list-item-action:hover {
+                        color: #34aaaa;
+                    }
                 `
             }
             </style>
@@ -79,11 +93,32 @@ export default function SmallGoalList() {
                 </Row>
                 <Container fluid className="small-list-cont">
                 {
-                    _goals.map((goal, index) => (
+                    (_goals.length > 0) ?
+                    <>
+                    {
+                        _goals.map((goal, index) => (
+                            <Row>
+                                <SmallGoalListItem id={goal.id} lastOne={(index === goals.length - 1)} priority={index + 1} name={`${goal.name}`} deadline={getDeadlineFormatted(goal.deadline)} />
+                            </Row>
+                        ))
+                    }
+                    </>
+                    :
+                    <>
                         <Row>
-                            <SmallGoalListItem id={goal.id} lastOne={(index === goals.length - 1)} priority={index + 1} name={`${goal.name}`} deadline={getDeadlineFormatted(goal.deadline)} />
+                            <Container className="w-100 add-goal-small-list-item" fluid>
+                                <Row>
+                                    <Col 
+                                        className="d-flex justify-content-lg-start mt-3 add-goal-list-item-action"
+                                        onClick={() => { navigate('/app/goals'); dispatch(setShowNewGoal(true));  }}
+                                    >
+
+                                        No goals found, click to add one!
+                                    </Col>
+                                </Row>
+                            </Container>
                         </Row>
-                    ))
+                    </>
                 }                
                 </Container>     
         </Container> 

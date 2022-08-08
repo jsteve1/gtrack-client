@@ -1,10 +1,10 @@
 import  { useDispatch, useSelector } from 'react-redux';
-import { selectGoals, setGoalIndex, updateGoal } from '../../app/features/goals/goalSlice';
+import { selectGoals, selectNumTodo, selectTodoGoals, setGoalIndex, updateGoal } from '../../app/features/goals/goalSlice';
 import { Container, Row, Col, Tooltip, OverlayTrigger, Button, ButtonGroup } from 'react-bootstrap'; 
 import { useEffect, useState } from 'react';
 import GoalListItem from '../../components/goals/goallistitem';
 import * as Icon from 'react-bootstrap-icons';
-import { current } from '../../../node_modules/@reduxjs/toolkit/dist/index';
+import { selectStartingSortState, setShowNewGoal } from '../../app/features/ui/uiSlice';
 
 export const setGoalsDeadline = ({ deadline, id, _goals, _setGoals }) => {
     let goalsCopy = JSON.parse(JSON.stringify(_goals));
@@ -99,10 +99,12 @@ export const showCompleted = ({ _goals, _setGoals, sortAscending = false }) => {
     _setGoals(goalsCopy);   
 }
 
-export default function GoalsList({ startingSortState, setShowEditGoal, setShowEditGoalId, openDeleteModal, setMarkCompleteModalShow, setMarkCompleteId  }) {   
+export default function GoalsList({ setShowEditGoal, setShowEditGoalId, openDeleteModal, setMarkCompleteModalShow, setMarkCompleteId  }) {   
     const dispatch = useDispatch();
     const [_goals, _setGoals] = useState([]);
     const goals = useSelector(selectGoals);
+    const startingSortState = useSelector(selectStartingSortState);
+    const todo = useSelector(selectTodoGoals);
     const [currentSortState, setCurrentSortState] = useState(startingSortState || "priority");
     const [sortAscending, setSortAscending] = useState(true);
     const [rearrangeMode, setRearrangeMode] = useState(false); 
@@ -127,15 +129,16 @@ export default function GoalsList({ startingSortState, setShowEditGoal, setShowE
             sortByDeadline();
         }
         if(currentSortState === "priority") {
-            console.log("sorting by prio" + `${sortAscending ? "ascending" : "descending"}`)
+            console.log("sorting by prio " + `${sortAscending ? "ascending" : "descending"}`)
             sortByPriority();
         }
         if(currentSortState === "completed") {
             console.log("showing completed goals " + `${sortAscending ? "ascending" : "descending"}`); 
             showCompletedGoals();
         }
-    }, [currentSortState, goals, sortAscending]);
+    }, [currentSortState, goals, sortAscending, startingSortState]);
     useEffect(() => {
+
         if(currentSortState === "priority") {
             console.log("sorting by prio " + `${sortAscending ? "ascending" : "descending"}`)
             sortByPriority();
@@ -302,7 +305,15 @@ export default function GoalsList({ startingSortState, setShowEditGoal, setShowE
                 .icon-add-new {
                     margin-top: 40px;
                 }
-
+                .add-goal-list-item-action {
+                    font-size: 17pt;
+                    cursor: pointer;
+                    color: #aaaaaa;
+                    margin-left: 50px;
+                }
+                .add-goal-list-item-action:hover {
+                    color: #34aaaa;
+                }
             `
         }
         </style>
@@ -368,7 +379,26 @@ export default function GoalsList({ startingSortState, setShowEditGoal, setShowE
             </Col>
         </Row>
         {
-            (rearrangeMode) ? <>
+            (
+              (currentSortState === "priority" || currentSortState === "deadline") 
+              &&
+              todo.length === 0
+            ) 
+            ? 
+            <>
+                <Row className="goal-list-item-row">
+                    <Col 
+                        className="d-flex justify-content-lg-start mt-3 add-goal-list-item-action"
+                        onClick={() => { dispatch(setShowNewGoal(true));  }}
+                    >
+                        No goals found, click to add one!
+                    </Col>
+                </Row>
+            </> 
+            :
+            <>
+            {
+                (rearrangeMode) ? <>
                 {
                     _goals.map((goal, index) => 
                         <>
@@ -402,9 +432,9 @@ export default function GoalsList({ startingSortState, setShowEditGoal, setShowE
                         </>
                     )
                 }
-            </> : <>
+                </> : <>
                 {
-                      _goals.map((goal, index) => (
+                    _goals.map((goal, index) => (
                         <>
                             <Row className="goal-list-item-row" key={goal.id}>
                                 <GoalListItem 
@@ -431,6 +461,8 @@ export default function GoalsList({ startingSortState, setShowEditGoal, setShowE
                         </>
                     ))
                 }
+                </>
+            }
             </>
         }
         </Container>

@@ -6,6 +6,11 @@ import { Link } from 'react-router-dom';
 import { forwardRef } from 'react';
 import * as Icon from 'react-bootstrap-icons';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { logout } from '../../app/features/users/userSlice';
+import { logoutGoals } from '../../app/features/goals/goalSlice';
+import { logoutUI } from '../../app/features/ui/uiSlice';
+
 const CustomProfileDropdown = forwardRef(( { onClick }, ref) => (
     <>
     <style type="text/css">
@@ -38,6 +43,13 @@ const CustomProfileDropdown = forwardRef(( { onClick }, ref) => (
 export default function LoggedInNavButtons() {
     const navigate = useNavigate();
     const location = useLocation();
+    const dispatch = useDispatch(); 
+    const handleSignout = () => {
+        navigate('/home');
+        dispatch(logout());
+        dispatch(logoutUI());
+        dispatch(logoutGoals());
+    }
     return (
         <>
         <style type="text/css">
@@ -129,7 +141,7 @@ export default function LoggedInNavButtons() {
                 {
                     (location.pathname.slice(0, 10) === '/app/goal/') ?
                     (
-                        <Icon.ArrowLeftShort className="back-button" width={75} height={75} onClick={() => { navigate("/app/goals/") }}/>
+                        <Icon.ArrowLeftShort className="back-button" width={50} height={50} onClick={() => { navigate("/app/goals/") }}/>
                     )
                     :
                     ""
@@ -140,7 +152,7 @@ export default function LoggedInNavButtons() {
                 <Dropdown.Menu variant="dark">
                     <Dropdown.Item onClick={(e) => { e.preventDefault(); navigate('/app/profile') } }><Icon.Person width={20} height={20} color={"#34dcbe"} /> My Profile</Dropdown.Item>
                     <Dropdown.Item onClick={(e) => { e.preventDefault(); navigate('/app/goals') } }><Icon.ListCheck width={20} height={20} color={"#34dcbe"}/> My Goals</Dropdown.Item>
-                    <Dropdown.Item onClick={(e) => { e.preventDefault(); navigate('/app/profile') } }><Icon.BoxArrowRight width={20} height={20} color={"#34dcbe"}/> Sign Out</Dropdown.Item>
+                    <Dropdown.Item onClick={(e) => { handleSignout() } }><Icon.BoxArrowRight width={20} height={20} color={"#34dcbe"}/> Sign Out</Dropdown.Item>
                 </Dropdown.Menu>
             </Dropdown>
         </Container>

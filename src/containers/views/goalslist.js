@@ -8,19 +8,15 @@ import GoalsGrid from '../goals/goalsgrid';
 import GoalsCompleted from '../goals/goalscompleted'; 
 import EditGoal from '../goals/editgoal';
 import NewGoal from '../goals/newgoal';
-import DeleteGoalModal from '../ui/DeleteModal';
-import * as Icon from 'react-bootstrap-icons';
+import DeleteGoalModal from '../ui/deletemodal';
 import MarkCompleteModal from '../ui/markcompletemodal';
 import { selectListMode } from '../../app/features/users/userSlice';
 import { useSelector } from 'react-redux';
 import { useEffect } from 'react';
-
-export default function GoalsListView({ startingSortState }) {
+export default function GoalsListView() {
     const listMode = useSelector(selectListMode); 
     const [showTimeline, setShowTimeline] = useState(false);
-    const [showCompleted, setShowCompleted] = useState(false);
     const [showGridView , setShowGridView] = useState(false);
-    const [showNewGoal, setShowNewGoal] = useState(false);
     const [showEditGoal, setShowEditGoal] = useState(false);
     const [editGoalId, setShowEditGoalId] = useState("");
     const [showDeleteGoal, setShowDeleteGoal] = useState(false);
@@ -35,12 +31,10 @@ export default function GoalsListView({ startingSortState }) {
         if(listMode === "grid") {
             setShowGridView(true);
             setShowEditGoal(false);
-            setShowCompleted(false);
         }
         if(listMode === "list") {
             setShowGridView(false);
             setShowEditGoal(false);
-            setShowCompleted(false);
         }
     }, [listMode]);
     return (
@@ -62,15 +56,10 @@ export default function GoalsListView({ startingSortState }) {
                 <Container fluid className="goals-list-cont">
                     <Row className="pr-5 pl-5">
                         <GoalsListMenuBar 
-                        showNewGoal={showNewGoal} 
-                        setShowNewGoal={setShowNewGoal} 
-                        showTimeline={showTimeline} 
-                        showGridView={showGridView} 
-                        showCompleted={showCompleted}  
-                        etShowTimeline={setShowTimeline} 
-                        setShowCompleted={setShowCompleted} 
-                        setShowGridView={setShowGridView}
-                        
+                            showTimeline={showTimeline} 
+                            showGridView={showGridView} 
+                            setShowTimeline={setShowTimeline} 
+                            setShowGridView={setShowGridView}
                         />
                     </Row>
                     <Row className="pr-5 pl-5">
@@ -83,7 +72,6 @@ export default function GoalsListView({ startingSortState }) {
                             (showGridView) ? <GoalsGrid 
                                                 setMarkCompleteModalShow={setMarkCompleteModalShow} 
                                                 setMarkCompleteId={setMarkCompleteId} 
-                                                startingSortState={startingSortState} 
                                                 openDeleteModal={openDeleteModal}  
                                                 showEditGoal={showEditGoal}
                                                 setShowEditGoal={setShowEditGoal} 
@@ -92,7 +80,6 @@ export default function GoalsListView({ startingSortState }) {
                                     <GoalsList 
                                         setMarkCompleteModalShow={setMarkCompleteModalShow} 
                                         setMarkCompleteId={setMarkCompleteId} 
-                                        startingSortState={startingSortState} 
                                         openDeleteModal={openDeleteModal} 
                                         showEditGoal={showEditGoal} 
                                         setShowEditGoal={setShowEditGoal} 
@@ -117,10 +104,12 @@ export default function GoalsListView({ startingSortState }) {
                 <EditGoal 
                     show={showEditGoal} 
                     setShow={setShowEditGoal} 
-                    editGoalId={editGoalId} />
-                <NewGoal 
-                    show={showNewGoal} 
-                    setShow={setShowNewGoal} />
+                    editGoalId={editGoalId} 
+                    showDeleteGoal={showDeleteGoal}
+                    setShowDeleteGoal={setShowDeleteGoal}
+                    setMarkCompleteModalShow={setMarkCompleteModalShow} 
+                    />
+                <NewGoal />
             </>
         )
 }

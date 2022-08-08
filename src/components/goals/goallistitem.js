@@ -4,16 +4,23 @@ import * as Icon from 'react-bootstrap-icons';
 import { useNavigate } from 'react-router-dom';
 import TimePicker from 'react-bootstrap-time-picker';
 
-export const getDeadlineFormatted = (deadline) => {
+export const getDeadlineFormatted = (deadline, includeTime = true) => {
     const unixEpochTimeMS = deadline * 1000;
     const d = new Date(unixEpochTimeMS);
+    console.log(d);
     const time = d.toLocaleTimeString(); 
     const ampm = time.split(" ")[1]; 
     const hour = time.split(":")[0]; 
     const minute = time.split(":")[1];
-
-    return d.toLocaleDateString() + `, ${hour}:${minute}${ampm}`;
+    const timeString = `, ${hour}:${minute}${ampm}`;
+    const dateString =  d.toLocaleDateString();
+    if(includeTime) {
+        return dateString + timeString;
+    } else
+        return d.toLocaleDateString();
 }
+
+
 export const renderMarkCompleteTooltip = (props) => (
     <Tooltip id="button-tooltip" {...props}>
        <h3>Mark Goal Complete</h3>
@@ -139,13 +146,15 @@ export default function GoalsListItem({ name,
                     white-space: nowrap;
                 }
                 .goal-list-cont {
+                    width: 95%;
+                    border-radius: 10px;
                     min-height: 150px;
                     cursor: pointer;
                     transition: all ease 0.2s;
                     background-color: rgba(100, 100, 100, 0.08);
-                }
+                }                            
                 .goal-list-cont:hover {
-                    ${(complete) ? "background-color: rgba(39, 245, 157, 0.15);"
+                    ${(complete) ? "background-color: rgba(0, 99, 56, 0.5);"
                         : "background-color: rgba(100, 100, 100, 0.2);"
                     }
                     transform: scale(1.01);
@@ -163,7 +172,7 @@ export default function GoalsListItem({ name,
                     color: #aaaaaa;
                     margin-right: 35px;
                     font-weight: 500;
-
+                    margin-left: 15px;
                 }
                 .goal-name-span {
                     color: #bbbbbb;
@@ -195,11 +204,6 @@ export default function GoalsListItem({ name,
                     cursor: pointer;
                     display: flex;
                     margin: 5px;
-                }
-                .deadline-date:hover {
-                    transform: scale(1.01);
-                    filter: brightness(1.05); 
-                    font-weight: 400;
                 }
                 @media only screen and (max-width: 780px) {
                     .deadline-col {
@@ -267,8 +271,11 @@ export default function GoalsListItem({ name,
                     color: #34aaaa;
                 } 
                 .goal-completed {
-                    background-color: rgba(39, 245, 157, 0.10);
+                    background-color: rgba(0, 99, 56, 0.5);
                  }
+                 .goal-completed:hover {
+                    background-color: rgba(0, 99, 56, 0.2);
+                }
                  .goal-name-span-center-align {
                     margin-left: 55px;
                  }
@@ -332,7 +339,7 @@ export default function GoalsListItem({ name,
                 }    
                 <span className={(complete === "true") ? "goal-name-span goal-name-span-center-align" :  "goal-name-span"} onClick={() => navigate(`/app/goal/${id}`) }>{name}</span>
                 </Col>
-                <Col sm="12" xs="12" md="5" className="goal-list-item-col d-flex justify-content-start deadline-col">
+                <Col sm="12" xs="12" md="5" className="goal-list-item-col d-flex justify-content-start deadline-col" onClick={() => navigate(`/app/goal/${id}`) }>
                     <span className="deadline-span d-inline align-items-center">
                         {
                             (complete) ? <span className="completed-span">
@@ -392,15 +399,10 @@ export default function GoalsListItem({ name,
                         :       
                         <>
                         {
-                            (complete) ? "" : (<OverlayTrigger
-                                placement="top"
-                                delay={{ show: 250, hide: 400 }}
-                                overlay={renderEditDeadlineTooltip}
-                        >
+                            (complete) ? "" : (
                             <span className="deadline-date" onClick={(e) => { e.preventDefault(); }}>
                                 {getDeadlineFormatted(newDeadline)}
-                            </span>
-                        </OverlayTrigger>) 
+                            </span>) 
                         }
                         </>
                    
@@ -412,15 +414,7 @@ export default function GoalsListItem({ name,
                     :
                     <Col md="2" sm="12" xs="12" className="goal-list-item-col d-flex justify-content-around align-items-center goal-list-actions-col">       
                         {
-                            (complete === true) ? ( 
-                                <OverlayTrigger
-                                    placement="top"
-                                    delay={{ show: 250, hide: 400 }}
-                                    overlay={renderShareTooltip}
-                                    >
-                                    <Icon.Share className="goal-list-item-action" width={40} height={40} /> 
-                                </OverlayTrigger>
-                            )
+                            (complete === true) ? ""
                             : (
                                 <>
                                     {

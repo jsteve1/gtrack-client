@@ -14,6 +14,7 @@ export function SmallImageTile({ url, index }) {
                     width: 100%;
                     overflow-y: hidden;
                     overflow-x: hidden;
+                    border-radius: 10px;
                 }    
                 .zoomin-div {                    
                     overflow-y: hidden;
@@ -63,10 +64,11 @@ export default function GridItemMedia({ media, setShowEditGoal, setShowEditGoalI
                         margin-top: 15px; 
                         height: 185px; 
                         min-width: 185px;
-                        margin-bottom: 25px;
+                        margin-bottom: 15px;
                         max-height: 175px;
                         overflow-y: hidden;
                         padding-top: 1px;
+                        border-radius: 10px;
                     }
                     .upload-button-grid-media {
                         margin-top: 25px;
@@ -88,7 +90,7 @@ export default function GridItemMedia({ media, setShowEditGoal, setShowEditGoalI
             <Container fluid className="grid-item-media-cont">
             {
                 (mediaList && mediaList.length !== 0) ?
-                <div className="grid-media-image-list-div">
+                <div className="grid-media-image-list-div shadow-lg">
                         <SmallImageTile url={mediaList[0]} index={0} /> 
                 </div>
                 : 

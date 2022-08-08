@@ -42,11 +42,8 @@ export default function SmallGoalListItem({ name, deadline, priority, lastOne, i
         </style>
         <Container fluid className={`small-goal-list-item ${lastOne ? "" : "border-bottom border-secondary"}`}  onClick={(e) => { e.preventDefault(); navigate(`/app/goal/${id}`); }}>
             <Row>
-                <Col className="small-goal-list-item-name d-flex justify-content-start pt-2" xs='10'>
+                <Col className="small-goal-list-item-name d-flex justify-content-start pt-2" xs='12'>
                     <span className="priority-list-item-span">{`${priority}  `}</span>{name}
-                </Col>
-                <Col className="small-goal-list-item-deadline d-flex justify-content-end pt-2 align-items-center" xs="2">
-                    <Icon.ThreeDotsVertical className="icon-person-top-nav" width={30} height={30} onClick={(e) => { e.preventDefault(); navigate('/app/goals/'); }} />
                 </Col>
             </Row>
             <Row>

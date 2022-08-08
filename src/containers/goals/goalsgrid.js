@@ -1,17 +1,21 @@
-import  { useSelector } from 'react-redux';
+import  { useSelector, useDispatch } from 'react-redux';
 import { selectGoals } from '../../app/features/goals/goalSlice';
 import { Container, Row, Col, Button, ButtonGroup } from 'react-bootstrap'; 
 import { useEffect, useState } from 'react';
 import GoalGridItem from '../../components/goals/goalgriditem';
 import * as Icon from 'react-bootstrap-icons';
-import { showCompleted, setGoalsDeadline, setGoalsIndex, sortGoalsByDeadline, sortGoalsByPriority } from './goalslist';
+import { showCompleted, setGoalsDeadline, sortGoalsByDeadline, sortGoalsByPriority } from './goalslist';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
-import MarkCompleteModal from '../ui/markcompletemodal';
+import { selectStartingSortState, setShowNewGoal } from '../../app/features/ui/uiSlice';
+import  { selectTodoGoals  } from '../../app/features/goals/goalSlice';
 
 export default function GoalsGrid({ setShowEditGoal, setShowEditGoalId, openDeleteModal, setMarkCompleteModalShow, setMarkCompleteId  }) {   
+    const dispatch = useDispatch();
     const { height, width } = useWindowDimensions();
     const [_goals, _setGoals] = useState([]);
     const goals = useSelector(selectGoals);
+    const startingSortState = useSelector(selectStartingSortState);
+    const todo = useSelector(selectTodoGoals);
     const [currentSortState, setCurrentSortState] = useState("priority");
     const [sortAscending, setSortAscending] = useState(true);
     const setGoalDeadline = (deadline, id) => {
@@ -41,10 +45,19 @@ export default function GoalsGrid({ setShowEditGoal, setShowEditGoalId, openDele
         }
     }, [currentSortState, goals, sortAscending]);
     useEffect(() => {
-        if(currentSortState === "priority") {
-            console.log("sorting by prio " + `${sortAscending ? "ascending" : "descending"}`)
-            sortByPriority();
+        if(startingSortState === "completed") {
+            console.log("showing completed goals " + `${sortAscending ? "ascending" : "descending"}`); 
+            showCompletedGoals();
+            return;
+        } else if(startingSortState === "deadline") {
+            console.log("sorting by deadline " + `${sortAscending ? "ascending" : "descending"}`)
+            sortByDeadline();
+            return;
         }
+        // if(currentSortState === "priority") {
+        //     console.log("showing completed goals " + `${sortAscending ? "ascending" : "descending"}`); 
+        //     sortByPriority();
+        // }
     }, []);
     return (
         <>
@@ -126,6 +139,15 @@ export default function GoalsGrid({ setShowEditGoal, setShowEditGoalId, openDele
                 .icon-add-new {
                     margin-top: 40px;
                 }
+                .add-goal-list-item-action {
+                    font-size: 17pt;
+                    cursor: pointer;
+                    color: #aaaaaa;
+                    margin-left: 50px;
+                }
+                .add-goal-list-item-action:hover {
+                    color: #34aaaa;
+                }
                 `
         }
         </style>
@@ -182,29 +204,50 @@ export default function GoalsGrid({ setShowEditGoal, setShowEditGoalId, openDele
             </Row>
             <Row>
             {
-                _goals.map((goal, index) => (
-                    <GoalGridItem 
-                        setShowEditGoal={setShowEditGoal}
-                        setShowEditGoalId={setShowEditGoalId}
-                        media={goal.media} id={goal.id} 
-                        setGoalDeadline={setGoalDeadline} 
-                        sortByDeadline={sortByDeadline} 
-                        sortState={currentSortState} 
-                        length={_goals.length}
-                        index={index} 
-                        rearrangeMode={true}  
-                        showPrio={currentSortState === "priority"} 
-                        priority={goal.priority} 
-                        name={goal.name} 
-                        deadline={goal.deadline}  
-                        currentSortState={currentSortState}
-                        complete={goal.complete === true}
-                        completedtime={goal.completedtime}
-                        openDeleteModal={openDeleteModal}
-                        setMarkCompleteModalShow={setMarkCompleteModalShow} 
-                        setMarkCompleteId={setMarkCompleteId} 
-                    />
-                ))
+                (
+                    (currentSortState === "priority" || currentSortState === "deadline") 
+                    &&
+                    todo.length === 0
+                  ) 
+                  ? 
+                  <>
+                      <Row className="goal-list-item-row">
+                          <Col 
+                              className="d-flex justify-content-center mt-3 add-goal-list-item-action"
+                              onClick={() => { dispatch(setShowNewGoal(true));  }}
+                          >
+                              No goals found, click to add one!
+                          </Col>
+                      </Row>
+                  </> 
+                  :
+                  <>
+                    {
+                        _goals.map((goal, index) => (
+                            <GoalGridItem 
+                                setShowEditGoal={setShowEditGoal}
+                                setShowEditGoalId={setShowEditGoalId}
+                                media={goal.media} id={goal.id} 
+                                setGoalDeadline={setGoalDeadline} 
+                                sortByDeadline={sortByDeadline} 
+                                sortState={currentSortState} 
+                                length={_goals.length}
+                                index={index} 
+                                rearrangeMode={true}  
+                                showPrio={currentSortState === "priority"} 
+                                priority={goal.priority} 
+                                name={goal.name} 
+                                deadline={goal.deadline}  
+                                currentSortState={currentSortState}
+                                complete={goal.complete === true}
+                                completedtime={goal.completedtime}
+                                openDeleteModal={openDeleteModal}
+                                setMarkCompleteModalShow={setMarkCompleteModalShow} 
+                                setMarkCompleteId={setMarkCompleteId} 
+                            />
+                        ))
+                    }
+                  </>
             }
             </Row>
         </Container>

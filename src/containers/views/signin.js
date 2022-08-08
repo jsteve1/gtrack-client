@@ -82,7 +82,7 @@ export default function Signin() {
                     `
                         .signin-col {
                             margin-top: 2vh;
-                            background-color: rgba(3,3,3, 0.9);
+                            background-color: rgba(9, 9, 9, 0.7);
                             max-width: 750px;
                             padding-top: 35px;
                             padding-bottom: 35px;
@@ -129,7 +129,7 @@ export default function Signin() {
                         }
                         .login-title {
                             font-size: 5vh;
-                            color: #aaaaaa;
+                            color: #34aaaa;
                             font-weight: 500;
                         }
                         .private-switch {
@@ -182,7 +182,7 @@ export default function Signin() {
                         <Col xs="1"/>
                             <Col className="signin-col">
                                 <Row className="mb-5 d-flex justify-content-center login-title"> 
-                                    Goals App Login 
+                                    Sign In 
                                 </Row>
                                 <Row>   
                                     <Col xs="1" sm="3"/>

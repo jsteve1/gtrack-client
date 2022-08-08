@@ -102,7 +102,7 @@ export default function Signup() {
                         <Col xs="1" />
                         <Col className="signup-col">
                             <Row className="signup-title-row d-flex justify-content-center mb-5">
-                                Please enter your profile details:
+                                Enter Account Details:
                             </Row>
                             <Row>
                                 <Col xs="12" sm="6">
@@ -214,7 +214,7 @@ export default function Signup() {
                                         <Icon.InfoCircle className="private-profile-info" />
                                     </OverlayTrigger>
                                 </Col>
-                                {
+                                {/* {
                                     (profilePic === null) ? ( 
                                         <Col xs="12" sm="4" className="mt-2 d-flex justify-content-center">
                                             <Button variant="dark" className="addprofilepic-button" onClick={() => setUploadModalShow(true)}>
@@ -226,7 +226,7 @@ export default function Signup() {
                                                 <CloseButton variant="white" onClick={() => {setProfilePic(null)}}/>
                                              </Col>   
                                         )
-                                }
+                                } */}
                             </Row>
                             {(showSignupError) ? (<Row>
                                 <Col className="d-flex justify-content-center">

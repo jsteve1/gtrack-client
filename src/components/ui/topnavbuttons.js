@@ -8,8 +8,11 @@ import { Link } from 'react-router-dom';
 import { addGoal, addProgressMarker, mockGoalState } from '../../app/features/goals/goalSlice';
 import { login, mockUsersState, addOtherUser } from '../../app/features/users/userSlice';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+
 export default function TopnavButtons() {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const loadMockState = () => {
         dispatch(login(mockUsersState.myProfile));
         for(let user of mockUsersState.otherUsers) {
@@ -26,6 +29,7 @@ export default function TopnavButtons() {
             }
         }
         console.log("Mock progress markers loaded into redux");
+        navigate('/app/profile');
     }
 
     return (
@@ -59,6 +63,8 @@ export default function TopnavButtons() {
                 box-shadow: none;
                 align-self: center;
                 margin-right: 25px;
+                margin-top: 5px; 
+                margin-bottom: 5px;
             }
             @media only screen and (max-width: 550px) {
                 .signup-button {
@@ -113,7 +119,7 @@ export default function TopnavButtons() {
                     style={{ maxHeight: '150px' }}
                     navbarScroll
                 >
-                    <Button  className="signup-button"  onClick={() => loadMockState()}>Load Mock</Button>
+                    <Button  className="signup-button"  onClick={() => loadMockState()}>Load Demo</Button>
                     <Button className="signup-button" onClick={ () => document.getElementById("hidden-sign-up-link").click() }>Sign Up</Button>
                     <Link className="link-color link-no-underline link-font-size nav-button-spacing"  to="/app/signin">Login</Link>
                     <Link className="hidden-link " id="hidden-sign-up-link" to="/app/signup" />         

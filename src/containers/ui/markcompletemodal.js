@@ -1,16 +1,23 @@
 import { Modal, Container, Row, Col, Button, CloseButton } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux'; 
-import { selectGoals, updateGoal } from '../../app/features/goals/goalSlice';
+import { selectGoals, updateGoal, markComplete } from '../../app/features/goals/goalSlice';
 import * as Icon from 'react-bootstrap-icons'; 
 import { useEffect, useState } from 'react';
 import { getDeadlineFormatted } from '../../components/goals/goallistitem';
-
+import { useNavigate } from 'react-router-dom';
 export default function MarkCompleteModal({ id, markCompleteModalShow, setMarkCompleteModalShow, setShowEditGoal, setShowEditGoalId }) {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const goals = useSelector(selectGoals); 
     const [goal, setGoal] = useState({});
-    const markComplete = () => {
-
+    const _markComplete = () => {
+        dispatch(markComplete({ id }));
+        setMarkCompleteModalShow(false); 
+    }
+    const _view = () => {
+        dispatch(markComplete({ id }));
+        setMarkCompleteModalShow(false); 
+        navigate(`/app/goal/${id}`);
     }
     useEffect(() => {
         if(goal.id !== id){
@@ -28,17 +35,17 @@ export default function MarkCompleteModal({ id, markCompleteModalShow, setMarkCo
                     padding-top: 25px;
                     min-width: 500px;
                     width: 500px;
-                    min-height: 500px;
+                    min-height: 400px;
                     height: fit-content;
                     margin: 0px;
                     padding: 25px;
-                    border: 1px solid #34aaaa;
                     border-radius: 10px;
                 }
                 .custom-mark-complete  {
                     min-width: 400px;
                     padding: 0px;
                     left: 0px;
+                    z-index: 1055;
                 }
                 .custom-mark-complete .modal-content {
                     background-color: transparent;
@@ -55,8 +62,8 @@ export default function MarkCompleteModal({ id, markCompleteModalShow, setMarkCo
                 }
                 .mark-complete-offcanvas-actions {
                     border: 1px solid #34aaaa;
-                    width: 100%;
-                    font-size: 16pt;
+                    width: 150px;
+                    font-size: 14pt;
                     text-align: center;
                     padding-right: 35px;
                     min-height: 75px;
@@ -66,7 +73,7 @@ export default function MarkCompleteModal({ id, markCompleteModalShow, setMarkCo
                 .congrats-span {
                     color: #34aaaa;
                     font-weight: 500;
-                    font-size: 16pt;
+                    font-size: 18pt;
                 }
                 @media only screen and (max-width: 400px) {
                     .mark-complete-cont {
@@ -111,34 +118,25 @@ export default function MarkCompleteModal({ id, markCompleteModalShow, setMarkCo
                                 <Col />
                                 <Col className="pl-5">
                                     <span className="pl-5 ml-5 confirm-mark-complete-span">
-                                        Time: {getDeadlineFormatted(goal.completedtime)}
-                                    </span>
-                                </Col>
-                                <Col />
-                        </Row>
-                        <Row className="d-flex justify-content-center mt-3 mb-5">
-                                <Col />
-                                <Col>
-                                    <span className="confirm-mark-complete-span">
-                                        <Icon.Trophy color={"#34dcbe"} width={50} height={50} />&nbsp;&nbsp;&nbsp;+10 Goal Score! 
+                                        Time: {getDeadlineFormatted(Date.now() / 1000)}
                                     </span>
                                 </Col>
                                 <Col />
                         </Row>
                         <Row className="d-flex justify-content-end">
                             <Col xs="12" md="4" className="d-flex justify-content-center">
-                                <Button className="mark-complete-offcanvas-actions" variant="dark">
-                                    <Icon.ShareFill width={35} height={35} color={"#098899"} />&nbsp;Share
-                                </Button>
-                            </Col>
-                            <Col xs="12" md="4" className="d-flex justify-content-center">
-                                <Button className="mark-complete-offcanvas-actions" variant="dark" onClick={() => { setShowEditGoalId(id); setShowEditGoal(true);  }}>
-                                    <Icon.CloudArrowUp width={40} height={40} color={"#098899"} />&nbsp;Upload
-                                </Button>
-                            </Col>
-                            <Col xs="12" md="4" className="d-flex justify-content-center">
                                 <Button className="mark-complete-offcanvas-actions" variant="dark" onClick={() => setMarkCompleteModalShow(false) }>
-                                    <Icon.X width={40} height={40} color={"#098899"} />&nbsp;Close
+                                    <Icon.X width={40} height={40} color={"#098899"} />&nbsp;&nbsp;Cancel
+                                </Button>
+                            </Col>
+                            <Col xs="12" md="4" className="d-flex justify-content-center">
+                                <Button className="mark-complete-offcanvas-actions" variant="dark">
+                                    <Icon.Trophy width={35} height={35} color={"#098899"} onClick={() => _view() }/>&nbsp;&nbsp;View
+                                </Button>
+                            </Col>
+                            <Col xs="12" md="4" className="d-flex justify-content-center">
+                                <Button className="mark-complete-offcanvas-actions" variant="dark" onClick={() => _markComplete() }>
+                                    <Icon.CheckCircleFill width={40} height={40} color={"#098899"} />&nbsp;&nbsp;Confirm
                                 </Button>
                             </Col>
                         </Row>

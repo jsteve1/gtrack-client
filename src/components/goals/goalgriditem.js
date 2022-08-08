@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Container, Row, Col, OverlayTrigger, Dropdown, Tooltip } from 'react-bootstrap';
 import * as Icon from 'react-bootstrap-icons';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import GridItemMedia from '../../containers/goals/griditemmedia';
 import { getDeadlineFormatted } from './goallistitem';
 import { renderFavoriteTooltip, renderMarkCompleteTooltip, renderMoreTooltip, CustomGoalActions } from './goallistitem';
+import { setGoalIndex } from '../../app/features/goals/goalSlice';
 export default function GoalGridItem({
                                         name, 
                                         media, 
@@ -31,6 +33,11 @@ export default function GoalGridItem({
                                         setMarkCompleteModalShow
                                      }){
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    const setIndex = (index, newIndex) => {
+        dispatch(setGoalIndex({ index, newIndex }));
+    }
     return (
         <>
             <style type="text/css">
@@ -50,6 +57,7 @@ export default function GoalGridItem({
                         background-color: rgba(100, 100, 100, 0.2);
                         cursor: pointer; 
                         margin: 10px;
+                        border-radius: 10px;
                     }
                     .grid-item:hover {
                         background-color: rgba(100, 100, 100, 0.3);                        
@@ -78,10 +86,13 @@ export default function GoalGridItem({
                         min-height: 80px;
                     }
                     .grid-item-actions-row-complete {
-                        margin-top: 70%;
+                        margin-top: 60%;
                     }
                     .goal-completed {
-                       background-color: rgba(39, 245, 157, 0.10);
+                        background-color: rgba(0, 99, 56, 0.5);
+                    }   
+                    .goal-completed:hover {
+                        background-color: rgba(0, 99, 56, 0.2);
                     }
                     .mark-complete-button:hover,
                     .mark-complete-button:active,
@@ -105,9 +116,9 @@ export default function GoalGridItem({
             </style>
             <Container fluid className={` shadow-lg grid-item ${(complete === true) ? "goal-completed" : ""} `}>
                 <Row className="d-flex justify-content-between mt-2">
-                    <Col xs="8" className="d-flex justify-content-start goal-griditem-name-col align-items-center">
+                    <Col xs="8" className="d-flex justify-content-start goal-griditem-name-col align-items-center" onClick={() => navigate(`/app/goal/${id}`)}>
                         {
-                            (currentSortState === "priority") ? <span className="priority-span">{priority}</span> : ""   
+                            (currentSortState === "priority" && priority !== -1) ? <span className="priority-span">{priority}</span> : ""   
                         }
                         {name}
                     </Col>
@@ -128,10 +139,10 @@ export default function GoalGridItem({
                         </OverlayTrigger>
                     </Col>
                 </Row>
-                <Row className="d-flex justify-content-start">
+                <Row className="d-flex justify-content-start mt-2">
                 {
                   (complete === true) ?
-                    <Col className="d-flex justify-content-start timestamp-col">
+                    <Col className="d-flex justify-content-start timestamp-col mt-2">
                         Completed:&nbsp;<span className="timestamp-color">{getDeadlineFormatted(completedtime)}</span>
                     </Col>
                     : 
@@ -163,7 +174,7 @@ export default function GoalGridItem({
                                         delay={{ show: 250, hide: 400 }}
                                         overlay={renderFavoriteTooltip}
                                         >
-                                        <Icon.Star color={"rgba(213, 176, 0, 0.5)"} width={40} height={40} className="mark-complete-button" />
+                                        <Icon.Star color={"rgba(213, 176, 0, 0.5)"} width={40} height={40} className="mark-complete-button" onClick={() => setIndex(priority - 1, 0)} />
                                     </OverlayTrigger>
                                     ) : <>
                                         {
@@ -186,19 +197,7 @@ export default function GoalGridItem({
                             </Col>
                         </Row> 
                     : 
-                        <Row className="grid-item-actions-row-complete">
-                            <Col className="d-flex justify-content-center">
-                                {
-                                    <OverlayTrigger
-                                        placement="top"
-                                        delay={{ show: 250, hide: 400 }}
-                                        overlay={<Tooltip><h4>Share</h4></Tooltip>}
-                                        >
-                                        <Icon.ShareFill color={"#34aaaa"} width={40} height={40} className="mark-complete-button" />
-                                    </OverlayTrigger>
-                                }
-                            </Col>
-                        </Row> 
+                        ""
                 }
             </Container>
         </>

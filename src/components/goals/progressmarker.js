@@ -1,14 +1,31 @@
-import { useState, useRef } from 'react';
-import { useDispatch } from "react-redux";
+import { useState, useRef, useEffect } from 'react';
+import { useDispatch, useSelector } from "react-redux";
 import { Row, Col, Button, Container, OverlayTrigger, Tooltip, FloatingLabel, Form } from 'react-bootstrap';
 import { getDeadlineFormatted } from './goallistitem';
 import * as Icon from 'react-bootstrap-icons';
 import { evalBio  } from '../../app/utils';
-import { addProgressMarker } from '../../app/features/goals/goalSlice';
+import { addProgressMarker, selectGoal } from '../../app/features/goals/goalSlice';
 import MarkCompleteModal from '../../containers/ui/markcompletemodal';
 import TimePicker from 'react-bootstrap-time-picker';
 
-export default function ProgressMarker({ marker, markers, setMarkers }) {
+export const getNumericDate = (enteredDate, time) => {
+    const [year, month, day] = enteredDate.split("-"); 
+    const date = new Date(year, month - 1, day);
+    if(!isNaN(date.getTime()) &&
+        parseInt(year) >= 2022 && 
+        parseInt(month) >= 0 && 
+        parseInt(month) <= 12 &&
+        parseInt(day) >= 1 &&
+        parseInt(day) <= 31
+    ) {
+        const newdatestr = date.getTime() /  1000;
+        const newdatenum = newdatestr + time;
+        console.log(newdatenum); 
+        return newdatenum;
+    }
+}
+
+export default function ProgressMarker({ goalid, marker, markers, setMarkers }) {
     const [editable, setEditable] = useState(false); 
     const [nameValid, setNameValid] = useState(true);
     const dispatch = useDispatch();
@@ -16,8 +33,15 @@ export default function ProgressMarker({ marker, markers, setMarkers }) {
     const [enteredDate, setEnteredDate] = useState("");
     const [enteredName, setEnteredName] = useState("");
     const [numberDate, setNumberDate] = useState(0);
-    const [time, setTime] = useState("");
+    const [time, setTime] = useState(0);
+    const goal = useSelector(selectGoal(goalid)); 
+    const [goalComplete, setGoalComplete] = useState(goal?.complete);
 
+    useEffect(() => {
+        if(goalComplete !== goal?.complete) {
+            setGoalComplete(goal?.complete);
+        }
+    }, [goal?.complete])
     const removeMarker = () => {
         const _markers = markers.filter(mkr => mkr.id !== marker.id);
         console.log(_markers);
@@ -29,24 +53,6 @@ export default function ProgressMarker({ marker, markers, setMarkers }) {
         console.log(_markers);
         setMarkers(_markers);
     }
-
-    const getNumericDate = () => {
-        const [year, month, day] = enteredDate.split("-"); 
-        const date = new Date(year, month - 1, day);
-        if(!isNaN(date.getTime()) &&
-            parseInt(year) >= 2022 && 
-            parseInt(month) >= 0 && 
-            parseInt(month) <= 12 &&
-            parseInt(day) >= 1 &&
-            parseInt(day) <= 31
-        ) {
-            const newdatestr = date.getTime() /  1000;
-            const newdatenum = newdatestr + time;
-            setNumberDate(newdatenum);
-            return newdatenum;
-        }
-    }
-
     const checkName = () => {
         if(enteredName.length === 0 || enteredName.length > 50 || !evalBio(enteredName)) {
             console.log("Error: Name entered is invalid");
@@ -58,15 +64,15 @@ export default function ProgressMarker({ marker, markers, setMarkers }) {
 
     const newProgressMarker = () => {
         if(!checkName()) return; 
-        const numericdate = getNumericDate();
+        const numericdate = getNumericDate(enteredDate, time);
         const newMarker = {
             name: enteredName,
             deadline: numericdate,
-            goalid: marker.id,
+            goalid: goalid,
             newmarker: false,
             completed: false
         }
-        dispatch(addProgressMarker({ progressMarker: newMarker, goalid: marker.id }));
+        dispatch(addProgressMarker({ progressMarker: newMarker, goalid: goalid }));
         const _markers = markers.filter(marker => marker.newmarker !== true); 
         setMarkers([newMarker, ..._markers]);
     }
@@ -306,12 +312,12 @@ export default function ProgressMarker({ marker, markers, setMarkers }) {
                 </>
                 ) : (
                 <>
-                    <Container className={`progress-marker pt-3 shadow-lg ${(marker.completed === true) ? "completed-prg-mrk" : ""}`}>
+                    <Container className={`progress-marker pt-3 shadow-lg ${(marker.completed === true || goalComplete === true) ? "completed-prg-mrk" : ""}`}>
                         <Row className="marker-name">
                             {marker.name}
                         </Row>
                         {
-                            (marker.completed === true) ? (
+                            (marker.completed === true || goalComplete === true) ? (
                                 <>
                                     <Row className="marker-name">
                                         Complete
@@ -325,7 +331,7 @@ export default function ProgressMarker({ marker, markers, setMarkers }) {
                         }
                         <Row>
                             {
-                                (marker.completed === true) ? "" : (
+                                (marker.completed === true || goalComplete === true) ? "" : (
                                 <Col xs="6" className="d-flex justify-content-end mt-5">
                                     <OverlayTrigger
                                         placement="top"

@@ -1,12 +1,19 @@
 import { Offcanvas, Container, Row, Col, FloatingLabel, OverlayTrigger, Form, Tooltip, Button, CloseButton } from 'react-bootstrap';
-import { useRef, useState, useEffect } from 'react';
-import { evalPw, evalName, evalBio, evalEmail  } from '../../app/utils';
+import { useRef, useState } from 'react';
+import { evalName, evalBio  } from '../../app/utils';
 import * as Icon from 'react-bootstrap-icons';
 import { useDispatch, useSelector } from 'react-redux'; 
 import { editProfile, profile } from '../../app/features/users/userSlice';
 import Switch from "react-switch";
+import { logout } from '../../app/features/users/userSlice';
+import { logoutGoals } from '../../app/features/goals/goalSlice';
+import { logoutUI } from '../../app/features/ui/uiSlice';
+import { useNavigate } from 'react-router-dom';
+import DeleteAccountModal from '../ui/deleteaccountmodal';
+import ResetPasswordModal from '../ui/resetpwmodal';
 
 export default function EditProfile({ show, setShow, ...props }) {
+    const navigate = useNavigate();
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     const myprofile = useSelector(profile); 
@@ -17,30 +24,47 @@ export default function EditProfile({ show, setShow, ...props }) {
     const [lNameValid, setlNameValid] = useState(true); 
     const [bioValid, setBioValid] = useState(true); 
     const [signupError, setSignupError] = useState("");
-    const [privacyChecked, setPrivacyChecked] = useState("");    
+    const [privacyChecked, setPrivacyChecked] = useState(myprofile.privacyChecked || false);    
     const fnameRef = useRef(null);
     const lnameRef = useRef(null);
     const bioRef = useRef(null);
     const privateBoolRef = useRef(null);    
-    const submitNameUpdate = () => [
-
-    ]
-
+    const [deleteAccountModalShow, setDeleteAccountModalShow] = useState(false);
+    const [resetPwModalShow, setResetPwModalShow] = useState(false);
+    const submitNameUpdate = () => {
+        setSignupError("");
+        if(!evalName(fnameRef.current.value) || !evalName(lnameRef.current.value)) {
+            console.error("Error parsing name for profile update");
+            setSignupError("Error parsing name for profile update");
+            return;
+        }
+        dispatch(editProfile({ fname: `${fnameRef.current.value}`, lname: `${lnameRef.current.value}` }));
+        setNameEditing(false);
+        
+    }
     const submitBioUpdate = () => {
-
+        setSignupError("");
+        if(!evalBio(bioRef.current.value)) {
+            console.error("Error parsing name for profile update");     
+            setSignupError("Error parsing bio for profile update");
+            return;
+        }
+        dispatch(editProfile({ bio: `${bioRef.current.value}` }));
+        setBioEditing(false);
     }
-
     const submitPrivacyUpdate = () => {
-
+        const newPrivacy = !privacyChecked;
+        setPrivacyChecked(newPrivacy);
+        dispatch(editProfile({ privateProfile: newPrivacy }));
     }
 
-    const submitResetPassword = () => {
-
+    const handleSignout = () => {
+        navigate('/home');
+        dispatch(logout());
+        dispatch(logoutUI());
+        dispatch(logoutGoals());
     }
 
-    const submitDeleteAccount = () => {
-
-    }
     return (
         <>
             <style type="text/css">
@@ -204,28 +228,31 @@ export default function EditProfile({ show, setShow, ...props }) {
                                 {
                                     (nameEditing) ? 
                                     <>
-
                                         <Form.Control 
-                                            required 
+                                            ref={fnameRef}
+                                            as="input" 
                                             isInvalid={!fNameValid}  
-                                            onChange={(e) => { if(!evalName(e.target.value)) setfNameValid(false); else{ if(fNameValid) return; else setfNameValid(true); }  }} 
-                                            ref={fnameRef} 
+                                            onChange={(e) => { if(!evalName(e.target.value)) setfNameValid(false); else { if(!fNameValid) setfNameValid(true); }  }} 
                                             className="signup-input" 
                                             variant="dark" 
                                             type="text" 
-                                            placeholder={`First Name`} />
-                
-                                        <div className="spacing-edit"></div>
-                                        
+                                            defaultValue={`${myprofile.fname}`}
+                                            placeholder={`First Name`} 
+                                            required
+                                            />
+                                        <div className="spacing-edit" />
                                         <Form.Control 
-                                            required 
+                                            ref={lnameRef} 
+                                            as="input"
                                             isInvalid={!lNameValid}  
-                                            onChange={(e) => { if(!evalName(e.target.value)) setfNameValid(false); else{ if(fNameValid) return; else setfNameValid(true); }  }} 
-                                            ref={fnameRef} 
+                                            onChange={(e) => { if(!evalName(e.target.value)) setlNameValid(false); else{ if(!lNameValid) setlNameValid(true); }  }} 
                                             className="signup-input" 
                                             variant="dark" 
                                             type="text" 
-                                            placeholder={`Last Name`} />
+                                            defaultValue={`${myprofile.lname}`}
+                                            placeholder={`Last Name`}
+                                            required 
+                                            />
                         
                                         <div className="spacing-edit"></div>
                                         <Icon.CheckCircleFill className="icon-edit-profile-action" width={35} height={35} onClick={() => submitNameUpdate(true) } />
@@ -257,6 +284,7 @@ export default function EditProfile({ show, setShow, ...props }) {
                                             className="signup-input signup-input-bio"
                                             isInvalid={!bioValid} 
                                             onChange={(e) => { if(!evalBio(e.target.value)) setBioValid(false); else{ if(bioValid) return; else setBioValid(true); }  }}
+                                            defaultValue={`${myprofile.bio}`}
                                         />
                                         <div className="spacing-edit"></div>
                                         <Icon.CheckCircleFill className="icon-edit-profile-action" width={35} height={35} onClick={() => submitBioUpdate(true) } />
@@ -281,37 +309,44 @@ export default function EditProfile({ show, setShow, ...props }) {
                         <Row className="desc-data-row mt-2">
                             <Col />
                                 <Col xs="12" md="8" className="d-flex justify-content-between align-items-center border-bottom border-dark">
-                                    Private&nbsp;Profile&nbsp;<Switch
-                                        checked={privacyChecked}
-                                        onChange={() => { setPrivacyChecked(!privacyChecked) }}
-                                        onColor="#098888"
-                                        onHandleColor="#34aaaa"
-                                        handleDiameter={30}
-                                        uncheckedIcon={false}
-                                        checkedIcon={false}
-                                        boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-                                        activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-                                        height={20}
-                                        width={48}
-                                        className="react-switch"
-                                        id="material-switch"
-                                    />
+                                    Private&nbsp;Profile&nbsp;
+                                    <span className="d-flex justify-content-between align-items-center">
+                                        {
+                                            (privacyChecked) ? <><Icon.Lock width={25} height={25} color={"#34aaaa"} />&nbsp;Private&nbsp;</> : <><Icon.Globe2 width={25} height={25} color={"#34aaaa"} />&nbsp;Public&nbsp;</>
+                                        }
+                                        <Switch
+                                            checked={privacyChecked}
+                                            onChange={() => { submitPrivacyUpdate() }}
+                                            onColor="#098888"
+                                            onHandleColor="#34aaaa"
+                                            handleDiameter={30}
+                                            uncheckedIcon={false}
+                                            checkedIcon={false}
+                                            boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+                                            activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+                                            height={20}
+                                            width={48}
+                                            className="react-switch"
+                                            id="material-switch"
+                                        />
+                                    </span>
+                                   
                                 </Col>
                             <Col />
                         </Row>
                         <Row className="desc-data-row mt-3">
                             <Col />
                                 <Col xs="12" md="8" className="d-flex justify-content-end flex-wrap align-items-end">
-                                    <Button variant="dark" className="edit-profile-actions shadow-lg">
+                                    <Button variant="dark" className="edit-profile-actions shadow-lg" onClick={() => setResetPwModalShow(true) }>
                                         <Icon.ArrowCounterclockwise width={25} height={25} />&nbsp;
                                         Reset Account
                                     </Button>
-                                    <Button variant="dark" className="edit-profile-actions shadow-lg">
+                                    <Button variant="dark" className="edit-profile-actions shadow-lg" onClick={() => setDeleteAccountModalShow(true) }>
                                         <Icon.PersonXFill width={30} height={30} />&nbsp;
                                         Delete Account 
                                     </Button>
-                                    <Button variant="dark" className="edit-profile-actions shadow-lg">
-                                        <Icon.BoxArrowRight width={30} height={30} />&nbsp;
+                                    <Button variant="dark" className="edit-profile-actions shadow-lg" onClick={() => handleSignout() }>
+                                        <Icon.BoxArrowRight width={30} height={30}  />&nbsp;
                                         Sign out
                                     </Button>
                                 </Col>
@@ -319,6 +354,14 @@ export default function EditProfile({ show, setShow, ...props }) {
                         </Row>
                 </Offcanvas.Body>
             </Offcanvas>
+            <DeleteAccountModal 
+                deleteAccountModalShow={deleteAccountModalShow}
+                setDeleteAccountModalShow={setDeleteAccountModalShow}
+            />
+            <ResetPasswordModal
+                resetPwModalShow={resetPwModalShow}
+                setResetPwModalShow={setResetPwModalShow}
+            />
         </>
     )
 }

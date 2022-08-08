@@ -71,11 +71,7 @@ export default function Home() {
         }
     }, [isDisabled]);
     const getStarted = () => {
-        if(cookies.ackCookie !== 'acknowledged')
-            setShowCookiesModal(true); 
-        else {
-            navigate('/app/signin');
-        }
+        navigate('/app/signin');
     }
     return (
             <>
@@ -242,9 +238,7 @@ export default function Home() {
                 </Container>
                 <Navbar className="home-footer-nav d-flex justify-content-center" fixed="bottom">
                     <div className="home-footer d-flex justify-content-center">
-                        <span className="privacy-btn" onClick={() => setShowPrivacyModal(true)}>Privacy</span> 
-                        <span className="contact-btn" onClick={() => setShowContactModal(true)}>Contact</span>
-                        <span className="cookies-btn" onClick={() => setShowCookiesModal(true)}>Cookies Policy</span>
+                        <span className="privacy-btn" onClick={() => setShowPrivacyModal(true)}>Disclaimer</span> 
                     </div>
                 </Navbar>
                 <Modal
@@ -255,32 +249,6 @@ export default function Home() {
                     className="privacy-modal-background"
                 >
                    <PrivacyModal setShowPrivacyModal={setShowPrivacyModal} />
-                </Modal>
-                <Modal
-                    show={showContactModal} 
-                    onHide={() => setShowContactModal(false)}
-                    centered
-                    className="privacy-modal-background"
-                >
-                    <Container className="contact-modal" fluid>
-                        <Row className="d-flex justify-content-end">
-                            <CloseButton variant="white" onClick={() => setShowContactModal(false) } />
-                        </Row>
-                        <Row>
-                            <Col className="contact-text">
-                                <p className="contact-title">Questions, concerns, or suggestions? Send me an email:</p>
-                                <span className="contact-email">goaltrackeradm@gmail.com</span>
-                            </Col>
-                        </Row> 
-                    </Container>
-                </Modal>
-                <Modal
-                    show={showCookiesModal} 
-                    centered
-                    className="cookie-modal-background"
-                    onHide={() => setShowCookiesModal(false)}
-                >
-                    <CookieModal setShowCookieModal={setShowCookiesModal} />
                 </Modal>
             </>
         )

@@ -8,7 +8,7 @@ import mtn from '../../static/images/mtn.jpg';
 import { useSelector } from 'react-redux';
 import { profile } from '../../app/features/users/userSlice';
 import MyProfileContent from '../myprofile/myprofilecontent';
-export default function MyProfileView({ setStartingSortState }) {
+export default function MyProfileView() {
     const _profile = useSelector(profile);
     const [showEdit, setShowEdit] = useState(false);
     const [uploadModalShow, setUploadModalShow] = useState(false);

@@ -10,14 +10,13 @@ import SingleGoalContent from '../goals/singlegoalcontent';
 import SingleGoalInfo from '../goals/singlegoalinfo';
 import SingleGoalDesc from '../goals/singlegoaldesc';
 import SingleGoalProgressMarkers from '../goals/singlegoalprogressmarkers';
-import DeleteGoalModal from '../ui/DeleteModal'; 
+import DeleteGoalModal from '../ui/deletemodal'; 
 import EditGoal from '../goals/editgoal';
 import SingleGoalActions from '../goals/singlegoalactions';
 
 export default function SingleGoalView() {
     const { goalId } = useParams(); 
     const goal = useSelector(selectGoal(goalId));
-    const dispatch = useDispatch(); 
     const [currentGoal, setCurrentGoal] = useState(goal || { id: "", media: [] });
     const [showEditGoal, setShowEditGoal] = useState(false);
     const [showDeleteGoal, setShowDeleteGoal] = useState(false);
@@ -63,7 +62,7 @@ export default function SingleGoalView() {
                 </Row>
                 <Row className="single-goal-info-row">
                     <SingleGoalInfo 
-                        goal={currentGoal}  
+                        goalid={goalId}  
                         setUploadModalShow={setUploadModalShow} 
                         uploadModalShow={uploadModalShow} 
                         setShowEdit={setShowEditGoal} 
@@ -82,6 +81,9 @@ export default function SingleGoalView() {
                 show={showEditGoal}
                 setShow={setShowEditGoal}
                 editGoalId={currentGoal.id}
+                showDeleteGoal={showDeleteGoal}
+                setShowDeleteGoal={setShowDeleteGoal}
+                setMarkCompleteModalShow={setMarkCompleteModalShow} 
             />
             <MarkCompleteModal
                  markCompleteModalShow={markCompleteModalShow}

@@ -10,14 +10,18 @@ export const mockGoalState = {
       "userid": "35942fde-d1a0-443e-aa0c-b383fe915bc5",
       "viewable": true, 
       "priority": 1, 
-      "reminders": true,
+      "reminders": {
+        "daily": false,
+        "daybefore": false
+      },
       "media": [], 
       "starttime": 1654381607,
       "postponed": false, 
       "complete": false, 
       "mediacomplete": 0,
       "completedtime": 0,
-      "mainpic": ""
+      "mainpic": "",
+      "private": false
     },
     {
       id: "6a8af92c-7a41-479b-91fb-e4cc1ce9cbe3",
@@ -26,14 +30,18 @@ export const mockGoalState = {
       "userid": "35942fde-d1a0-443e-aa0c-b383fe915bc5",
       "viewable": true, 
       "priority": 2, 
-      "reminders": true,
+      "reminders": {
+        "daily": false,
+        "daybefore": false
+      },
       "media": [], 
       "starttime": 1654381607,
       "postponed": false, 
       "complete": false, 
       "mediacomplete": 0,
       "completedtime": 0,
-      "mainpic": ""
+      "mainpic": "",
+      "private": true
     },
     {
       id: "6a8af92c-7a41-479b-91fb-e4cc1ce9cbe4",
@@ -42,14 +50,18 @@ export const mockGoalState = {
       "userid": "35942fde-d1a0-443e-aa0c-b383fe915bc5",
       "viewable": true, 
       "priority": 3, 
-      "reminders": true,
+      "reminders": {
+        "daily": false,
+        "daybefore": false
+      },
       "media": [], 
       "starttime": 1654381607,
       "postponed": false, 
       "complete": true, 
       "mediacomplete": 0,
       "completedtime": 1655391007,
-      "mainpic": ""
+      "mainpic": "",
+      "private": false
     },
     {
       "id": "6a8af92c-7a41-479b-91fb-e4cc1ce9cbe1",
@@ -58,14 +70,18 @@ export const mockGoalState = {
       "userid": "35942fde-d1a0-443e-aa0c-b383fe915bc5",
       "viewable": true, 
       "priority": 4, 
-      "reminders": true,
+      "reminders": {
+        "daily": false,
+        "daybefore": false
+      },
       "media": [], 
       "starttime": 1654381607,
       "postponed": false, 
       "complete": true, 
       "mediacomplete": 0,
       "completedtime": 1655391007,
-      "mainpic": ""
+      "mainpic": "",
+      "private": false
     },
   ],
   progressMarkers: {
@@ -130,6 +146,10 @@ export const goalSlice = createSlice({
   name: 'goals',
   initialState,
   reducers: {
+    logoutGoals: (state, action) => {
+      state.goals = []; 
+      state.progressMarkers = {}; 
+    },
     addGoal: (state, action) => {
       state.goals.push(action.payload);
     },
@@ -139,6 +159,14 @@ export const goalSlice = createSlice({
           return false; 
         } else return true;
       });
+      state.goals.sort((a, b) => {
+        return a.priority - b.priority;
+      });
+      let idx = 1;
+      for(let goal of state.goals) {
+        goal.priority = idx; 
+        idx++; 
+      }
     },
     setGoals: (state, action) => {
       state.goals = action.payload.goals;
@@ -187,16 +215,15 @@ export const goalSlice = createSlice({
       } else if(newIndex === index) {
           console.log("invalid new index");
       } else {
-          const goalsCopy = JSON.parse(JSON.stringify(_goals)).filter(goal => goal.complete === false);
+          let goalsCopy = JSON.parse(JSON.stringify(_goals)).filter(goal => goal.complete === false);
           const currGoal = _goals[index]; 
-          const otherGoal = _goals[newIndex];
-          goalsCopy[newIndex] = currGoal; 
-          goalsCopy[index] = otherGoal; 
+          goalsCopy = goalsCopy.filter(goal => goal.id !== currGoal.id); 
+          goalsCopy.splice(newIndex, 0, currGoal);
           for(let i = 0; i < goalsCopy.length; i++) {
             let newGoal = JSON.parse(JSON.stringify(goalsCopy[i]));
             newGoal.priority = i + 1;
             goalsCopy[i] = JSON.parse(JSON.stringify(newGoal));
-        }
+          } 
         const completedGoals = _goals.filter(goal => goal.complete === true || goal.completedtime !== 0); 
         for(let goal of completedGoals) {
           goal.priority = -1;
@@ -206,6 +233,7 @@ export const goalSlice = createSlice({
     },
     addProgressMarker: (state, action) => {
       const goal = state.goals.find(goal => goal.id === action.payload.goalid); 
+      console.log("adding progress marker to goal", goal, action.payload.goalid);
       if(goal) {
         if(state.progressMarkers[goal.id] !== undefined) {
           state.progressMarkers[goal.id].push(action.payload.progressMarker); 
@@ -268,6 +296,53 @@ export const goalSlice = createSlice({
       goal.media = produce(goal.media, draft => {
         draft.splice(action.payload.index, 1);
       })
+    },
+    removeAllMedia: (state, action) => {
+      console.log("removing all goal media " + action.payload.id);
+      const goal = state.goals.find(goal => goal.id === action.payload.id);
+      if(goal) goal.media = [];
+    },
+    setReminders: (state, action) => {
+      const goal = state.goals.find(goal => goal.id === action.payload.id);
+      if(goal) {
+        if(action.payload.daily !== undefined) {
+          if(action.payload.daily !== false && !isNaN(action.payload.daily) && Number.isFinite(action.payload.daily)) {
+            goal.reminders.daily = action.payload.daily; 
+          } 
+          if(action.payload.daily === false) {
+            goal.reminders.daily = false; 
+          }
+        }
+        if(action.payload.daybefore !== undefined) {
+          goal.reminders.daybefore = action.payload.daybefore; 
+        } 
+      }
+    },
+    markComplete: (state, action) => {
+      console.log("marking goal complete", action.payload.id); 
+      const goal = state.goals.find(goal => goal.id === action.payload.id);
+      if(goal) {
+        goal.complete = true; 
+        goal.completedtime = Math.round(Date.now() / 1000); 
+        goal.postponed = false; 
+        goal.reminders = { daily: false, daybefore: false };
+        goal.priority = -1; 
+      }
+      if(state.progressMarkers[action.payload.id]) {
+        for(let prgmrk of state.progressMarkers[action.payload.id]) {
+          prgmrk.completed = true; 
+        }
+      }
+      const goalsCopy = state.goals.filter(_goal => _goal.id !== goal.id); 
+      for(let i = 0; i < goalsCopy.length; i++) {
+          goalsCopy[i].priority = i + 1;
+      }
+      const completedGoals = state.goals.filter(_goal => _goal.id !== goal.id && (_goal.complete === true || _goal.completedtime !== 0)); 
+      for(let goal of completedGoals) {
+        goal.priority = -1;
+      }
+      completedGoals.unshift(goal); 
+      state.goals = [...goalsCopy, ...completedGoals];
     }
   }
 })
@@ -276,16 +351,19 @@ export const selectGoal = (id) => (state) => {
   return state.goals.goals.find(goal => goal.id === id);
 }
 export const selectGoalProgressMarkers = (id) => (state) => {
-  console.log(state.goals.progressMarkers[id]);
   return state.goals.progressMarkers[id];
 }
 export const selectGoals = (state) => state.goals.goals; 
 export const selectTodoGoals = (state) => state.goals.goals.filter(goal => goal.complete === false || goal.completedtime === 0); 
 export const selectCompleteGoals = (state) => state.goals.goals.filter(goal => goal.complete === true); 
+export const selectPostponedGoals = (state) => state.goals.goals.filter(goal => goal.postponed === true); 
 export const selectProgressMarkers = (state) => state.goals.progressMarkers;
+export const selectNumCompleted = (userid) => (state) => state.goals.goals.filter(goal => goal.complete === true && goal.userid === userid).length;
+export const selectNumTodo = (userid) => (state) => state.goals.goals.filter(goal => goal.completed !== true && goal.completedtime === 0 && goal.userid === userid).length;
 
-
-export const { addGoal, 
+export const { 
+              logoutGoals,
+              addGoal, 
               removeGoal, 
               addProgressMarker, 
               rmProgressMarker, 
@@ -295,7 +373,10 @@ export const { addGoal,
               setMainPicIndex,
               setMediaIndex,
               addUpload,
-              removePicIndex
+              removePicIndex,
+              setReminders,
+              removeAllMedia,
+              markComplete
             } = goalSlice.actions
 
 export default goalSlice.reducer
