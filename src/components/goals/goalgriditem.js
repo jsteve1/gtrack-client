@@ -197,7 +197,19 @@ export default function GoalGridItem({
                             </Col>
                         </Row> 
                     : 
-                        ""
+                        <Row className="grid-item-actions-row-complete">
+                            <Col className="d-flex justify-content-center">
+                                {
+                                    <OverlayTrigger
+                                        placement="top"
+                                        delay={{ show: 250, hide: 400 }}
+                                        overlay={<Tooltip><h4>Share</h4></Tooltip>}
+                                        >
+                                        <Icon.ShareFill color={"#34aaaa"} width={40} height={40} className="mark-complete-button" />
+                                    </OverlayTrigger>
+                                }
+                            </Col>
+                        </Row> 
                 }
             </Container>
         </>

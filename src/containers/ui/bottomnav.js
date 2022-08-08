@@ -9,7 +9,7 @@ export default function BottomNav() {
     const navigate = useNavigate();
     const location = useLocation();
     useEffect(() => {
-        console.log("location changed", location);
+        //console.log("location changed", location);
     }, [location]);
     return (
         (_loggedIn) ? (

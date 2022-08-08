@@ -125,22 +125,22 @@ export default function GoalsList({ setShowEditGoal, setShowEditGoalId, openDele
     }
     useEffect(() => {
         if(currentSortState === "deadline") {
-            console.log("sorting by deadline " + `${sortAscending ? "ascending" : "descending"}`)
+            //console.log("sorting by deadline " + `${sortAscending ? "ascending" : "descending"}`)
             sortByDeadline();
         }
         if(currentSortState === "priority") {
-            console.log("sorting by prio " + `${sortAscending ? "ascending" : "descending"}`)
+            //console.log("sorting by prio " + `${sortAscending ? "ascending" : "descending"}`)
             sortByPriority();
         }
         if(currentSortState === "completed") {
-            console.log("showing completed goals " + `${sortAscending ? "ascending" : "descending"}`); 
+            //console.log("showing completed goals " + `${sortAscending ? "ascending" : "descending"}`); 
             showCompletedGoals();
         }
     }, [currentSortState, goals, sortAscending, startingSortState]);
     useEffect(() => {
 
         if(currentSortState === "priority") {
-            console.log("sorting by prio " + `${sortAscending ? "ascending" : "descending"}`)
+            //console.log("sorting by prio " + `${sortAscending ? "ascending" : "descending"}`)
             sortByPriority();
         }
     }, []);

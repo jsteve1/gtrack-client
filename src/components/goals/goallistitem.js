@@ -7,7 +7,6 @@ import TimePicker from 'react-bootstrap-time-picker';
 export const getDeadlineFormatted = (deadline, includeTime = true) => {
     const unixEpochTimeMS = deadline * 1000;
     const d = new Date(unixEpochTimeMS);
-    console.log(d);
     const time = d.toLocaleTimeString(); 
     const ampm = time.split(" ")[1]; 
     const hour = time.split(":")[0]; 

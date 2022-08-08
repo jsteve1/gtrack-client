@@ -1,5 +1,5 @@
-import { useState, useRef } from 'react';
-import { Offcanvas, Container, Row, Col, Form, Button } from 'react-bootstrap';
+import { useState, useRef, forwardRef } from 'react';
+import { Offcanvas, Container, Row, Col, Form, Button, OverlayTrigger, Tooltip, Dropdown } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectShowNewGoal, setShowNewGoal } from '../../app/features/ui/uiSlice';
 import { evalBio } from '../../app/utils';
@@ -7,26 +7,82 @@ import { getDeadlineFormatted } from '../../components/goals/goallistitem';
 import TimePicker from 'react-bootstrap-time-picker';
 import * as Icon from 'react-bootstrap-icons';
 import Switch from "react-switch";
+import { CustomGoalReminderActions } from './editgoal';
+import NewGoalReminders from '../../components/goals/newgoalreminders';
+import { getNumericDate } from '../../components/goals/progressmarker';
+import { profile } from '../../app/features/users/userSlice';
+import { addGoal, selectTodoGoals } from '../../app/features/goals/goalSlice';
 
 export default function NewGoal({ ...props }) {
     const dispatch = useDispatch();
+    const _profile = useSelector(profile);
+    const goals = useSelector(selectTodoGoals); 
     const showNewGoal = useSelector(selectShowNewGoal);
     const handleClose = () => {
         dispatch(setShowNewGoal(false));
     }  
-    const handleShow = () => {
-        dispatch(setShowNewGoal(true));
-    } 
     const handleTimeChange = (time) => {
-        console.log(time);
         setTime(time);
     }
+    const evalFields = () => {
+        setDateInvalid(false); setNameInvalid(false);
+        if(!evalBio(nameRef.current.value)) {
+            console.log("Name error for new goal");
+            setNameInvalid(true); 
+            return false; 
+        }
+        if(isNaN(getNumericDate(enteredDate, time))) {
+            console.log("Date error for new goal");
+            setDateInvalid(true);
+            return false; 
+        }
+        if(_profile.id === undefined) {
+            console.log("Profile error for new goal");
+            return false; 
+        }
+        if(1 > parseInt(prioRef.current.value)) {
+            console.log("Priority error for new goal");
+            prioRef.current.value = 1; 
+        } else if(goals.length < prioRef.current.value) {
+            prioRef.current.value = goals.length + 1; 
+        }
+        return true;
+    }
+    const submitCreate = () => {    
+        if(evalFields() !== true) {
+            console.log("Failed create goal"); 
+            return; 
+        }
+        const newGoal = {
+            name: nameRef.current.value, 
+            deadline: getNumericDate(enteredDate, time),
+            reminders, 
+            userid: _profile.id, 
+            viewable: !goalPrivate, 
+            media: [],
+            starttime: Math.round(Date.now() / 1000), 
+            postponed: false,
+            complete: false, 
+            mediacomplete: 0, 
+            completedtime: 0, 
+            mainpic: "",
+            private: goalPrivate,
+            priority: parseInt(prioRef.current.value)
+        }
+        console.log("submitting new goal", newGoal); 
+        dispatch(addGoal(newGoal));
+        dispatch(setShowNewGoal(false));
+    }
     const nameRef = useRef(null);
+    const prioRef = useRef(null);
     const [enteredName, setEnteredName] = useState("");
     const [nameInvalid, setNameInvalid] = useState(false);
+    const [dateInvalid, setDateInvalid] = useState(false);
     const [enteredDate, setEnteredDate] = useState(""); 
     const [time, setTime] = useState(""); 
-    
+    const [goalPrivate, setGoalPrivate] = useState(false);
+    const [reminders, setReminders] = useState(false);
+    const [showDropdown, setShowDropdown] = useState(false); 
     return (
         <>
             <style type="text/css">
@@ -46,8 +102,8 @@ export default function NewGoal({ ...props }) {
                         width: 80%;
                         height: 70px;
                         font-size: 21pt; 
-                        min-width: 350px;
-                        max-width: 360px;
+                        min-width: 360px;
+                        max-width: 400px;
                     }
                     .signup-input:hover {
                         background-color: #202020;
@@ -65,8 +121,10 @@ export default function NewGoal({ ...props }) {
                         color: #34aaaa;
                         border: none;
                     }
-                    .form-control-date-picker {
+                    .form-control-date-picker,
+                    .form-control-prio-picker {
                         width: min-content;
+                        min-width: 175px;
                         height: 80px;
                         font-size: 2.5vh;
                         margin-top: auto;
@@ -76,14 +134,22 @@ export default function NewGoal({ ...props }) {
                         border: none;
                         margin-right: 3px;
                     }
+                    .form-control-prio-picker {
+                        width: 100px !important;
+                        min-width: 100px !important;
+                    }
                     .time-picker-input:active,
                     .form-control-date-picker:active,
+                    .form-control-prio-picker:active, 
                     .time-picker-input:hover,
                     .form-control-date-picker:hover,
+                    .form-control-prio-picker:hover, 
                     .time-picker-input:focus,
                     .form-control-date-picker:focus,
+                    .form-control-prio-picker:focus, 
                     .time-picker-input:focus-visible,
-                    .form-control-date-picker:focus-visible {
+                    .form-control-date-picker:focus-visible,
+                    .form-control-prio-picker:focus-visible  {
                         background-color: rgba(40, 40, 40, 0.4);
                         color: #0199aa;
                         border: none;
@@ -114,7 +180,7 @@ export default function NewGoal({ ...props }) {
                     }
                     @media only screen and (max-width: 576px) {
                         .deadline-date-newgoal {
-                            margin-left: 2px;
+                            margin-left: 10px;
                         }
                     }
                     .create-new-goal {
@@ -128,6 +194,23 @@ export default function NewGoal({ ...props }) {
                         width: 100%;
                         max-width: 360px;
                         min-width: 350px;
+                    }
+                    .spacing-deadline {
+                        padding-left: 25px;
+                    }
+                    .spacing-actions {
+                        min-width: 30px;
+                    }
+                    #dropdown-custom-component-new-goal {
+                        margin-left: 15px;
+                    }
+                    .label-new-goal {
+                        font-size: 16pt;
+                        font-weight: 200;
+                        color: #34aaaa;
+                    }
+                    .react-switch {
+                        align-self: baseline !important;
                     }
                 `
             }
@@ -167,7 +250,7 @@ export default function NewGoal({ ...props }) {
                             <span className="deadline-date">
                                 <Form.Control 
                                     defaultValue={
-                                        getDeadlineFormatted(Date.now() / 1000)
+                                        getDeadlineFormatted(Math.round(Date.now() / 1000))
                                     }
                                     onChange={(e) => { 
                                         setEnteredDate(e.target.value); 
@@ -175,51 +258,63 @@ export default function NewGoal({ ...props }) {
                                     type="date" 
                                     variant="dark"
                                     className="form-control-date-picker"
+                                    isInvalid={dateInvalid}
                                 />
                             </span>
                             <TimePicker className="time-picker-input" onChange={handleTimeChange} value={time} start="00:00" end="23:59" step={15} />
+                            <Dropdown autoClose="outside" drop={'up'} show={showDropdown} onToggle={() => setShowDropdown(!showDropdown)}>
+                                <Dropdown.Toggle as={CustomGoalReminderActions} id="dropdown-custom-component-new-goal" />
+                                <NewGoalReminders setReminders={setReminders} reminders={reminders} setShow={setShowDropdown} />
+                            </Dropdown>
                         </Col>
                     </Row>
-                    <Row className="pl-2 border-bottom border-dark pb-4 pt-4">
-                        <Col xs="7" sm="6" className="d-flex justify-content-end align-items-center">
-                            Priority&nbsp;
-                            <span className="deadline-date-newgoal">
-                                <Form.Control 
-                                    onChange={(e) => { 
-                             
-                                    }}                               
+                    <Row className="pl-2 pb-4 pt-4 d-flex justify-content-around">
+                        <Col xs="4" className="d-flex justify-content-around align-items-center">
+                            <div className="label-new-goal">
+                                Priority:
+                            </div>
+                            <div className="deadline-date-newgoal">
+                                <Form.Control                             
                                     type="number" 
                                     variant="dark"
-                                    className="form-control-date-picker number-picker-control"
+                                    className="form-control-prio-picker number-picker-control"
                                     min={1}
+                                    max={goals.length + 1}
+                                    placeholder={"#"}
+                                    ref={prioRef}
                                 />
-                            </span>
+                            </div>
+                            <div className="spacing-actions" />
+                            <div className="label-new-goal">
+                                Private:
+                            </div>
+                            <div className="deadline-date-newgoal d-flex">
+                                <Switch
+                                    checked={goalPrivate}
+                                    onChange={() => { setGoalPrivate(!goalPrivate) }}
+                                    onColor="#098888"
+                                    onHandleColor="#34aaaa"
+                                    handleDiameter={30}
+                                    uncheckedIcon={false}
+                                    checkedIcon={false}
+                                    boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+                                    activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+                                    height={20}
+                                    width={48}
+                                    className="react-switch"
+                                    id="material-switch"
+                                />
+                            </div>
                         </Col>
-                        <Col xs="5" sm="6" className="private-new-goal-col d-flex justify-content-start mt-3">
-                            Private&nbsp;
-                                <span className="deadline-date-newgoal">
-                                    <Switch
-                                        checked={false}
-                                        onChange={() => {  }}
-                                        onColor="#098888"
-                                        onHandleColor="#34aaaa"
-                                        handleDiameter={30}
-                                        uncheckedIcon={false}
-                                        checkedIcon={false}
-                                        boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-                                        activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-                                        height={20}
-                                        width={48}
-                                        className="react-switch"
-                                        id="material-switch"
-                                    />
-                            </span>
+                    </Row>
+                    <Row className="mt-3">
+                        <Col xs="12" className="d-flex justify-content-center align-items-center">
                         </Col>
                     </Row>
                     <Row className="pt-3">
                         <Col xs="12" className="d-flex justify-content-center align-items-center">
-                            <Button variant="dark" className="create-new-goal">
-                                <Icon.TrophyFill color="#34dcbe" /> Create 
+                            <Button variant="dark" className="create-new-goal" onClick={() => submitCreate()}>
+                                <Icon.PencilSquare color="#34dcbe" /> Create 
                             </Button>
                         </Col>  
                     </Row>

@@ -13,9 +13,8 @@ import { loggedIn } from "../app/features/users/userSlice";
 import AppHomeView from '../containers/views/apphome';
 import MyProfileView from "../containers/views/myprofile";
 import GoalsListView from "../containers/views/goalslist";
-import FeedView from '../containers/views/feed';
 import SingleGoalView from "../containers/views/singlegoal";
-import { setShowActionButton, selectShowActionButton, setSt } from "../app/features/ui/uiSlice";
+import { setShowActionButton, selectShowActionButton } from "../app/features/ui/uiSlice";
 
 const ScrollResetWrapper = ({ children }) => {
   const location = useLocation();
@@ -124,11 +123,6 @@ export default function Router() {
                               <Route path="profile" element={
                                 <RequireAuth>
                                   <MyProfileView  />   
-                                </RequireAuth>                  
-                              }/>
-                              <Route path="feed" element={
-                                <RequireAuth>
-                                  <FeedView />   
                                 </RequireAuth>                  
                               }/>
                               <Route path="goals" element={

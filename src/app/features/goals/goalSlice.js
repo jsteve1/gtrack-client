@@ -1,5 +1,6 @@
 import { createSlice, current } from '@reduxjs/toolkit'
 import produce from 'immer';
+import { v4 as uuidv4 } from 'uuid';
 
 export const mockGoalState = {
   goals: [
@@ -151,7 +152,19 @@ export const goalSlice = createSlice({
       state.progressMarkers = {}; 
     },
     addGoal: (state, action) => {
-      state.goals.push(action.payload);
+      const goal = action.payload; 
+      if(!goal.id) {
+        goal.id = uuidv4();
+      }
+      const newIndex = goal.priority - 1; 
+      if(newIndex < 0 || newIndex > state.goals.length) {
+        console.log("New goal priority out of range"); 
+        return; 
+      }
+      state.goals.splice(newIndex, 0, goal); 
+      for(let i = 0; i < state.goals.length; i++) {
+        state.goals[i].priority = i + 1; 
+      }
     },
     removeGoal: (state, action) => {
       state.goals = state.goals.filter((goal) => {

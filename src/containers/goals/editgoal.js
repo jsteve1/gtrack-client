@@ -19,6 +19,7 @@ export const CustomGoalReminderActions = forwardRef(( { onClick }, ref) => (
                         .icon-person-top-nav {
                             cursor: pointer;
                             color: #aaaaaa;
+                            margin-left: 15px;
                         }
                         .icon-person-top-nav:hover {
                             transform: scale(1.05); 
@@ -229,7 +230,7 @@ export default function EditGoal({ show, setShow, editGoalId, showDeleteGoal, se
         const newPrivacy = !privacyChecked; 
         setPrivacyChecked(newPrivacy);
         if(goal.private !== newPrivacy) {
-            dispatch(updateGoal({ id: `${editGoalId}`, updateGoal: { private: newPrivacy }}));
+            dispatch(updateGoal({ id: `${editGoalId}`, updateGoal: { private: newPrivacy, viewable: !newPrivacy }}));
             console.log("new goal privacy", newPrivacy);
         }
     }
